@@ -7,7 +7,7 @@ As the WASM bundle includes all localization data, it's quite large (about 8 MiB
 ## Example
 
 ```typ
-#import "@preview/icu-datetime": fmt-date, fmt-time, fmt-datetime, experimental
+#import "@preview/icu-datetime:0.1.0": fmt-date, fmt-time, fmt-datetime, experimental
 // These functions may change at any time
 #import experimental: fmt-timezone, fmt-zoned-datetime
 
