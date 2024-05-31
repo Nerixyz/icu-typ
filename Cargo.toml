@@ -1,0 +1,28 @@
+[package]
+name = "icu-typ"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+serde = { version = "1.0", features = ["derive"] }
+ciborium = "0.2.2"
+
+icu_datetime = { version = "1.5.0", features = ["serde", "std"] }
+icu_calendar = { version = "1.5.0", features = ["serde", "std"] }
+icu_timezone = { version = "1.5.0", features = ["serde", "std"] }
+icu_locid = { version = "1.5.0", features = ["serde", "std"] }
+icu_provider = { version = "1.5.0" }
+writeable = "0.5.5"
+
+wasm-minimal-protocol = { git = "https://github.com/astrale-sharp/wasm-minimal-protocol" }
+thiserror = "1.0"
+
+[profile.release]
+lto = "fat"
+strip = true
+opt-level = "z"
+codegen-units = 1
+panic = "abort"
