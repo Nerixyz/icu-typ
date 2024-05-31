@@ -1,0 +1,30 @@
+name: Formatting
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+    branches: [master, main]
+
+jobs:
+  check-rs-format:
+    name: Check Formatting (Rust)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: nightly
+          components: rustfmt
+      - name: rustfmt
+        run: cargo fmt --check
+
+  check-prettier-format:
+    name: Check Formatting (Prettier)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check formatting with Prettier
+        uses: actionsx/prettier@v3
+        with:
+          args: -c .
