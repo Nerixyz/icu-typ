@@ -106,7 +106,7 @@
     type(dt.month) == int and 
     type(dt.day) == int
   )
-  str(plug.format_date(bytes(cbor.encode(dt)), bytes(cbor.encode(opts))))
+  str(plug.format_date(cbor.encode(dt), cbor.encode(opts)))
 }
 
 /// Formats a time in some `locale`.
@@ -129,7 +129,7 @@
     type(dt.minute) == int and 
     type(dt.second) == int
   )
-  str(plug.format_time(bytes(cbor.encode(dt)), bytes(cbor.encode(opts))))
+  str(plug.format_time(cbor.encode(dt), cbor.encode(opts)))
 }
 
 /// Formats a date and time in some `locale`. Dates are assumed to be ISO dates.
@@ -163,7 +163,7 @@
     type(dt.minute) == int and 
     type(dt.second) == int
   )
-  str(plug.format_datetime(bytes(cbor.encode(dt)), bytes(cbor.encode(opts))))
+  str(plug.format_datetime(cbor.encode(dt), cbor.encode(opts)))
 }
 
 /// Formats a timezone in some `locale`.
@@ -220,7 +220,7 @@
     fallback: fallback,
     includes: if type(includes) == array { includes } else { (includes,) },
   )
-  str(plug.format_timezone(bytes(cbor.encode(tz)), bytes(cbor.encode(opts))))
+  str(plug.format_timezone(cbor.encode(tz), cbor.encode(opts)))
 }
 
 /// Formats a date and a time in a timezone. Dates are assumed to be ISO dates.
@@ -266,5 +266,5 @@
     date: date-length,
     time: time-length,
   )
-  str(plug.format_zoned_datetime(bytes(cbor.encode(spec)), bytes(cbor.encode(opts))))
+  str(plug.format_zoned_datetime(cbor.encode(spec), cbor.encode(opts)))
 }
