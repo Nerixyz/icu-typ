@@ -176,6 +176,10 @@ Formats a date and a time in a timezone. Dates are assumed to be ISO dates.
 - `date-length`: The length of the formatted date part ("full", "long" (default), "medium", "short", or `none`).
 - `time-length`: The length of the formatted time part ("full", "long" (default), "medium", "short", or `none`).
 
+## Using Locally
+
+Download the [latest release](https://github.com/Nerixyz/icu-typ/releases), unzip it to your [local Typst packages](https://github.com/typst/packages#local-packages), and use `#import "@local/icu-datetime:0.1.0"`.
+
 ## Building
 
 To build the library, you need to have [Rust](https://www.rust-lang.org/), [Deno](https://deno.com/), and [`wasm-opt`](https://github.com/WebAssembly/binaryen) installed.
