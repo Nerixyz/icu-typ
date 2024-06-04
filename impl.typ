@@ -269,3 +269,12 @@
   )
   str(plug.format_zoned_datetime(cbor.encode(spec), cbor.encode(opts)))
 }
+
+/// Gets information about ICU4X' understanding of the `locale`
+///
+/// `locale`: A Unicode Locale Identifier (see https://unicode.org/reports/tr35/tr35.html#Unicode_locale_identifier)
+#let locale-info(locale) = {
+  assert(type(locale) == str)
+
+  cbor.decode(plug.locale_info(bytes(locale)))
+}

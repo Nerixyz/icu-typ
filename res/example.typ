@@ -65,4 +65,53 @@
 = Zoned Datetime (experimental)
 #fmt-zoned-datetime(dt, tz) \
 #fmt-zoned-datetime(dt, tz, locale: "lv") \
-#fmt-zoned-datetime(dt, tz, locale: "de") \
+#fmt-zoned-datetime(dt, tz, locale: "en-CA-u-hc-h24-ca-buddhist") \
+
+// the default undefined language
+#assert.eq(
+  locale-info("und"),
+  (
+    id: (
+      language: "und",
+      script: none,
+      region: none,
+      variants: (),
+    ),
+    extensions: (
+      unicode: (keywords: "", attributes: ()),
+      transform: (lang: none, fields: ""),
+      private: (),
+      other: (),
+    )
+  )
+)
+
+// full unicode language identifier
+#assert.eq(
+  locale-info("en-arab-DE-posix-macos-u-foo-bar-hc-h12-ca-buddhist-t-en-latn-US-windows-rusty-h0-hybrid-a-other-ext-x-typst-wasm"),
+  (
+    id: (
+      language: "en",
+      script: "Arab",
+      region: "DE",
+      variants: ("macos", "posix"),
+    ),
+    extensions: (
+      unicode: (
+        keywords: "ca-buddhist-hc-h12",
+        attributes: ("bar", "foo"),
+      ),
+      transform: (
+        lang: (
+          language: "en",
+          script: "Latn",
+          region: "US",
+          variants: ("rusty", "windows"),
+        ),
+        fields: "h0-hybrid",
+      ),
+      private: ("typst", "wasm"),
+      other: ("a-other-ext",),
+    ),
+  )
+)

@@ -2,6 +2,7 @@ use wasm_minimal_protocol::*;
 
 mod date;
 mod datetime;
+mod locale;
 mod time;
 mod timezone;
 mod write;
@@ -11,8 +12,10 @@ initiate_protocol!();
 
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
-    #[error("CBOR (de-)serialization error: {0}")]
-    Serde(#[from] ciborium::de::Error<std::io::Error>),
+    #[error("CBOR deserialization error: {0}")]
+    De(#[from] ciborium::de::Error<std::io::Error>),
+    #[error("CBOR serialization error: {0}")]
+    Ser(#[from] ciborium::ser::Error<std::io::Error>),
     #[error("ICU datetime error: {0}")]
     IcuDatetime(#[from] icu_datetime::Error),
     #[error("ICU calendar error: {0}")]
@@ -25,6 +28,8 @@ pub enum Error {
     IanaIdNotFound(String),
     #[error("Formatting error: {0}")]
     Fmt(#[from] std::fmt::Error),
+    #[error("Failed to interpret as UTF-8: {0}")]
+    Utf8(#[from] std::str::Utf8Error),
 }
 
 macro_rules! make_formatter {
@@ -44,3 +49,10 @@ make_formatter!(format_time from time);
 make_formatter!(format_datetime from datetime);
 make_formatter!(format_timezone from timezone);
 make_formatter!(format_zoned_datetime from zoned_datetime);
+
+#[cfg_attr(target_arch = "wasm32", wasm_func)]
+pub fn locale_info(locale: &[u8]) -> Result<Vec<u8>, Error> {
+    let locale = std::str::from_utf8(locale)?;
+
+    locale::info(locale)
+}

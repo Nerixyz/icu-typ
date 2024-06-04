@@ -21,6 +21,7 @@ Types of changes:
 
 ### Added
 
+- `locale-info` - This function gets information about a locale identifier and how it was parsed.
 - This changelog was added.
 
 ### Changed

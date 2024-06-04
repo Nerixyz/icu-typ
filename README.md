@@ -1,6 +1,7 @@
 # icu-datetime
 
 <!-- markdownlint-disable-file MD033 -->
+<!-- markdownlint-configure-file { "no-duplicate-heading": { "siblings_only": true } } -->
 
 This library is a wrapper around [ICU4X](https://github.com/unicode-org/icu4x)' `datetime` formatting for Typst which provides internationalized formatting for dates, times, and timezones.
 
@@ -75,12 +76,16 @@ As the WASM bundle includes all localization data, it's quite large (about 8 MiB
 = Zoned Datetimes (experimental)
 #fmt-zoned-datetime(dt, tz) \
 #fmt-zoned-datetime(dt, tz, locale: "lv") \
-#fmt-zoned-datetime(dt, tz, locale: "de") \
+#fmt-zoned-datetime(dt, tz, locale: "en-CA-u-hc-h24-ca-buddhist")
 ```
 
 <!-- typst c res/example.typ res/example.png --root . -->
 
 <img src="res/example.svg" alt="Example" style="background: white">
+
+Locales must be [Unicode Locale Identifier]s.
+Use [`locale-info(locale)`](#locale-info) to get information on how a locale is parsed.
+Unicode extensions are supported, so you can, for example, set the hour cycle with `hc-h12` or set the calendar with `ca-buddhist` (e.g. `en-CA-u-hc-h24-ca-buddhist`).
 
 ## API
 
@@ -203,6 +208,69 @@ Formats a date and a time in a timezone. Dates are assumed to be ISO dates.
 - `fallback`: The timezone format fallback. Either `"localized-gmt"` or a dictionary for an ISO 8601 fallback (e.g. `(iso8601: (format: "basic", minutes: "required", seconds: "never"))`).
 - `date-length`: The length of the formatted date part ("full", "long" (default), "medium", "short", or `none`).
 - `time-length`: The length of the formatted time part ("full", "long" (default), "medium", "short", or `none`).
+
+### `locale-info`
+
+```typ
+#let locale-info(locale)
+```
+
+Gets information about ICU4X' understanding of the `locale`
+
+- `locale`: A [Unicode Locale Identifier]
+
+#### Example
+
+```typ
+// the default undefined language
+#assert.eq(
+  locale-info("und"),
+  (
+    id: (
+      language: "und",
+      script: none,
+      region: none,
+      variants: (),
+    ),
+    extensions: (
+      unicode: (keywords: "", attributes: ()),
+      transform: (lang: none, fields: ""),
+      private: (),
+      other: (),
+    )
+  )
+)
+
+// full unicode language identifier
+#assert.eq(
+  locale-info("en-arab-DE-posix-macos-u-foo-bar-hc-h12-ca-buddhist-t-en-latn-US-windows-rusty-h0-hybrid-a-other-ext-x-typst-wasm"),
+  (
+    id: (
+      language: "en",
+      script: "Arab",
+      region: "DE",
+      variants: ("macos", "posix"),
+    ),
+    extensions: (
+      unicode: (
+        keywords: "ca-buddhist-hc-h12",
+        attributes: ("bar", "foo"),
+      ),
+      transform: (
+        lang: (
+          language: "en",
+          script: "Latn",
+          region: "US",
+          variants: ("rusty", "windows"),
+        ),
+        fields: "h0-hybrid",
+      ),
+      private: ("typst", "wasm"),
+      other: ("a-other-ext",),
+    ),
+  )
+)
+```
 
 ## Using Locally
 
