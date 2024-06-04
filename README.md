@@ -29,30 +29,56 @@ As the WASM bundle includes all localization data, it's quite large (about 8 MiB
   minute: 2,
   second: 23,
 )
-
-#fmt-date(day, locale: "de", length: "full") \
-#fmt-time(time, locale: "de", length: "medium") \
-#fmt-datetime(dt, locale: "fi", date-length: "full") \
-#fmt-timezone(
-  "-07",
+#let tz = (
+  offset: "-07",
   iana: "America/Los_Angeles",
+  zone-variant: "st", // standard
+)
+
+= Dates
+#fmt-date(day, locale: "km", length: "full") \
+#fmt-date(day, locale: "af", length: "full") \
+#fmt-date(day, locale: "za", length: "full") \
+
+= Time
+#fmt-time(time, locale: "id", length: "medium") \
+#fmt-time(time, locale: "en", length: "medium") \
+#fmt-time(time, locale: "ga", length: "medium") \
+
+= Date and Time
+#fmt-datetime(dt, locale: "ru", date-length: "full") \
+#fmt-datetime(dt, locale: "en-US", date-length: "full") \
+#fmt-datetime(dt, locale: "zh-Hans-CN", date-length: "full") \
+#fmt-datetime(dt, locale: "ar", date-length: "full") \
+#fmt-datetime(dt, locale: "fi", date-length: "full")
+
+= Timezones (experimental)
+#fmt-timezone(
+  ..tz,
   local-date: dt,
-  zone-variant: "st",
   includes: "specific-non-location-long"
 ) \
-#fmt-zoned-datetime(
-  dt,
-  (
-    offset: "-07",
-    iana: "America/Los_Angeles",
-    zone-variant: "st", // standard
+#fmt-timezone(
+  ..tz,
+  local-date: dt,
+  includes: (
+    iso8601: (
+      format: "utc-extended",
+      minutes: "required",
+      seconds: "optional",
+    )
   )
 )
+
+= Zoned Datetimes (experimental)
+#fmt-zoned-datetime(dt, tz) \
+#fmt-zoned-datetime(dt, tz, locale: "lv") \
+#fmt-zoned-datetime(dt, tz, locale: "de") \
 ```
 
 <!-- typst c res/example.typ res/example.png --root . -->
 
-![Example](res/example.png)
+<img src="res/example.svg" alt="Example" style="background: white">
 
 ## API
 
