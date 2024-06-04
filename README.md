@@ -112,7 +112,7 @@ Formats a date and time in some `locale`. Dates are assumed to be ISO dates.
 
 ```typ
 #let fmt-timezone(
-  offset,
+  offset: none, // required
 
   iana: none,
   bcp47: none,
@@ -130,7 +130,7 @@ Formats a date and time in some `locale`. Dates are assumed to be ISO dates.
 
 Formats a timezone in some `locale`.
 
-- `offset`: A string specifying the GMT offset (e.g. "-07", "Z", "+05", "+0500", "+05:00")
+- `offset`: A string specifying the GMT offset (e.g. "-07", "Z", "+05", "+0500", "+05:00"). (required)
 
 - `iana`: Name of the IANA TZ identifier (e.g. "Brazil/West" - see [IANA](https://www.iana.org/time-zones) and [Wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)). This is mutually exclusive with `bcp47`. This identifier will be converted to a BCP-47 ID.
 - `bcp47`: Name of the BCP-47 timezone ID (e.g. "iodga" - see [timezone.xml](https://github.com/unicode-org/cldr/blob/main/common/bcp47/timezone.xml)). This is mutually exclusive with `iana`.

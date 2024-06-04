@@ -168,7 +168,7 @@
 
 /// Formats a timezone in some `locale`.
 ///
-/// `offset`: A string specifying the GMT offset (e.g. "-07", "Z", "+05", "+0500", "+05:00")
+/// `offset`: A string specifying the GMT offset (e.g. "-07", "Z", "+05", "+0500", "+05:00"). (required)
 ///
 /// `iana`: Name of the IANA TZ identifier (e.g. "Brazil/West" - see https://www.iana.org/time-zones and https://en.wikipedia.org/wiki/List_of_tz_database_time_zones). This is mutually exclusive with `bcp47`. This identifier will be converted to a BCP-47 ID.
 /// `bcp47`: Name of the BCP-47 timezone ID (e.g. "iodga" - see https://github.com/unicode-org/cldr/blob/main/common/bcp47/timezone.xml). This is mutually exclusive with `iana`.
@@ -189,7 +189,7 @@
 ///   `specific-non-location-short` (e.g. "PDT")
 ///   `iso8601`: A dictionary of ISO 8601 options `(iso8601: (format: "utc-basic", minutes: "optional", seconds: "optional"))` (e.g. "-07:00")
 #let fmt-timezone(
-  offset,
+  offset: none,
 
   iana: none,
   bcp47: none,
@@ -205,6 +205,7 @@
 ) = {
   assert(type(includes) == array or type(includes) == str or type(includes) == dictionary)
   assert(type(locale) == str)
+  assert(type(offset) == str or type(offset) == int)
 
   let tz = make-timezone-dict(
     offset,
