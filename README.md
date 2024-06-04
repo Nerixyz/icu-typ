@@ -1,5 +1,7 @@
 # icu-datetime
 
+<!-- markdownlint-disable-file MD033 -->
+
 This library is a wrapper around [ICU4X](https://github.com/unicode-org/icu4x)' `datetime` formatting for Typst which provides internationalized formatting for dates, times, and timezones.
 
 As the WASM bundle includes all localization data, it's quite large (about 8 MiB).
