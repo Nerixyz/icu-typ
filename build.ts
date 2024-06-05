@@ -19,6 +19,7 @@ try {
   // ignored
 }
 await Deno.mkdir("./build");
+await Deno.mkdir("./build/res");
 
 await runCommand(
   "wasm-opt",
@@ -37,3 +38,4 @@ for await (const entry of Deno.readDir(".")) {
     await Deno.copyFile(entry.name, `./build/${entry.name}`);
   }
 }
+await Deno.copyFile("./res/example.png", "./build/res/example.png");
