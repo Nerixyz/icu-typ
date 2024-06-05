@@ -81,7 +81,7 @@ As the WASM bundle includes all localization data, it's quite large (about 8 MiB
 
 <!-- typst c res/example.typ res/example.png --root . -->
 
-<img src="res/example.svg" alt="Example" style="background: white">
+[Example](res/example.png)
 
 Locales must be [Unicode Locale Identifier]s.
 Use [`locale-info(locale)`](#locale-info) to get information on how a locale is parsed.

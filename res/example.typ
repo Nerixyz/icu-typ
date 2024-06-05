@@ -2,6 +2,15 @@
 #import experimental: fmt-timezone, fmt-zoned-datetime
 
 #set page(width: auto, height: auto, margin: 1em)
+#set text(
+  font: (
+    "Linux Libertine",
+    "New Computer Modern",
+    "New Computer Modern Math",
+    "DejaVu Sans Mono",
+    "Microsoft JhengHei",
+  )
+)
 
 #let day = datetime(
   year: 2024,
