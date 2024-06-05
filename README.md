@@ -10,7 +10,7 @@ As the WASM bundle includes all localization data, it's quite large (about 8 MiB
 ## Example
 
 ```typ
-#import "@preview/icu-datetime:0.1.0": fmt-date, fmt-time, fmt-datetime, experimental
+#import "@preview/icu-datetime:0.1.1": fmt-date, fmt-time, fmt-datetime, experimental
 // These functions may change at any time
 #import experimental: fmt-timezone, fmt-zoned-datetime
 
@@ -274,7 +274,7 @@ Gets information about ICU4X' understanding of the `locale`
 
 ## Using Locally
 
-Download the [latest release](https://github.com/Nerixyz/icu-typ/releases), unzip it to your [local Typst packages](https://github.com/typst/packages#local-packages), and use `#import "@local/icu-datetime:0.1.0"`.
+Download the [latest release](https://github.com/Nerixyz/icu-typ/releases), unzip it to your [local Typst packages](https://github.com/typst/packages#local-packages), and use `#import "@local/icu-datetime:0.1.1"`.
 
 ## Building
 

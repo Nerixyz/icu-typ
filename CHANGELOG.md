@@ -19,6 +19,8 @@ Types of changes:
 
 ## [Unreleased]
 
+## [0.1.1] - 2024-06-05
+
 ### Added
 
 - `locale-info` - This function gets information about a locale identifier and how it was parsed.
@@ -33,7 +35,7 @@ Types of changes:
 
 - Removed redundant `bytes()` call
 
-## [0.1.0] - 2014-05-31
+## [0.1.0] - 2024-05-31
 
 ### Added
 
@@ -43,5 +45,6 @@ Types of changes:
 - `fmt-timezone` (🚧 experimental)
 - `fmt-zoned-datetime` (🚧 experimental)
 
-[unreleased]: https://github.com/Nerixyz/icu-typ/compare/v0.1.0...HEAD
+[unreleased]: https://github.com/Nerixyz/icu-typ/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/Nerixyz/icu-typ/releases/tag/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/Nerixyz/icu-typ/releases/tag/v0.1.0
