@@ -51,10 +51,7 @@ jobs:
       - run: pip install .
         working-directory: docs
       - run: python3 -m mkdocs build
-
-      - run: npm i -g svgo
-      - run: for f in *.svg; do svgo "$f"; done
-        working-directory: docs/site/rendered
+        working-directory: docs
 
   check-release:
     runs-on: ubuntu-latest
