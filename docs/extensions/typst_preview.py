@@ -66,7 +66,7 @@ class PreviewPreprocessor(Preprocessor):
             lang = m.group("lang")
             preview = m.group("preview")
             options = m.group("options") or ""
-            classes = " "
+            classes = ""
             if "vertical" in options:
                 classes += "vertical"
             options = f'{options} lang="{lang}"'

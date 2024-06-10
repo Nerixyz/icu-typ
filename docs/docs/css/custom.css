@@ -41,7 +41,7 @@
   min-width: 100%;
 }
 
-details .typst-preview p {
+.typst-preview > p {
   display: none;
 }
 
