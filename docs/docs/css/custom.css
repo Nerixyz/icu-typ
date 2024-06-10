@@ -56,6 +56,6 @@ details .md-annotation > .md-tooltip {
   max-width: 10rem;
 }
 
-details .typst-source {
+.typst-preview .typst-source {
   overflow-y: hidden; /* TODO: this doesn't look right */
 }
