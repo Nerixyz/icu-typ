@@ -1,0 +1,61 @@
+[data-md-color-scheme="default"] img[src$="_d.svg"],
+[data-md-color-scheme="slate"] img[src$="_l.svg"] {
+  display: none;
+}
+
+.typst-preview {
+  display: flex;
+  gap: 1em;
+  margin: 0 0 1em;
+  flex-wrap: wrap;
+}
+
+.typst-preview > .typst-source {
+  margin: 0;
+  overflow-x: auto;
+  flex: 1;
+}
+
+.typst-preview > .typst-source > .highlight,
+.typst-preview > .typst-source > .highlight > :is(pre, .highlighttable),
+.typst-preview > .typst-source > .highlight > pre > code {
+  height: 100%;
+}
+
+.typst-preview > .typst-source > .highlight > .highlighttable {
+  margin: 0;
+}
+
+.typst-preview > .typst-source > .highlight > pre {
+  margin: 0;
+  height: 100%;
+}
+
+.typst-preview > .preview {
+  background: var(--md-code-bg-color);
+  display: flex;
+  align-items: center;
+}
+
+.typst-preview.vertical > * {
+  min-width: 100%;
+}
+
+details .typst-preview p {
+  display: none;
+}
+
+@media screen and (max-width: 700px) {
+  .typst-preview > * {
+    min-width: 100%;
+  }
+}
+
+details .md-annotation > .md-tooltip {
+  width: auto;
+  max-width: 10rem;
+}
+
+details .typst-source {
+  overflow-y: hidden; /* TODO: this doesn't look right */
+}

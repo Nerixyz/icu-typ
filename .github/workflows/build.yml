@@ -42,6 +42,20 @@ jobs:
           name: icu-datetime.zip
           path: icu-datetime.zip
 
+      - uses: typst-community/setup-typst@v3
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+      - run: pip install .
+        working-directory: docs
+      - run: python3 -m mkdocs build
+
+      - run: npm i -g svgo
+      - run: for f in *.svg; do svgo "$f"; done
+        working-directory: docs/site/rendered
+
   check-release:
     runs-on: ubuntu-latest
     needs: build
