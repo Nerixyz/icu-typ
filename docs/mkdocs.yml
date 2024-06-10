@@ -1,7 +1,7 @@
 site_name: icu-datetime
 site_url: https://nerixyz.github.io/icu-typ
-repo_url: https://github.com/Nerixyz/icu-datetime
-repo_name: Nerixyz/icu-datetime
+repo_url: https://github.com/Nerixyz/icu-typ
+repo_name: Nerixyz/icu-typ
 edit_uri: edit/main/docs/docs/
 extra_css:
   - css/custom.css
