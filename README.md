@@ -99,10 +99,11 @@ Download the [latest release](https://github.com/Nerixyz/icu-typ/releases), unzi
 
 ## Building
 
-To build the library, you need to have [Rust](https://www.rust-lang.org/), [Deno](https://deno.com/), and [`wasm-opt`](https://github.com/WebAssembly/binaryen) installed.
+To build the library, you need to have [Rust](https://www.rust-lang.org/), [just](https://just.systems/), and [`wasm-opt`](https://github.com/WebAssembly/binaryen) installed.
 
 ```sh
-deno task build
+just build
+# to deploy the package locally, use `just deploy`
 ```
 
 While developing, you can symlink the WASM file into the root of the repository (it's in the `.gitignore`):

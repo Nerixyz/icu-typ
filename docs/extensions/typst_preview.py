@@ -145,8 +145,10 @@ TEMPLATE_HEADER = r"""
 #set text(fill: if _is-dark { white } else { black })
 
 """
+
+# requires `just deploy`
 IMPORTS = r"""
-#import "@preview/icu-datetime:0.1.1": fmt-date, fmt-time, fmt-datetime, experimental, locale-info
+#import "@local/icu-datetime:0.1.2": fmt-date, fmt-time, fmt-datetime, experimental, locale-info
 #import experimental: fmt-timezone, fmt-zoned-datetime
 """
 TEMPLATES = {

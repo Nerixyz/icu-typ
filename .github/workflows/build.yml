@@ -14,6 +14,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - uses: extractions/setup-just@v2
+
       - uses: Aandreba/setup-binaryen@v1.0.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -29,8 +31,8 @@ jobs:
 
       - uses: Swatinem/rust-cache@v2
 
-      - name: Build
-        run: deno task build
+      - name: Build and deploy locally
+        run: just deploy
 
       - name: Bundle
         run: zip -r ../icu-datetime.zip *

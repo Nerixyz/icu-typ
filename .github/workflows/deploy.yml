@@ -26,6 +26,10 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
+      - uses: extractions/setup-just@v2
+      - name: Build and deploy locally
+        run: just deploy
+
       - name: Install Noto Fonts
         run: sudo apt install -y fonts-noto-core fonts-noto-cjk
 
