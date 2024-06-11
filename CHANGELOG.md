@@ -23,6 +23,10 @@ Types of changes:
 
 - The documentation is now hosted at [nerixyz.github.io/icu-typ](https://nerixyz.github.io/icu-typ/) and includes more examples.
 
+### Fixed
+
+- Setting [`bcp47`](https://nerixyz.github.io/icu-typ/fmt-timezone/#bcp47) in time zones now works correctly.
+
 ## [0.1.1] - 2024-06-05
 
 ### Added

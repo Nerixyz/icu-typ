@@ -58,7 +58,7 @@
   if iana != none {
     tz.insert("timezone-id", (iana: iana))
   } else if bcp47 != none {
-    tz.insert("bcp47", (bcp47: bcp47))
+    tz.insert("timezone-id", (bcp47: bcp47))
   }
 
   if metazone-id != none {
