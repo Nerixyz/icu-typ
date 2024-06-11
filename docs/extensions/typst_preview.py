@@ -146,7 +146,7 @@ TEMPLATE_HEADER = r"""
 
 """
 IMPORTS = r"""
-#import "@preview/icu-datetime:0.1.1": fmt-date, fmt-time, fmt-datetime, experimental
+#import "@preview/icu-datetime:0.1.1": fmt-date, fmt-time, fmt-datetime, experimental, locale-info
 #import experimental: fmt-timezone, fmt-zoned-datetime
 """
 TEMPLATES = {
