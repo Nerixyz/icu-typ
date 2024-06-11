@@ -79,3 +79,4 @@ nav:
   - fmt-datetime.md
   - fmt-timezone.md
   - fmt-zoned-datetime.md
+  - locale-info.md

@@ -93,69 +93,6 @@ Unicode extensions are supported, so you can, for example, set the hour cycle wi
 
 Documentation can be found on [nerixyz.github.io/icu-typ](https://nerixyz.github.io/icu-typ).
 
-### `locale-info`
-
-```typ
-#let locale-info(locale)
-```
-
-Gets information about ICU4X' understanding of the `locale`
-
-- `locale`: A [Unicode Locale Identifier]
-
-#### Example
-
-```typ
-// the default undefined language
-#assert.eq(
-  locale-info("und"),
-  (
-    id: (
-      language: "und",
-      script: none,
-      region: none,
-      variants: (),
-    ),
-    extensions: (
-      unicode: (keywords: "", attributes: ()),
-      transform: (lang: none, fields: ""),
-      private: (),
-      other: (),
-    )
-  )
-)
-
-// full unicode language identifier
-#assert.eq(
-  locale-info("en-arab-DE-posix-macos-u-foo-bar-hc-h12-ca-buddhist-t-en-latn-US-windows-rusty-h0-hybrid-a-other-ext-x-typst-wasm"),
-  (
-    id: (
-      language: "en",
-      script: "Arab",
-      region: "DE",
-      variants: ("macos", "posix"),
-    ),
-    extensions: (
-      unicode: (
-        keywords: "ca-buddhist-hc-h12",
-        attributes: ("bar", "foo"),
-      ),
-      transform: (
-        lang: (
-          language: "en",
-          script: "Latn",
-          region: "US",
-          variants: ("rusty", "windows"),
-        ),
-        fields: "h0-hybrid",
-      ),
-      private: ("typst", "wasm"),
-      other: ("a-other-ext",),
-    ),
-  )
-)
-```
-
 ## Using Locally
 
 Download the [latest release](https://github.com/Nerixyz/icu-typ/releases), unzip it to your [local Typst packages](https://github.com/typst/packages#local-packages), and use `#import "@local/icu-datetime:0.1.1"`.
