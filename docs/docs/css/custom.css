@@ -32,6 +32,7 @@
 
 .typst-preview > .typst-source > .highlight > .highlighttable {
   margin: 0;
+  background: var(--md-code-bg-color);
 }
 
 .typst-preview > .typst-source > .highlight > pre {
