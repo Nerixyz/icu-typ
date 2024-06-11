@@ -11,7 +11,7 @@ This library is a wrapper around [ICU4X](https://github.com/unicode-org/icu4x)' 
 #import "@preview/icu-datetime:0.1.1": experimental
 #import experimental: fmt-timezone, fmt-zoned-datetime
 
-This documentation was built #fmt-date(datetime.today(), length: "full").
+This documentation was built on #fmt-date(datetime.today()).
 ```
 
 ## Date
