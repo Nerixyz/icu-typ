@@ -62,7 +62,7 @@
   }
 
   if metazone-id != none {
-    tz.insert("metazone", (id: metazone-id))
+    tz.insert("metazone", (id: bytes(metazone-id)))
   } else if local-date != none {
     let dt = datetime-to-dict(local-date)
 

@@ -26,6 +26,7 @@ Types of changes:
 ### Fixed
 
 - Setting [`bcp47`](https://nerixyz.github.io/icu-typ/fmt-timezone/#bcp47) in time zones now works correctly.
+- Setting [`metazone-id`](https://nerixyz.github.io/icu-typ/fmt-timezone/#metazone-id) in time zones now works correctly.
 
 ## [0.1.1] - 2024-06-05
 
