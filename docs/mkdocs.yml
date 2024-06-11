@@ -10,6 +10,9 @@ theme:
   icon:
     logo: material/calendar-month
     repo: material/github
+  font:
+    code: JetBrains Mono
+    text: Inter
   palette:
     - media: "(prefers-color-scheme)"
       toggle:
@@ -53,6 +56,10 @@ markdown_extensions:
       permalink: true
   - admonition
   - md_in_html
+  - attr_list
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - pymdownx.details
   - pymdownx.highlight:
       anchor_linenums: true

@@ -1,3 +1,11 @@
+[data-md-color-scheme="slate"] {
+  --md-code-hl-variable-color: #ffa585;
+  --md-default-bg-color: hsla(var(--md-hue), 15%, 10%, 1);
+}
+[data-md-color-scheme="default"] {
+  --md-code-hl-variable-color: #a32c00;
+}
+
 [data-md-color-scheme="default"] img[src$="_d.svg"],
 [data-md-color-scheme="slate"] img[src$="_l.svg"] {
   display: none;

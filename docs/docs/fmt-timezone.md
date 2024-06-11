@@ -1,6 +1,6 @@
 # `fmt-timezone` 🚧
 
-⚠ Warning: This function is experimental and can change at any time.
+:warning: Warning: This function is experimental and can change at any time.
 
 ```typst-code
 let fmt-timezone(
