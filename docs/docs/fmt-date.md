@@ -1,7 +1,5 @@
 # `fmt-date`
 
-Formats a date in some [`locale`](#locale). Dates are assumed to be ISO dates.
-
 ```typst-code
 let fmt-date(
   dt,
@@ -9,6 +7,8 @@ let fmt-date(
   length: "full"
 )
 ```
+
+Formats a date in some [`locale`](#locale). Dates are assumed to be ISO dates.
 
 ## Arguments
 
