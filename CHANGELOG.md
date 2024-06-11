@@ -19,6 +19,10 @@ Types of changes:
 
 ## [Unreleased]
 
+### Added
+
+- The documentation is now hosted at [nerixyz.github.io/icu-typ](https://nerixyz.github.io/icu-typ/) and includes more examples.
+
 ## [0.1.1] - 2024-06-05
 
 ### Added
