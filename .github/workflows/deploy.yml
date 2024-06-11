@@ -19,12 +19,15 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: windows-latest # using windows because it has better fonts than ubuntu
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Setup Pages
         uses: actions/configure-pages@v5
+
+      - name: Install Noto Fonts
+        run: sudo apt install -y fonts-noto-core fonts-noto-cjk
 
       - uses: typst-community/setup-typst@v3
 
