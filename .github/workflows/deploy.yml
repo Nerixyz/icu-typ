@@ -26,6 +26,15 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: stable
+          components: clippy
+
+      - uses: Aandreba/setup-binaryen@v1.0.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
       - uses: extractions/setup-just@v2
       - name: Build and deploy locally
         run: just deploy
