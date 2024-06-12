@@ -143,7 +143,9 @@ class MyExtension(Extension):
 TEMPLATE_HEADER = r"""
 #let _is-dark = %s
 #set page(width: auto, height: auto, margin: 0.75cm)
-#set text(fill: if _is-dark { white } else { black })
+#let _accent = if _is-dark { white } else { black }
+#set text(fill: _accent)
+#set table(stroke: _accent.transparentize(30%%))
 
 """
 

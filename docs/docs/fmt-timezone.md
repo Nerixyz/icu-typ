@@ -87,6 +87,37 @@ Name of the BCP-47 timezone ID (e.g. `#!typst-code "iodga"` - see [timezone.xml]
 !!! warning
     In v0.1.1 it's not possible to set the BCP-47 timezone ID - use [`iana`](#iana) instead. This will be fixed in v0.1.2.
 
+example{
+
+```typst +preview linenums="1"
+#let dt = (
+  year: 2024, month: 5, day: 31,
+  hour: 18, minute: 2, second: 23,
+)
+
+#let f(offset, bcp47) = fmt-timezone(
+  offset: offset,
+  bcp47: bcp47,
+  zone-variant: "st",
+  local-date: dt,
+  includes: "specific-non-location-long",
+  locale: "en"
+)
+#set enum(start: 16)
+
++ #f("+01", "debsngn")
++ #f("+07", "khpnh")
++ #f("+12", "mhmaj")
++ #f("+01", "nenim")
++ #f("-08", "pst8pdt")
++ #f("+09", "ruchita")
++ #f("+11", "sbhir")
++ #f("+12", "tvfun")
++ #f("+05", "invalid")
+```
+
+}example
+
 ### `local-date`
 
 A local date to calculate the [`metazone-id`](#metazone-id). This is mutually exclusive with [`metazone-id`](#metazone-id). When formatting [zoned-datetimes](./fmt-zoned-datetime.md) this isn't necessary. [metaZones.xml](https://github.com/unicode-org/cldr/blob/main/common/supplemental/metaZones.xml) contains a mapping of time zones to metazones at specific dates.
@@ -124,9 +155,70 @@ example{
 
 A short ID of the metazone. A metazone is a collection of multiple time zones that share the same localized formatting at a particular date and time (e.g. `#!typst-code "phil"` - see [metaZones.xml](https://github.com/unicode-org/cldr/blob/main/common/supplemental/metaZones.xml) (bottom)).
 
+example{
+
+```typst +preview linenums="1"
+#let f(metazone-id) = fmt-timezone(
+  offset: "Z", // (1)!
+  zone-variant: "st",
+  metazone-id: metazone-id,
+  includes: "specific-non-location-long",
+  locale: "en"
+)
+#set enum(start: 10)
+
++ #f("arge")
++ #f("chri")
++ #f("dumo")
++ #f("eufe")
++ #f("haal")
++ #f("loho")
++ #f("niue")
++ #f("kosr")
++ #f("----") // invalid
+```
+
+1. `offset` doesn't need to correspond to the metazone.
+
+}example
+
 ### `zone-variant`
 
 Many metazones use different names and offsets in the summer than in the winter. In ICU4X, this is called the _zone variant_. Supports `#!typst-code none`, `#!typst-code "st"` (standard), and `#!typst-code "dt"` (daylight).
+
+example{
+
+```typst +preview(vertical)
+#let f(metazone-id, variant) = fmt-timezone(
+  offset: "Z", // (1)!
+  zone-variant: variant,
+  metazone-id: metazone-id,
+  includes: "specific-non-location-long",
+  locale: "en"
+)
+
+#let c(metazone-id) = (
+  f(metazone-id, "st"),
+  f(metazone-id, "dt")
+)
+
+#table(
+  columns: (auto, auto),
+  table.header([*st* (standard)],[*dt* (daylight)]),
+  ..c("ammo"),
+  ..c("coco"), // (2)!
+  ..c("euea"),
+  ..c("haal"),
+  ..c("loho"),
+  ..c("mosc"),
+  ..c("neze"),
+)
+```
+
+1. `offset` doesn't need to correspond to the metazone.
+2. Cocos Islands only have a single timezone (no summer/winter time).
+
+}example
 
 ### `locale`
 
