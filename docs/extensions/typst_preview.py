@@ -196,7 +196,7 @@ def custom_formatter(
             site_folder.mkdir(parents=True)
 
         def paths_for(is_dark: bool):
-            filename = f"{base}_{"d" if is_dark else "l"}.svg"
+            filename = f"{base}_{'d' if is_dark else 'l'}.svg"
             return (
                 dump_folder / filename,
                 site_folder / filename,
