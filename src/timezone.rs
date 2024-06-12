@@ -38,7 +38,7 @@ pub enum MetazoneSpec {
 #[derive(Deserialize)]
 #[serde(rename_all = "kebab-case")]
 pub enum TimezoneIdSpec {
-    Bcp47(icu_timezone::TimeZoneBcp47Id),
+    Bcp47(String),
     Iana(String),
 }
 
@@ -114,7 +114,13 @@ impl TryFrom<Spec> for CustomTimeZone {
         };
 
         match value.timezone_id {
-            Some(TimezoneIdSpec::Bcp47(bcp)) => base.time_zone_id = Some(bcp),
+            Some(TimezoneIdSpec::Bcp47(bcp)) => {
+                base.time_zone_id = Some(
+                    bcp.as_str()
+                        .parse()
+                        .map_err(|e| Self::Error::TinyStr(e, bcp))?,
+                )
+            }
             Some(TimezoneIdSpec::Iana(iana)) => {
                 let mapper = TimeZoneIdMapper::new();
                 let mapped = mapper.as_borrowed().iana_to_bcp47(&iana);

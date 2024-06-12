@@ -30,6 +30,8 @@ pub enum Error {
     Fmt(#[from] std::fmt::Error),
     #[error("Failed to interpret as UTF-8: {0}")]
     Utf8(#[from] std::str::Utf8Error),
+    #[error("Failed to convert string {0} (source: '{1}')")]
+    TinyStr(tinystr::TinyStrError, String),
 }
 
 macro_rules! make_formatter {

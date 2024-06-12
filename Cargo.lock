@@ -110,6 +110,7 @@ dependencies = [
  "icu_timezone",
  "serde",
  "thiserror",
+ "tinystr",
  "wasm-minimal-protocol",
  "writeable",
 ]

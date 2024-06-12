@@ -16,6 +16,7 @@ icu_timezone = { version = "1.5.0", features = ["serde", "std"] }
 icu_locid = { version = "1.5.0", features = ["serde", "std"] }
 icu_provider = { version = "1.5.0" }
 writeable = "0.5.5"
+tinystr = "0.7.6"
 
 wasm-minimal-protocol = { git = "https://github.com/astrale-sharp/wasm-minimal-protocol" }
 thiserror = "1.0"
