@@ -81,6 +81,7 @@ class PreviewPreprocessor(Preprocessor):
 
             # find the end of this fence
             block = []
+            k = i
             for k in range(i + 1, len(lines)):
                 line = lines[k]
                 block.append(line)
