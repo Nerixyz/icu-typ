@@ -22,6 +22,7 @@ Types of changes:
 ### Added
 
 - The documentation is now hosted at [nerixyz.github.io/icu-typ](https://nerixyz.github.io/icu-typ/) and includes more examples.
+- The [`offset`](https://nerixyz.github.io/icu-typ/fmt-timezone/#offset) in time zones can be specified as an `int` which specifies the offset in seconds.
 
 ### Fixed
 

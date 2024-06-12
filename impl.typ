@@ -40,7 +40,7 @@
 
   zone-variant: none,
 ) = {
-  assert(type(offset) == str)
+  assert(type(offset) == str or type(offset) == int)
 
   assert(iana == none or type(iana) == str)
   assert(bcp47 == none or type(bcp47) == str)
