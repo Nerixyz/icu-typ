@@ -81,12 +81,12 @@ This documentation was built on #fmt-date(datetime.today()).
 #fmt-timezone(
   ..tz,
   local-date: dt,
-  includes: "specific-non-location-long"
+  format: "specific-non-location-long"
 ) \
 #fmt-timezone(
   ..tz,
   local-date: dt,
-  includes: (
+  format: (
     iso8601: (
       format: "utc-extended",
       minutes: "required",

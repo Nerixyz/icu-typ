@@ -18,7 +18,7 @@ let fmt-timezone(
 
   locale: "en",
   fallback: "localized-gmt",
-  includes: ()
+  format: none
 )
 ```
 
@@ -28,7 +28,7 @@ Formats a timezone in some [`locale`](#locale).
 
 ### `offset`
 
-A `str` specifying the GMT offset as an [ISO-8601 time zone designator](https://en.wikipedia.org/wiki/ISO_8601#Time_zone_designators) (`Z`, `±hh`, `±hh:mm`, or `±hhmm`). _(required)_
+A `str` specifying the GMT offset as an [ISO-8601 time zone designator](https://en.wikipedia.org/wiki/ISO_8601#Time_zone_designators) (`Z`, `±hh`, `±hh:mm`, or `±hhmm`). Since v0.1.2, this can be an `int` which specifies the offset in seconds. _(required)_
 
 example{
 
@@ -39,7 +39,13 @@ example{
 - #fmt-timezone(offset: "+1445")
 - #fmt-timezone(offset: "Z")
 - #fmt-timezone(offset: "-00")
+// v0.1.2 and later:
+- #fmt-timezone(offset: 60 * 60)
+- #fmt-timezone(offset: 30 * 60)
+- #fmt-timezone(offset: 30 * 60 + 30) // (1)!
 ```
+
+1. See [`iso8601` fallback format](#fallback).
 
 }example
 
@@ -60,7 +66,7 @@ example{
   iana: iana,
   zone-variant: "st",
   local-date: dt,
-  includes: "specific-non-location-short",
+  format: "specific-non-location-short",
   locale: locale
 )
 #set enum(start: 16)
@@ -100,7 +106,7 @@ example{
   bcp47: bcp47,
   zone-variant: "st",
   local-date: dt,
-  includes: "specific-non-location-long",
+  format: "specific-non-location-long",
   locale: "en"
 )
 #set enum(start: 16)
@@ -135,7 +141,7 @@ example{
   iana: iana,
   zone-variant: "st",
   local-date: dt(year),
-  includes: "specific-non-location-long",
+  format: "specific-non-location-long",
 )
 
 - #f("Africa/Tripoli", 1981)
@@ -162,7 +168,7 @@ example{
   offset: "Z", // (1)!
   zone-variant: "st",
   metazone-id: metazone-id,
-  includes: "specific-non-location-long",
+  format: "specific-non-location-long",
   locale: "en"
 )
 #set enum(start: 10)
@@ -193,7 +199,7 @@ example{
   offset: "Z", // (1)!
   zone-variant: variant,
   metazone-id: metazone-id,
-  includes: "specific-non-location-long",
+  format: "specific-non-location-long",
   locale: "en"
 )
 
@@ -224,20 +230,202 @@ example{
 
 The locale to use when formatting the timezone. A [Unicode Locale Identifier].
 
+example{
+
+```typst +preview
+#let f(
+  locale,
+  metazone-id: none,
+  offset: "Z",
+) = fmt-timezone(
+  offset: offset,
+  zone-variant: "st",
+  metazone-id: metazone-id,
+  format: "specific-non-location-long",
+  locale: locale,
+)
+
+- #f("ko", metazone-id: "bang")
+- #f("lo", metazone-id: "cook")
+- #f("ms", metazone-id: "inwe")
+- #f("nl", metazone-id: "peru")
+- #f("en", offset: "+06")
+- #f("fi", offset: "+06")
+- #f("si", offset: "+06")
+```
+
+}example
+
 ### `fallback`
 
-The timezone format fallback. Either `#!typst-code "localized-gmt"` or a dictionary for an ISO 8601 fallback (e.g. `#!typst-code (iso8601: (format: "basic", minutes: "required", seconds: "never"))`).
+The timezone format fallback. Either `#!typst-code "localized-gmt"` or a dictionary for an [ISO 8601](#iso-8601) fallback (e.g. `#!typst-code (iso8601: (format: "basic", minutes: "required", seconds: "never"))`).
 
-### `includes`
+example{
 
-An array or a single item (str/dictionary) of part(s) to include - corresponds to calls on [`TimeZoneFormatter`](https://docs.rs/icu/latest/icu/datetime/time_zone/struct.TimeZoneFormatter.html). Valid options are:
+```typst +preview
+#let f(
+  offset,
+  iso: none,
+  minutes: true,
+  seconds: false,
+  locale: "en"
+) = fmt-timezone(
+  offset: offset,
+  fallback: if iso != none {(
+      iso8601: (
+        format: iso,
+        minutes: if minutes {
+          "required"
+        } else {
+          "optional"
+        },
+        seconds: if seconds {
+          "optional"
+        } else {
+          "never"
+        },
+      )
+  )} else {
+    "localized-gmt"
+  },
+  locale: locale,
+)
 
-- `generic-location-format` (e.g. "Los Angeles Time")
-- `generic-non-location-long` (e.g. "Pacific Time")
-- `generic-non-location-short` (e.g. "PT")
-- `localized-gmt-format` (e.g. "GMT-07:00")
-- `specific-non-location-long` (e.g. "Pacific Standard Time")
-- `specific-non-location-short` (e.g. "PDT")
-- `iso8601`: A dictionary of ISO 8601 options `#!typst-code (iso8601: (format: "utc-basic", minutes: "optional", seconds: "optional"))` (e.g. "-07:00")
+- #f("+06")
+- #f("+06", locale: "cs")
+- #f("+06", locale: "da")
+- #f("+06", iso: "basic")
+- #f("+06", iso: "extended")
+- #f("+06", iso: "utc-basic")
+- #f("+06", iso: "utc-extended")
+\
+- #f("Z", iso: "basic")
+- #f("Z", iso: "extended")
+- #f("Z", iso: "utc-basic")
+- #f("Z", iso: "utc-extended")
+\
+// 1h 30min 30s
+#let sec = 90 * 60 + 30
+- #f(sec, iso: "extended")
+- #f(sec, iso: "extended", seconds: true)
+- #f(sec, iso: "extended", minutes: false)
+- #f(60 * 60, iso: "extended", minutes: false)
+```
+
+}example
+
+### `format`
+
+The format to display a time zone as (see [Time Zone Format Terminology](https://unicode.org/reports/tr35/tr35-dates.html#time-zone-format-terminology)). Note that not every [`locale`](#locale) has definitions for all formats. If none is found, [`fallback`](#fallback) will be used to format the timezone. Valid options are:
+
+- `generic-location` (e.g. "Los Angeles Time") [`bcp47`](#bcp47) or [`iana`](#iana) must be specified
+- `generic-non-location-long` (e.g. "Pacific Time") [`local-date`](#local-date) or [`metazone-id`](#metazone-id) must be specified
+- `generic-non-location-short` (e.g. "PT") [`local-date`](#local-date) or [`metazone-id`](#metazone-id) must be specified
+- `localized-gmt` (e.g. "GMT-07:00")
+- `specific-non-location-long` (e.g. "Pacific Standard Time") [`local-date`](#local-date) or [`metazone-id`](#metazone-id) must be specified
+- `specific-non-location-short` (e.g. "PDT") [`local-date`](#local-date) or [`metazone-id`](#metazone-id) must be specified.
+- A dictionary of [ISO 8601](#iso-8601) options (e.g. "-07:00")
+
+example{
+
+```typst +preview(vertical)
+#let dt = datetime(
+  year: 2024, month: 5, day: 31,
+  hour: 0, minute: 0, second: 0,
+)
+
+#let f(offset, iana, locale: "en") = (
+  "generic-location",
+  "generic-non-location-long",
+  "generic-non-location-short",
+  "localized-gmt",
+  "specific-non-location-long",
+  "specific-non-location-short"
+).map(format => fmt-timezone(
+  offset: offset,
+  zone-variant: "st",
+  iana: iana,
+  local-date: dt,
+  format: format,
+  locale: locale
+))
+
+#let hc(..args) = table.cell(align: center, ..args)
+
+#table(
+  columns: (auto, auto, auto, auto, auto, auto),
+  hc(rowspan: 2, align: bottom + center)[generic-location],
+  hc(colspan: 2)[generic-non-location-],
+  hc(rowspan: 2, align: bottom)[localized-gmt],
+  hc(colspan: 2)[specific-non-location-],
+  hc(x: 1)[long],
+  hc[short],
+  hc(x: 4)[long],
+  hc[short],
+
+  ..f("-11", "Pacific/Midway"),
+  ..f("-07", "US/Pacific"),
+  ..f("-06", "Mexico/General"),
+  ..f("-05", "Jamaica"),
+  ..f("-04", "Chile/Continental", locale: "es-CL"),
+  ..f("-03:30", "Canada/Newfoundland", locale: "en-CA"),
+  ..f("-03", "Brazil/East", locale: "pt-BR"),
+  ..f("-02", "America/Godthab"),
+  ..f("-01", "Atlantic/Azores"),
+  ..f("Z", "Africa/Timbuktu"),
+  ..f("+01", "Arctic/Longyearbyen", locale: "en-GB"),
+  ..f("+02", "Africa/Johannesburg", locale: "en-ZA"),
+  ..f("+03", "Indian/Mayotte", locale: "en-MG"),
+)
+```
+
+}example
+
+#### ISO-8601
+
+ISO-8601 options are passed as a dictionary inside a dictionary with the `#!typst-code iso8601` key. The options must include the following keys:
+
+- `#!typst-code format`: one of `#!typst-code "basic"`, `#!typst-code "extended"`, `#!typst-code "utc-basic"`, or `#!typst-code "utc-extended"`
+- `#!typst-code minutes`: either `#!typst-code "required"` or `#!typst-code "optional"`
+- `#!typst-code seconds`: either `#!typst-code "optional"` or `#!typst-code "never"`
+
+example{
+
+```typst +preview
+#let f(
+  offset,
+  format,
+  minutes: "required",
+  seconds: "never",
+) = fmt-timezone(
+  offset: offset,
+  format: (
+      iso8601: (
+        format: format,
+        minutes: minutes,
+        seconds: seconds,
+    ),
+  ),
+)
+
+- #f("-03", "basic")
+- #f("-03", "extended")
+- #f("-03", "utc-basic")
+- #f("-03", "utc-extended")
+\
+- #f("Z", "basic")
+- #f("Z", "extended")
+- #f("Z", "utc-basic")
+- #f("Z", "utc-extended")
+\
+// 2h 30min 30s
+#let sec = 2 * 60 * 60 + 30 * 60 + 30
+- #f(sec, "extended")
+- #f(sec, "extended", seconds: "optional")
+- #f(sec, "extended", minutes: "optional")
+- #f(2 * 60 * 60, "extended", minutes: "optional")
+```
+
+}example
 
 [Unicode Locale Identifier]: https://unicode.org/reports/tr35/tr35.html#Unicode_locale_identifier

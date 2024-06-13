@@ -25,14 +25,16 @@
 }
 
 .typst-preview > .typst-source > .highlight,
-.typst-preview > .typst-source > .highlight > :is(pre, .highlighttable),
-.typst-preview > .typst-source > .highlight > pre > code {
+.typst-preview > .typst-source > .highlight > :is(pre, .highlighttable) {
   height: 100%;
+}
+
+.typst-preview > .typst-source > .highlight > :is(.highlighttable, pre) {
+  background: var(--md-code-bg-color);
 }
 
 .typst-preview > .typst-source > .highlight > .highlighttable {
   margin: 0;
-  background: var(--md-code-bg-color);
 }
 
 .typst-preview > .typst-source > .highlight > pre {
