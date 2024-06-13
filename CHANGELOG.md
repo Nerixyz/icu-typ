@@ -24,6 +24,11 @@ Types of changes:
 - The documentation is now hosted at [nerixyz.github.io/icu-typ](https://nerixyz.github.io/icu-typ/) and includes more examples.
 - The [`offset`](https://nerixyz.github.io/icu-typ/fmt-timezone/#offset) in time zones can be specified as an `int` which specifies the offset in seconds.
 
+### Changed
+
+- 🚧 [`fmt-timezone`](https://nerixyz.github.io/icu-typ/fmt-timezone): `includes` was renamed to `format` and doesn't accept an array anymore (passing an array with more than one item never worked).
+- 🚧 [`fmt-timezone`](https://nerixyz.github.io/icu-typ/fmt-timezone): The `-format` suffix for options of [`format`](https://nerixyz.github.io/icu-typ/fmt-timezone#format) was removed.
+
 ### Fixed
 
 - Setting [`bcp47`](https://nerixyz.github.io/icu-typ/fmt-timezone/#bcp47) in time zones now works correctly.

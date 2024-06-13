@@ -61,12 +61,12 @@ See [nerixyz.github.io/icu-typ](https://nerixyz.github.io/icu-typ) for a full AP
 #fmt-timezone(
   ..tz,
   local-date: dt,
-  includes: "specific-non-location-long"
+  format: "specific-non-location-long"
 ) \
 #fmt-timezone(
   ..tz,
   local-date: dt,
-  includes: (
+  format: (
     iso8601: (
       format: "utc-extended",
       minutes: "required",

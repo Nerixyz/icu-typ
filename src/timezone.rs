@@ -18,7 +18,7 @@ pub struct Spec {
 pub struct FormatOptions {
     pub locale: String,
     pub fallback: FallbackSpec,
-    pub includes: Vec<IncludeSpec>,
+    pub format: Option<IncludeSpec>,
 }
 
 #[derive(Deserialize)]
@@ -84,10 +84,10 @@ pub enum IncludeSpec {
         minutes: IsoMinutesSpec,
         seconds: IsoSecondsSpec,
     },
-    GenericLocationFormat,
+    GenericLocation,
     GenericNonLocationLong,
     GenericNonLocationShort,
-    LocalizedGmtFormat,
+    LocalizedGmt,
     SpecificNonLocationLong,
     SpecificNonLocationShort,
 }
@@ -95,7 +95,7 @@ pub enum IncludeSpec {
 pub fn format(tz: CustomTimeZone, formatter_opts: FormatOptions) -> Result<Vec<u8>, crate::Error> {
     let locale = Locale::from_str(&formatter_opts.locale)?;
     let mut formatter = TimeZoneFormatter::try_new(&locale.into(), formatter_opts.fallback.into())?;
-    for spec in formatter_opts.includes {
+    if let Some(spec) = formatter_opts.format {
         spec.apply(&mut formatter)?;
     }
 
@@ -213,10 +213,10 @@ impl IncludeSpec {
                 minutes,
                 seconds,
             } => f.include_iso_8601_format((*format).into(), (*minutes).into(), (*seconds).into()),
-            IncludeSpec::GenericLocationFormat => f.include_generic_location_format(),
+            IncludeSpec::GenericLocation => f.include_generic_location_format(),
             IncludeSpec::GenericNonLocationLong => f.include_generic_non_location_long(),
             IncludeSpec::GenericNonLocationShort => f.include_generic_non_location_short(),
-            IncludeSpec::LocalizedGmtFormat => f.include_localized_gmt_format(),
+            IncludeSpec::LocalizedGmt => f.include_localized_gmt_format(),
             IncludeSpec::SpecificNonLocationLong => f.include_specific_non_location_long(),
             IncludeSpec::SpecificNonLocationShort => f.include_specific_non_location_short(),
         }

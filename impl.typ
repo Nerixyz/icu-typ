@@ -180,7 +180,7 @@
 ///
 /// `locale`: A Unicode Locale Identifier (see https://unicode.org/reports/tr35/tr35.html#Unicode_locale_identifier)
 /// `fallback`: The timezone format fallback. Either `"LocalizedGmt"` or a dictionary for an ISO 8601 fallback (e.g. `(iso8601: (format: "basic", minutes: "required", seconds: "never"))`).
-/// `includes`: An array or a single item (str/dictionary) of part(s) to include - corresponds to calls on `TimeZoneFormatter` (https://docs.rs/icu/latest/icu/datetime/time_zone/struct.TimeZoneFormatter.html). Valid options are:
+/// `format`: The format to display a time zone as (see https://unicode.org/reports/tr35/tr35-dates.html#time-zone-format-terminology). Valid options are:
 ///   `generic-location-format` (e.g. "Los Angeles Time")
 ///   `generic-non-location-long` (e.g. "Pacific Time")
 ///   `generic-non-location-short` (e.g. "PT")
@@ -201,9 +201,9 @@
 
   locale: "en",
   fallback: "localized-gmt",
-  includes: ()
+  format: none
 ) = {
-  assert(type(includes) == array or type(includes) == str or type(includes) == dictionary)
+  assert(format == none or type(format) == str or type(format) == dictionary)
   assert(type(locale) == str)
   assert(type(offset) == str or type(offset) == int)
 
@@ -219,7 +219,7 @@
   let opts = (
     locale: locale,
     fallback: fallback,
-    includes: if type(includes) == array { includes } else { (includes,) },
+    format: format,
   )
   str(plug.format_timezone(cbor.encode(tz), cbor.encode(opts)))
 }

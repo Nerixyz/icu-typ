@@ -8,7 +8,7 @@
     "New Computer Modern",
     "New Computer Modern Math",
     "DejaVu Sans Mono",
-    "Microsoft JhengHei",
+    "Noto Serif SC",
   )
 )
 
@@ -57,12 +57,12 @@
 #fmt-timezone(
   ..tz,
   local-date: dt,
-  includes: "specific-non-location-long"
+  format: "specific-non-location-long"
 ) \
 #fmt-timezone(
   ..tz,
   local-date: dt,
-  includes: (
+  format: (
     iso8601: (
       format: "utc-extended",
       minutes: "required",
