@@ -60,12 +60,11 @@ See [nerixyz.github.io/icu-typ](https://nerixyz.github.io/icu-typ) for a full AP
 = Timezones (experimental)
 #fmt-timezone(
   ..tz,
-  local-date: dt,
+  local-date: datetime.today(),
   format: "specific-non-location-long"
 ) \
 #fmt-timezone(
   ..tz,
-  local-date: dt,
   format: (
     iso8601: (
       format: "utc-extended",

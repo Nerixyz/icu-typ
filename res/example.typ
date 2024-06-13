@@ -56,12 +56,11 @@
 = Timezone (experimental)
 #fmt-timezone(
   ..tz,
-  local-date: dt,
+  local-date: datetime.today(),
   format: "specific-non-location-long"
 ) \
 #fmt-timezone(
   ..tz,
-  local-date: dt,
   format: (
     iso8601: (
       format: "utc-extended",

@@ -64,14 +64,6 @@ This documentation was built on #fmt-date(datetime.today()).
 ## Timezones (🚧 experimental)
 
 ```typst +preview
-#let dt = datetime(
-  year: 2024,
-  month: 5,
-  day: 31,
-  hour: 18,
-  minute: 2,
-  second: 23,
-)
 #let tz = (
   offset: "-07",
   iana: "America/Los_Angeles",
@@ -80,12 +72,11 @@ This documentation was built on #fmt-date(datetime.today()).
 
 #fmt-timezone(
   ..tz,
-  local-date: dt,
+  local-date: datetime.today(),
   format: "specific-non-location-long"
 ) \
 #fmt-timezone(
   ..tz,
-  local-date: dt,
   format: (
     iso8601: (
       format: "utc-extended",

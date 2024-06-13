@@ -56,16 +56,11 @@ Name of the IANA TZ identifier (e.g. `#!typst-code "Brazil/West"` - see [IANA](h
 example{
 
 ```typst +preview linenums="1"
-#let dt = (
-  year: 2024, month: 5, day: 31,
-  hour: 18, minute: 2, second: 23,
-)
-
 #let f(offset, iana, locale: "en") = fmt-timezone(
   offset: offset,
   iana: iana,
   zone-variant: "st",
-  local-date: dt,
+  local-date: datetime.today(),
   format: "specific-non-location-short",
   locale: locale
 )
@@ -96,16 +91,11 @@ Name of the BCP-47 timezone ID (e.g. `#!typst-code "iodga"` - see [timezone.xml]
 example{
 
 ```typst +preview linenums="1"
-#let dt = (
-  year: 2024, month: 5, day: 31,
-  hour: 18, minute: 2, second: 23,
-)
-
 #let f(offset, bcp47) = fmt-timezone(
   offset: offset,
   bcp47: bcp47,
   zone-variant: "st",
-  local-date: dt,
+  local-date: datetime.today(),
   format: "specific-non-location-long",
   locale: "en"
 )
@@ -126,14 +116,16 @@ example{
 
 ### `local-date`
 
-A local date to calculate the [`metazone-id`](#metazone-id). This is mutually exclusive with [`metazone-id`](#metazone-id). When formatting [zoned-datetimes](./fmt-zoned-datetime.md) this isn't necessary. [metaZones.xml](https://github.com/unicode-org/cldr/blob/main/common/supplemental/metaZones.xml) contains a mapping of time zones to metazones at specific dates.
+A local date to calculate the [`metazone-id`](#metazone-id). This is mutually exclusive with [`metazone-id`](#metazone-id). This can be a dictionary or a [`datetime`](https://typst.app/docs/reference/foundations/datetime) with or without time (`hour`, `minute`, `second` - these will be 0 by default).
+When formatting [zoned-datetimes](./fmt-zoned-datetime.md) this isn't necessary. [metaZones.xml](https://github.com/unicode-org/cldr/blob/main/common/supplemental/metaZones.xml) contains a mapping of time zones to metazones at specific dates.
 
 example{
 
 ```typst +preview
 #let dt(year) = (
   year: year, month: 1, day: 1,
-  hour: 12, minute: 0, second: 0,
+  hour: 12,
+  // minute and second default to 0
 )
 
 #let f(iana, year) = fmt-timezone(
@@ -329,11 +321,6 @@ The format to display a time zone as (see [Time Zone Format Terminology](https:/
 example{
 
 ```typst +preview(vertical)
-#let dt = datetime(
-  year: 2024, month: 5, day: 31,
-  hour: 0, minute: 0, second: 0,
-)
-
 #let f(offset, iana, locale: "en") = (
   "generic-location",
   "generic-non-location-long",
@@ -345,7 +332,7 @@ example{
   offset: offset,
   zone-variant: "st",
   iana: iana,
-  local-date: dt,
+  local-date: datetime.today(),
   format: format,
   locale: locale
 ))

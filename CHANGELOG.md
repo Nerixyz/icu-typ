@@ -28,6 +28,7 @@ Types of changes:
 
 - 🚧 [`fmt-timezone`](https://nerixyz.github.io/icu-typ/fmt-timezone): `includes` was renamed to `format` and doesn't accept an array anymore (passing an array with more than one item never worked).
 - 🚧 [`fmt-timezone`](https://nerixyz.github.io/icu-typ/fmt-timezone): The `-format` suffix for options of [`format`](https://nerixyz.github.io/icu-typ/fmt-timezone#format) was removed.
+- 🚧 [`fmt-timezone`](https://nerixyz.github.io/icu-typ/fmt-timezone): `local-date` now accepts dictionaries and datetimes without `hour`, `minute`, and `second` (default to `0`) to be able to use `datetime.today()`.
 
 ### Fixed
 

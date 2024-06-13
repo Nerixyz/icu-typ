@@ -69,11 +69,19 @@
     assert(
       type(dt.year) == int and 
       type(dt.month) == int and 
-      type(dt.day) == int and
-      type(dt.hour) == int and 
-      type(dt.minute) == int and 
-      type(dt.second) == int
+      type(dt.day) == int
     )
+
+    if dt.at("hour", default: none) == none {
+      dt.hour = 0
+    }
+    if dt.at("minute", default: none) == none {
+      dt.minute = 0
+    }
+    if dt.at("second", default: none) == none {
+      dt.second = 0
+    }
+
     tz.insert("metazone", (local-date: dt))
   }
 
