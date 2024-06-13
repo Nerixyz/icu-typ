@@ -251,8 +251,8 @@
 ) = {
   assert(type(zone) == dictionary)
   assert(type(locale) == str)
-  assert(type(date-length) == str)
-  assert(type(time-length) == str)
+  assert(date-length == none or type(date-length) == str)
+  assert(time-length == none or type(time-length) == str)
 
   let dt = datetime-to-dict(dt)
   let tz = make-timezone-dict(
