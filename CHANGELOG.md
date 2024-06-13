@@ -19,6 +19,8 @@ Types of changes:
 
 ## [Unreleased]
 
+## [0.1.2] - 2024-06-13
+
 ### Added
 
 - The documentation is now hosted at [nerixyz.github.io/icu-typ](https://nerixyz.github.io/icu-typ/) and includes more examples.
@@ -62,6 +64,7 @@ Types of changes:
 - `fmt-timezone` (🚧 experimental)
 - `fmt-zoned-datetime` (🚧 experimental)
 
-[unreleased]: https://github.com/Nerixyz/icu-typ/compare/v0.1.1...HEAD
+[unreleased]: https://github.com/Nerixyz/icu-typ/compare/v0.1.2...HEAD
+[0.1.2]: https://github.com/Nerixyz/icu-typ/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/Nerixyz/icu-typ/releases/tag/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/Nerixyz/icu-typ/releases/tag/v0.1.0

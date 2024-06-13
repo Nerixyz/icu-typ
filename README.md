@@ -12,7 +12,7 @@ See [nerixyz.github.io/icu-typ](https://nerixyz.github.io/icu-typ) for a full AP
 ## Example
 
 ```typ
-#import "@preview/icu-datetime:0.1.1": fmt-date, fmt-time, fmt-datetime, experimental
+#import "@preview/icu-datetime:0.1.2": fmt-date, fmt-time, fmt-datetime, experimental
 // These functions may change at any time
 #import experimental: fmt-timezone, fmt-zoned-datetime
 
@@ -94,7 +94,7 @@ Documentation can be found on [nerixyz.github.io/icu-typ](https://nerixyz.github
 
 ## Using Locally
 
-Download the [latest release](https://github.com/Nerixyz/icu-typ/releases), unzip it to your [local Typst packages](https://github.com/typst/packages#local-packages), and use `#import "@local/icu-datetime:0.1.1"`.
+Download the [latest release](https://github.com/Nerixyz/icu-typ/releases), unzip it to your [local Typst packages](https://github.com/typst/packages#local-packages), and use `#import "@local/icu-datetime:0.1.2"`.
 
 ## Building
 
