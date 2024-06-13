@@ -85,7 +85,7 @@ See [nerixyz.github.io/icu-typ](https://nerixyz.github.io/icu-typ) for a full AP
 ![Example](res/example.png)
 
 Locales must be [Unicode Locale Identifier]s.
-Use [`locale-info(locale)`](#locale-info) to get information on how a locale is parsed.
+Use [`locale-info(locale)`](https://nerixyz.github.io/icu-typ/locale-info/) to get information on how a locale is parsed.
 Unicode extensions are supported, so you can, for example, set the hour cycle with `hc-h12` or set the calendar with `ca-buddhist` (e.g. `en-CA-u-hc-h24-ca-buddhist`).
 
 ## Documentation
@@ -116,5 +116,4 @@ ln -s ./target/wasm32-unknown-unknown/debug/icu_typ.wasm icu-datetime.wasm
 
 Use `cargo b --target wasm32-unknown-unknown` to build in debug mode.
 
-[`datetime`]: https://typst.app/docs/reference/foundations/datetime/
 [Unicode Locale Identifier]: https://unicode.org/reports/tr35/tr35.html#Unicode_locale_identifier
