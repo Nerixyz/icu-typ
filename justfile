@@ -30,13 +30,13 @@ bundle: build (clean-dir "build")
     cp typst.toml build/.
     cp README.md build/.
     cp LICENSE build/.
-    cp res/example.png build/res/example.png
+    cp res/example.png build/res/.
     wasm-opt -Oz ./target/wasm32-unknown-unknown/release/icu_typ.wasm -o ./build/icu-datetime.wasm
 
 [unix]
 deploy: bundle
     mkdir -p {{local-dir}}
-    cp build/* {{local-dir}}/.
+    cp -r build/* {{local-dir}}/.
 
 [windows]
 deploy: bundle
