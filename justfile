@@ -18,18 +18,19 @@ build:
 [unix]
 clean-dir dir:
     rm -rf {{dir}}
-    mkdir -p {{dir}}
+    mkdir -p {{dir}}/res
 
 [windows]
 clean-dir dir:
     rm -Recurse {{dir}}
-    mkdir -Force {{dir}}
+    mkdir -Force {{dir}}/res
 
 bundle: build (clean-dir "build")
     cp *.typ build/.
     cp typst.toml build/.
     cp README.md build/.
     cp LICENSE build/.
+    cp res/example.png build/res/.
     wasm-opt -Oz ./target/wasm32-unknown-unknown/release/icu_typ.wasm -o ./build/icu-datetime.wasm
 
 [unix]
