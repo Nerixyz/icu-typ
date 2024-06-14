@@ -5,10 +5,10 @@ This library is a wrapper around [ICU4X](https://github.com/unicode-org/icu4x)' 
 ## Usage
 
 ```typst +preview(vertical mode="basic")
-#import "@preview/icu-datetime:0.1.1": fmt-date, fmt-time, fmt-datetime
+#import "@preview/icu-datetime:0.1.2": fmt-date, fmt-time, fmt-datetime
 
 // These functions may change at any time
-#import "@preview/icu-datetime:0.1.1": experimental
+#import "@preview/icu-datetime:0.1.2": experimental
 #import experimental: fmt-timezone, fmt-zoned-datetime
 
 This documentation was built on #fmt-date(datetime.today()).
