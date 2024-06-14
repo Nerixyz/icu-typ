@@ -43,3 +43,6 @@ deploy: bundle
     mkdir -Force {{local-dir}}
     cp build/* {{local-dir}}/.
 
+example:
+    typst c res/example.typ res/example.png --root .
+    optipng -o7 res/example.png
