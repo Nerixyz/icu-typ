@@ -41,7 +41,7 @@ deploy: bundle
 [windows]
 deploy: bundle
     mkdir -Force {{local-dir}}
-    cp build/* {{local-dir}}/.
+    cp -Force -Recurse build/* {{local-dir}}/.
 
 example:
     typst c res/example.typ res/example.png --root .
