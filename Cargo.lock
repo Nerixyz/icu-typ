@@ -85,7 +85,7 @@ checksum = "0febbeb1118a9ecdee6e4520ead6b54882e843dd0592ad233247dbee84c53db8"
 dependencies = [
  "displaydoc",
  "smallvec",
- "writeable",
+ "writeable 0.5.5",
 ]
 
 [[package]]
@@ -110,9 +110,9 @@ dependencies = [
  "icu_timezone",
  "serde",
  "thiserror",
- "tinystr",
+ "tinystr 0.8.0",
  "wasm-minimal-protocol",
- "writeable",
+ "writeable 0.6.0",
 ]
 
 [[package]]
@@ -128,8 +128,8 @@ dependencies = [
  "icu_locid_transform",
  "icu_provider",
  "serde",
- "tinystr",
- "writeable",
+ "tinystr 0.7.6",
+ "writeable 0.5.5",
  "zerovec",
 ]
 
@@ -159,8 +159,8 @@ dependencies = [
  "litemap",
  "serde",
  "smallvec",
- "tinystr",
- "writeable",
+ "tinystr 0.7.6",
+ "writeable 0.5.5",
  "zerovec",
 ]
 
@@ -182,7 +182,7 @@ dependencies = [
  "icu_locid_transform",
  "icu_provider",
  "serde",
- "writeable",
+ "writeable 0.5.5",
 ]
 
 [[package]]
@@ -200,8 +200,8 @@ dependencies = [
  "displaydoc",
  "litemap",
  "serde",
- "tinystr",
- "writeable",
+ "tinystr 0.7.6",
+ "writeable 0.5.5",
  "zerovec",
 ]
 
@@ -215,7 +215,7 @@ dependencies = [
  "icu_locid",
  "icu_locid_transform_data",
  "icu_provider",
- "tinystr",
+ "tinystr 0.7.6",
  "zerovec",
 ]
 
@@ -257,8 +257,8 @@ dependencies = [
  "icu_provider_macros",
  "serde",
  "stable_deref_trait",
- "tinystr",
- "writeable",
+ "tinystr 0.7.6",
+ "writeable 0.5.5",
  "yoke",
  "zerofrom",
  "zerovec",
@@ -286,7 +286,7 @@ dependencies = [
  "icu_provider",
  "icu_timezone_data",
  "serde",
- "tinystr",
+ "tinystr 0.7.6",
  "zerotrie",
  "zerovec",
 ]
@@ -419,6 +419,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "tinystr"
+version = "0.8.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b2b56a820bb70060f096338fcc02edb78cb3f8fb21c5078503f48588cfcaf494"
+dependencies = [
+ "displaydoc",
+]
+
+[[package]]
 name = "unicode-ident"
 version = "1.0.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -449,6 +458,12 @@ name = "writeable"
 version = "0.5.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1e9df38ee2d2c3c5948ea468a8406ff0db0b29ae1ffde1bcf20ef305bcc95c51"
+
+[[package]]
+name = "writeable"
+version = "0.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "74b3b5b7c6114bf7253093603034e102d479ecc8501deca33b6c1c816418b6d2"
 
 [[package]]
 name = "yoke"
