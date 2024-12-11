@@ -64,7 +64,7 @@ example{
   format: "specific-non-location-short",
   locale: locale
 )
-#set enum(start: 16)
+#set enum(start: 11)
 
 + #f("-06", "Canada/Central", locale: "fi")
 + #f("-05", "Canada/Eastern")
@@ -99,7 +99,7 @@ example{
   format: "specific-non-location-long",
   locale: "en"
 )
-#set enum(start: 16)
+#set enum(start: 11)
 
 + #f("+01", "debsngn")
 + #f("+07", "khpnh")
