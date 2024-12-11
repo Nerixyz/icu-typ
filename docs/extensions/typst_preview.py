@@ -142,7 +142,7 @@ class MyExtension(Extension):
 
 TEMPLATE_HEADER = r"""
 #let _is-dark = %s
-#set page(width: auto, height: auto, margin: 0.75cm)
+#set page(width: auto, height: auto, margin: 0.75cm, fill: none)
 #let _accent = if _is-dark { white } else { black }
 #set text(fill: _accent)
 #set table(stroke: _accent.transparentize(30%%))
@@ -208,7 +208,7 @@ def custom_formatter(
 
         light_dump_path, lite_site_path, lite_web_path = paths_for(False)
         dark_dump_path, dark_site_path, dark_web_path = paths_for(True)
-        if not light_dump_path.exists() or not dark_dump_path.exists:
+        if not light_dump_path.exists() or not dark_dump_path.exists():
             render_typst([(light_doc, light_dump_path), (dark_doc, dark_dump_path)])
             if site_dir is not None:
                 shutil.copy2(light_dump_path, lite_site_path)
