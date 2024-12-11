@@ -81,9 +81,5 @@ markdown_extensions:
 
 nav:
   - Home: index.md
-  - fmt-date.md
-  - fmt-time.md
-  - fmt-datetime.md
-  - fmt-timezone.md
-  - fmt-zoned-datetime.md
+  - fmt.md
   - locale-info.md

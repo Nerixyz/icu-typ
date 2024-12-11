@@ -12,9 +12,7 @@ See [nerixyz.github.io/icu-typ](https://nerixyz.github.io/icu-typ) for a full AP
 ## Example
 
 ```typ
-#import "@preview/icu-datetime:0.1.2": fmt-date, fmt-time, fmt-datetime, experimental
-// These functions may change at any time
-#import experimental: fmt-timezone, fmt-zoned-datetime
+#import "@preview/icu-datetime:0.2.0" as icu
 
 #let day = datetime(
   year: 2024,
@@ -40,44 +38,46 @@ See [nerixyz.github.io/icu-typ](https://nerixyz.github.io/icu-typ) for a full AP
   zone-variant: "st", // standard
 )
 
-= Dates
-#fmt-date(day, locale: "km", length: "full") \
-#fmt-date(day, locale: "af", length: "full") \
-#fmt-date(day, locale: "za", length: "full") \
+= Date
+#icu.fmt(day, locale: "km", date-fields: "YMDE") \
+#icu.fmt(day, locale: "af", date-fields: "YMDE") \
+#icu.fmt(day, locale: "za", date-fields: "YMDE") \
 
 = Time
-#fmt-time(time, locale: "id", length: "medium") \
-#fmt-time(time, locale: "en", length: "medium") \
-#fmt-time(time, locale: "ga", length: "medium") \
+#icu.fmt(time, locale: "id", time-precision: "second") \
+#icu.fmt(time, locale: "en", time-precision: "second") \
+#icu.fmt(time, locale: "ga", time-precision: "second") \
 
 = Date and Time
-#fmt-datetime(dt, locale: "ru", date-length: "full") \
-#fmt-datetime(dt, locale: "en-US", date-length: "full") \
-#fmt-datetime(dt, locale: "zh-Hans-CN", date-length: "full") \
-#fmt-datetime(dt, locale: "ar", date-length: "full") \
-#fmt-datetime(dt, locale: "fi", date-length: "full")
+#icu.fmt(dt, locale: "ru", length: "long") \
+#icu.fmt(dt, locale: "en-US", length: "long") \
+#icu.fmt(dt, locale: "zh-Hans-CN", length: "long") \
+#icu.fmt(dt, locale: "ar", length: "long") \
+#icu.fmt(dt, locale: "fi", length: "long")
 
-= Timezones (experimental)
-#fmt-timezone(
-  ..tz,
-  local-date: datetime.today(),
-  format: "specific-non-location-long"
+= Timezone
+#icu.fmt(
+  datetime.today(),
+  zone: tz,
+  zone-style: "specific-long",
 ) \
-#fmt-timezone(
-  ..tz,
-  format: (
-    iso8601: (
-      format: "utc-extended",
-      minutes: "required",
-      seconds: "optional",
-    )
-  )
+#icu.fmt(
+  datetime.today(),
+  zone: tz,
+  zone-style: "generic-short",
 )
 
-= Zoned Datetimes (experimental)
-#fmt-zoned-datetime(dt, tz) \
-#fmt-zoned-datetime(dt, tz, locale: "lv") \
-#fmt-zoned-datetime(dt, tz, locale: "en-CA-u-hc-h24-ca-buddhist")
+= Zoned Datetime
+#let opts = (
+  zone: tz,
+  date-fields: "YMDE",
+  time-precision: "second",
+  length: "long",
+)
+
+#icu.fmt(dt, ..opts, zone-style: "generic-short") \
+#icu.fmt(dt, ..opts, zone-style: "localized-offset-short", locale: "lv") \
+#icu.fmt(dt, ..opts, zone-style: "exemplar-city", locale: "en-CA-u-hc-h24-ca-buddhist")
 ```
 
 <!-- typst c res/example.typ res/example.png --root . -->
@@ -94,7 +94,7 @@ Documentation can be found on [nerixyz.github.io/icu-typ](https://nerixyz.github
 
 ## Using Locally
 
-Download the [latest release](https://github.com/Nerixyz/icu-typ/releases), unzip it to your [local Typst packages](https://github.com/typst/packages#local-packages), and use `#import "@local/icu-datetime:0.1.2"`.
+Download the [latest release](https://github.com/Nerixyz/icu-typ/releases), unzip it to your [local Typst packages](https://github.com/typst/packages#local-packages), and use `#import "@local/icu-datetime:0.2.0"`.
 
 ## Building
 

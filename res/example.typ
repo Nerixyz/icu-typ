@@ -1,5 +1,4 @@
-#import "../api.typ": *
-#import experimental: fmt-timezone, fmt-zoned-datetime
+#import "../api.typ" as icu
 
 #set page(width: auto, height: auto, margin: 1em)
 #set text(
@@ -9,7 +8,7 @@
     "New Computer Modern Math",
     "DejaVu Sans Mono",
     "Noto Serif SC",
-  )
+  ),
 )
 
 #let day = datetime(
@@ -37,47 +36,49 @@
 )
 
 = Date
-#fmt-date(day, locale: "km", length: "full") \
-#fmt-date(day, locale: "af", length: "full") \
-#fmt-date(day, locale: "za", length: "full") \
+#icu.fmt(day, locale: "km", date-fields: "YMDE") \
+#icu.fmt(day, locale: "af", date-fields: "YMDE") \
+#icu.fmt(day, locale: "za", date-fields: "YMDE") \
 
 = Time
-#fmt-time(time, locale: "id", length: "medium") \
-#fmt-time(time, locale: "en", length: "medium") \
-#fmt-time(time, locale: "ga", length: "medium") \
+#icu.fmt(time, locale: "id", time-precision: "second") \
+#icu.fmt(time, locale: "en", time-precision: "second") \
+#icu.fmt(time, locale: "ga", time-precision: "second") \
 
 = Date and Time
-#fmt-datetime(dt, locale: "ru", date-length: "full") \
-#fmt-datetime(dt, locale: "en-US", date-length: "full") \
-#fmt-datetime(dt, locale: "zh-Hans-CN", date-length: "full") \
-#fmt-datetime(dt, locale: "ar", date-length: "full") \
-#fmt-datetime(dt, locale: "fi", date-length: "full")
+#icu.fmt(dt, locale: "ru", length: "long") \
+#icu.fmt(dt, locale: "en-US", length: "long") \
+#icu.fmt(dt, locale: "zh-Hans-CN", length: "long") \
+#icu.fmt(dt, locale: "ar", length: "long") \
+#icu.fmt(dt, locale: "fi", length: "long")
 
-= Timezone (experimental)
-#fmt-timezone(
-  ..tz,
-  local-date: datetime.today(),
-  format: "specific-non-location-long"
+= Timezone
+#icu.fmt(
+  datetime.today(),
+  zone: tz,
+  zone-style: "specific-long",
 ) \
-#fmt-timezone(
-  ..tz,
-  format: (
-    iso8601: (
-      format: "utc-extended",
-      minutes: "required",
-      seconds: "optional",
-    )
-  )
+#icu.fmt(
+  datetime.today(),
+  zone: tz,
+  zone-style: "generic-short",
 )
 
-= Zoned Datetime (experimental)
-#fmt-zoned-datetime(dt, tz) \
-#fmt-zoned-datetime(dt, tz, locale: "lv") \
-#fmt-zoned-datetime(dt, tz, locale: "en-CA-u-hc-h24-ca-buddhist") \
+= Zoned Datetime
+#let opts = (
+  zone: tz,
+  date-fields: "YMDE",
+  time-precision: "second",
+  length: "long",
+)
+
+#icu.fmt(dt, ..opts, zone-style: "generic-short") \
+#icu.fmt(dt, ..opts, zone-style: "localized-offset-short", locale: "lv") \
+#icu.fmt(dt, ..opts, zone-style: "exemplar-city", locale: "en-CA-u-hc-h24-ca-buddhist")
 
 // the default undefined language
 #assert.eq(
-  locale-info("und"),
+  icu.locale-info("und"),
   (
     id: (
       language: "und",
@@ -90,13 +91,13 @@
       transform: (lang: none, fields: ""),
       private: (),
       other: (),
-    )
-  )
+    ),
+  ),
 )
 
 // full unicode language identifier
 #assert.eq(
-  locale-info("en-arab-DE-posix-macos-u-foo-bar-hc-h12-ca-buddhist-t-en-latn-US-windows-rusty-h0-hybrid-a-other-ext-x-typst-wasm"),
+  icu.locale-info("en-arab-DE-posix-macos-u-foo-bar-hc-h12-ca-buddhist-t-en-latn-US-windows-rusty-h0-hybrid-a-other-ext-x-typst-wasm"),
   (
     id: (
       language: "en",
@@ -121,5 +122,5 @@
       private: ("typst", "wasm"),
       other: ("a-other-ext",),
     ),
-  )
+  ),
 )

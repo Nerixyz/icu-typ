@@ -151,8 +151,7 @@ TEMPLATE_HEADER = r"""
 
 # requires `just deploy`
 IMPORTS = r"""
-#import "@local/icu-datetime:0.1.2": fmt-date, fmt-time, fmt-datetime, experimental, locale-info
-#import experimental: fmt-timezone, fmt-zoned-datetime
+#import "@local/icu-datetime:0.2.0" as icu
 """
 TEMPLATES = {
     "code": TEMPLATE_HEADER
