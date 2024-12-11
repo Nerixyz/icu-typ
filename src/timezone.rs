@@ -42,56 +42,6 @@ pub enum TimezoneIdSpec {
     Iana(String),
 }
 
-#[derive(Deserialize, Clone, Copy, PartialEq)]
-#[serde(rename_all = "kebab-case")]
-pub enum IsoFormatSpec {
-    Basic,
-    Extended,
-    UtcBasic,
-    UtcExtended,
-}
-
-#[derive(Deserialize, Clone, Copy, PartialEq)]
-#[serde(rename_all = "kebab-case")]
-pub enum IsoMinutesSpec {
-    Required,
-    Optional,
-}
-
-#[derive(Deserialize, Clone, Copy, PartialEq)]
-#[serde(rename_all = "kebab-case")]
-pub enum IsoSecondsSpec {
-    Never,
-    Optional,
-}
-
-#[derive(Deserialize)]
-#[serde(rename_all = "kebab-case")]
-pub enum FallbackSpec {
-    Iso8601 {
-        format: IsoFormatSpec,
-        minutes: IsoMinutesSpec,
-        seconds: IsoSecondsSpec,
-    },
-    LocalizedGmt,
-}
-
-#[derive(Deserialize)]
-#[serde(rename_all = "kebab-case")]
-pub enum IncludeSpec {
-    Iso8601 {
-        format: IsoFormatSpec,
-        minutes: IsoMinutesSpec,
-        seconds: IsoSecondsSpec,
-    },
-    GenericLocation,
-    GenericNonLocationLong,
-    GenericNonLocationShort,
-    LocalizedGmt,
-    SpecificNonLocationLong,
-    SpecificNonLocationShort,
-}
-
 pub fn format(tz: CustomTimeZone, formatter_opts: FormatOptions) -> Result<Vec<u8>, crate::Error> {
     let locale = Locale::from_str(&formatter_opts.locale)?;
     let mut formatter = TimeZoneFormatter::try_new(&locale.into(), formatter_opts.fallback.into())?;

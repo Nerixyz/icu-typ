@@ -15,7 +15,7 @@ pub struct Spec {
 #[derive(Deserialize)]
 pub struct FormatOptions {
     pub locale: String,
-    pub length: icu_datetime::options::length::Date,
+    pub fields: CompositeFieldSetSerde,
 }
 
 pub fn format(
