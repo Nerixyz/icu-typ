@@ -44,7 +44,7 @@ jobs:
           name: icu-datetime.zip
           path: icu-datetime.zip
 
-      - uses: typst-community/setup-typst@v3
+      - uses: typst-community/setup-typst@v4
 
       - uses: actions/setup-python@v5
         with:
