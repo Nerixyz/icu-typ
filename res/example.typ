@@ -4,7 +4,7 @@
 #set page(width: auto, height: auto, margin: 1em)
 #set text(
   font: (
-    "Linux Libertine",
+    "Libertinus Serif",
     "New Computer Modern",
     "New Computer Modern Math",
     "DejaVu Sans Mono",
