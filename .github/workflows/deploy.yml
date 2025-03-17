@@ -35,7 +35,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: extractions/setup-just@v2
+      - uses: extractions/setup-just@v3
       - name: Build and deploy locally
         run: just deploy
 
