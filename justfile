@@ -22,6 +22,7 @@ clean-dir dir:
 
 [windows]
 clean-dir dir:
+    mkdir -Force {{dir}}
     rm -Recurse {{dir}}
     mkdir -Force {{dir}}/res
 
@@ -45,4 +46,4 @@ deploy: bundle
 
 example:
     typst c res/example.typ res/example.png --root .
-    optipng -o7 res/example.png
+    oxipng -Z -o max res/example.png
