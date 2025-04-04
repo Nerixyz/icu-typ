@@ -1,14 +1,14 @@
 use std::str::FromStr;
 
 pub fn info(name: &str) -> Result<Vec<u8>, crate::Error> {
-    let locale = wrap::Locale::from(icu_locid::Locale::from_str(name)?);
+    let locale = wrap::Locale::from(icu_locale_core::Locale::from_str(name)?);
     let mut w = vec![];
     ciborium::into_writer(&locale, &mut w)?;
 
     Ok(w)
 }
 
-/// This module wraps [icu_locid::Locale] to be able to serialize it.
+/// This module wraps [icu_locale_core::Locale] to be able to serialize it.
 mod wrap {
     use serde::{ser::SerializeSeq, Serialize};
 
@@ -18,8 +18,8 @@ mod wrap {
         pub extensions: Extensions,
     }
 
-    impl From<icu_locid::Locale> for Locale {
-        fn from(value: icu_locid::Locale) -> Self {
+    impl From<icu_locale_core::Locale> for Locale {
+        fn from(value: icu_locale_core::Locale) -> Self {
             Self {
                 id: value.id.into(),
                 extensions: value.extensions.into(),
@@ -29,14 +29,14 @@ mod wrap {
 
     #[derive(Serialize)]
     pub struct LanguageIdentifier {
-        pub language: Displayer<icu_locid::subtags::Language>,
-        pub script: Option<Displayer<icu_locid::subtags::Script>>,
-        pub region: Option<Displayer<icu_locid::subtags::Region>>,
-        pub variants: Slicer<icu_locid::subtags::Variants>,
+        pub language: Displayer<icu_locale_core::subtags::Language>,
+        pub script: Option<Displayer<icu_locale_core::subtags::Script>>,
+        pub region: Option<Displayer<icu_locale_core::subtags::Region>>,
+        pub variants: Slicer<icu_locale_core::subtags::Variants>,
     }
 
-    impl From<icu_locid::LanguageIdentifier> for LanguageIdentifier {
-        fn from(value: icu_locid::LanguageIdentifier) -> Self {
+    impl From<icu_locale_core::LanguageIdentifier> for LanguageIdentifier {
+        fn from(value: icu_locale_core::LanguageIdentifier) -> Self {
             Self {
                 language: value.language.into(),
                 script: value.script.map(Into::into),
@@ -50,12 +50,12 @@ mod wrap {
     pub struct Extensions {
         pub unicode: Unicode,
         pub transform: Transform,
-        pub private: Slicer<icu_locid::extensions::private::Private>,
-        pub other: Vec<Displayer<icu_locid::extensions::other::Other>>,
+        pub private: Slicer<icu_locale_core::extensions::private::Private>,
+        pub other: Vec<Displayer<icu_locale_core::extensions::other::Other>>,
     }
 
-    impl From<icu_locid::extensions::Extensions> for Extensions {
-        fn from(value: icu_locid::extensions::Extensions) -> Self {
+    impl From<icu_locale_core::extensions::Extensions> for Extensions {
+        fn from(value: icu_locale_core::extensions::Extensions) -> Self {
             Self {
                 unicode: value.unicode.into(),
                 transform: value.transform.into(),
@@ -67,12 +67,12 @@ mod wrap {
 
     #[derive(Serialize)]
     pub struct Unicode {
-        pub keywords: Displayer<icu_locid::extensions::unicode::Keywords>,
-        pub attributes: Slicer<icu_locid::extensions::unicode::Attributes>,
+        pub keywords: Displayer<icu_locale_core::extensions::unicode::Keywords>,
+        pub attributes: Slicer<icu_locale_core::extensions::unicode::Attributes>,
     }
 
-    impl From<icu_locid::extensions::unicode::Unicode> for Unicode {
-        fn from(value: icu_locid::extensions::unicode::Unicode) -> Self {
+    impl From<icu_locale_core::extensions::unicode::Unicode> for Unicode {
+        fn from(value: icu_locale_core::extensions::unicode::Unicode) -> Self {
             Self {
                 keywords: value.keywords.into(),
                 attributes: value.attributes.into(),
@@ -83,11 +83,11 @@ mod wrap {
     #[derive(Serialize)]
     pub struct Transform {
         pub lang: Option<LanguageIdentifier>,
-        pub fields: Displayer<icu_locid::extensions::transform::Fields>,
+        pub fields: Displayer<icu_locale_core::extensions::transform::Fields>,
     }
 
-    impl From<icu_locid::extensions::transform::Transform> for Transform {
-        fn from(value: icu_locid::extensions::transform::Transform) -> Self {
+    impl From<icu_locale_core::extensions::transform::Transform> for Transform {
+        fn from(value: icu_locale_core::extensions::transform::Transform) -> Self {
             Self {
                 lang: value.lang.map(Into::into),
                 fields: value.fields.into(),
@@ -147,9 +147,9 @@ mod wrap {
         };
     }
 
-    slice_like_for_deref!(icu_locid::subtags::Variants);
-    slice_like_for_deref!(icu_locid::extensions::unicode::Attributes);
-    slice_like_for_deref!(icu_locid::extensions::private::Private);
+    slice_like_for_deref!(icu_locale_core::subtags::Variants);
+    slice_like_for_deref!(icu_locale_core::extensions::unicode::Attributes);
+    slice_like_for_deref!(icu_locale_core::extensions::private::Private);
 
     impl<T> From<T> for Slicer<T> {
         fn from(value: T) -> Self {

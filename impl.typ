@@ -3,7 +3,7 @@
 /// Creates a dictionary from a datetime or echos a dictionary passed as `dt`.
 #let datetime-to-dict(dt) = {
   if type(dt) == datetime {
-     (
+    (
       year: dt.year(),
       month: dt.month(),
       day: dt.day(),
@@ -18,264 +18,49 @@
   }
 }
 
-/// Creates a timezone specification to pass to WASM.
+/// Formats a date, time, or timezone.
 ///
-/// `offset`: A string specifying the GMT offset (e.g. "-07", "Z", "+05", "+0500", "+05:00")
-///
-/// `iana`: Name of the IANA TZ identifier (e.g. "Brazil/West" - see https://www.iana.org/time-zones and https://en.wikipedia.org/wiki/List_of_tz_database_time_zones). This is mutually exclusive with `bcp47`. This identifier will be converted to a BCP-47 ID.
-/// `bcp47`: Name of the BCP-47 timezone ID (e.g. "iodga" - see https://github.com/unicode-org/cldr/blob/main/common/bcp47/timezone.xml). This is mutually exclusive with `iana`.
-///
-/// `local-date`: A local date to calculate the metazone-id. This is mutually exclusive with `metazone-id`. When formatting zoned-datetimes this isn't necessary.
-/// `metazone-id`: A short ID of the metazone. A metazone is a collection of multiple time zones that share the same localized formatting at a particular date and time (e.g. "phil" - see https://github.com/unicode-org/cldr/blob/main/common/supplemental/metaZones.xml (bottom)).
-///
-/// `zone-variant`: Many metazones use different names and offsets in the summer than in the winter. In ICU4X, this is called the _zone variant_. Supports `none`, `"st"` (standard), and `"dt"` (daylight).
-#let make-timezone-dict(
-  offset,
-
-  iana: none,
-  bcp47: none,
-
-  local-date: none,
-  metazone-id: none,
-
-  zone-variant: none,
+/// - dt (dictionary, datetime): The date and time to format. This can be a `datetime` or a dictionary with `year`, `month`, `day`, `hour`, `minute`, `second`, and (optionally) `nanosecond`.
+/// - zone (dictionary, none): The timezone. A dictionary with `offset`, `iana`, `bcp47`, `metazone-id`, and `zone-variant`. The options correspond to the arguments for `fmt-timezone`. Only `offset` is mandatory - the other fields provide supplemental information for named timezones.
+/// - locale (str): A Unicode Locale Identifier (see https://unicode.org/reports/tr35/tr35.html#Unicode_locale_identifier)
+/// - length (str, none): The length of the formatted date part ("long", "medium" (default), "short", or `none`). The avialable options are also provided in `length` as a dictionary.
+/// - date-fields (str, none): The fields of the date to include in the formatted string. "D" (day of month), "MD", "YMD", "DE", "MDE", "YMDE", "E" (weekday), "M" (month), "YM", "Y" (year), or `none`. Defaults to "YMD" if neither `time-precison` nor `zone-style` are specified - otherwise this defaults to `none` and the date isn't included in the output. The avialable options are also provided in `fields` as a dictionary.
+/// - time-precision (str, none): How precise to display the time. "hour", "minute", "second", "subsecond{n}" (n subsecond digits), "minute-optional" ("hour" if `minutes == 0`, otherwise "minute"), or `none`. Defaults to "minute" if neither `date-fields` nor `zone-style` are specified - otherwise this defaults to `none` and the time isn't included in the output. The avialable options are also provided in `time-precision` as a dictionary.
+/// - zone-style (str, none): How to format the timezone (if any). "specific-long", "specific-short", "localized-offset-long", "localized-offset-short",  "generic-long", "generic-short", "location", "exemplar-city", or `none`. Defaults to `none`. The avialable options are also provided in `zone-style` as a dictionary.
+/// - alignment (str, none): How to align (pad) the formatted string. "auto", "column", or `none` (default, implies "auto").
+/// - year-style (str, none): How to format the year and the era. "auto", "full", "with-era", `none` (default, implies "auto").
+#let fmt(
+  dt,
+  zone: none,
+  locale: "en",
+  length: none,
+  date-fields: none,
+  time-precision: none,
+  zone-style: none,
+  alignment: none,
+  year-style: none,
 ) = {
-  assert(type(offset) == str or type(offset) == int)
+  assert(type(locale) == str)
 
-  assert(iana == none or type(iana) == str)
-  assert(bcp47 == none or type(bcp47) == str)
-  assert(not (iana != none and bcp47 != none))
-
-  assert(metazone-id == none or type(metazone-id) == str)
-  assert(not (metazone-id != none and local-date != none))
-
-  assert(zone-variant == none or type(zone-variant) == str or type(zone-variant) == bytes)
-
-  let tz = (
-    offset: offset,
-  )
-
-  if iana != none {
-    tz.insert("timezone-id", (iana: iana))
-  } else if bcp47 != none {
-    tz.insert("timezone-id", (bcp47: bcp47))
+  let spec = datetime-to-dict(dt)
+  if zone != none {
+    spec.insert("zone", zone)
   }
 
-  if metazone-id != none {
-    tz.insert("metazone", (id: bytes(metazone-id)))
-  } else if local-date != none {
-    let dt = datetime-to-dict(local-date)
-
-    assert(
-      type(dt.year) == int and 
-      type(dt.month) == int and 
-      type(dt.day) == int
-    )
-
-    if dt.at("hour", default: none) == none {
-      dt.hour = 0
-    }
-    if dt.at("minute", default: none) == none {
-      dt.minute = 0
-    }
-    if dt.at("second", default: none) == none {
-      dt.second = 0
-    }
-
-    tz.insert("metazone", (local-date: dt))
+  if date-fields == none and time-precision == none and zone-style == none {
+    date-fields = "YMD"
+    time-precision = "minute"
   }
 
-  if zone-variant != none {
-    tz.insert("zone-variant", if type(zone-variant) == str {
-      bytes(zone-variant)
-    } else { zone-variant })
-  }
-
-  tz
-}
-
-/// Formats a date in some `locale`. Dates are assumed to be ISO dates.
-///
-/// `dt`: The date to format. This can be a `datetime` or a dictionary with `year`, `month`, `day`.
-/// `locale`: A Unicode Locale Identifier (see https://unicode.org/reports/tr35/tr35.html#Unicode_locale_identifier).
-/// `length`: The length of the formatted date ("full", "long" (default), "medium", "short", or `none`).
-#let fmt-date(
-  dt,
-  locale: "en",
-  length: "full"
-) = {
-  assert(type(locale) == str)
-
-  let opts = (locale: locale, length: length)
-  let dt = datetime-to-dict(dt)
-
-  assert(
-    type(dt.year) == int and 
-    type(dt.month) == int and 
-    type(dt.day) == int
-  )
-  str(plug.format_date(cbor.encode(dt), cbor.encode(opts)))
-}
-
-/// Formats a time in some `locale`.
-///
-/// `dt`: The time to format. This can be a `datetime` or a dictionary with `hour`, `minute`, `second`, and (optionally) `nanosecond`.
-/// `locale`: A Unicode Locale Identifier (see https://unicode.org/reports/tr35/tr35.html#Unicode_locale_identifier).
-/// `length`: The length of the formatted time ("medium", "short" (default), or `none`).
-#let fmt-time(
-  dt,
-  locale: "en",
-  length: "short"
-) = {
-  assert(type(locale) == str)
-
-  let opts = (locale: locale, length: length)
-  let dt = datetime-to-dict(dt)
-
-  assert(
-    type(dt.hour) == int and 
-    type(dt.minute) == int and 
-    type(dt.second) == int
-  )
-  str(plug.format_time(cbor.encode(dt), cbor.encode(opts)))
-}
-
-/// Formats a date and time in some `locale`. Dates are assumed to be ISO dates.
-///
-/// `dt`: The date and time to format. This can be a `datetime` or a dictionary with `year`, `month`, `day`, `hour`, `minute`, `second`, and (optionally) `nanosecond`.
-/// `locale`: A Unicode Locale Identifier (see https://unicode.org/reports/tr35/tr35.html#Unicode_locale_identifier).
-/// `date-length`: The length of the formatted date part ("full", "long" (default), "medium", "short", or `none`).
-/// `time-length`: The length of the formatted time part ("medium", "short" (default), or `none`).
-#let fmt-datetime(
-  dt,
-  locale: "en",
-  date-length: "long",
-  time-length: "short"
-) = {
-  assert(type(locale) == str)
-  assert(type(date-length) == str)
-  assert(type(time-length) == str)
-
   let opts = (
-    locale: locale,
-    date: date-length,
-    time: time-length
+    length: length,
+    date-fields: date-fields,
+    time-precision: time-precision,
+    zone-style: zone-style,
+    alignment: alignment,
+    year-style: year-style,
   )
-  let dt = datetime-to-dict(dt)
-
-  assert(
-    type(dt.year) == int and 
-    type(dt.month) == int and 
-    type(dt.day) == int and
-    type(dt.hour) == int and 
-    type(dt.minute) == int and 
-    type(dt.second) == int
-  )
-  str(plug.format_datetime(cbor.encode(dt), cbor.encode(opts)))
-}
-
-/// Formats a timezone in some `locale`.
-///
-/// `offset`: A string specifying the GMT offset (e.g. "-07", "Z", "+05", "+0500", "+05:00"). (required)
-///
-/// `iana`: Name of the IANA TZ identifier (e.g. "Brazil/West" - see https://www.iana.org/time-zones and https://en.wikipedia.org/wiki/List_of_tz_database_time_zones). This is mutually exclusive with `bcp47`. This identifier will be converted to a BCP-47 ID.
-/// `bcp47`: Name of the BCP-47 timezone ID (e.g. "iodga" - see https://github.com/unicode-org/cldr/blob/main/common/bcp47/timezone.xml). This is mutually exclusive with `iana`.
-///
-/// `local-date`: A local date to calculate the metazone-id. This is mutually exclusive with `metazone-id`. When formatting zoned-datetimes this isn't necessary.
-/// `metazone-id`: A short ID of the metazone. A metazone is a collection of multiple time zones that share the same localized formatting at a particular date and time (e.g. "phil" - see https://github.com/unicode-org/cldr/blob/main/common/supplemental/metaZones.xml (bottom)).
-///
-/// `zone-variant`: Many metazones use different names and offsets in the summer than in the winter. In ICU4X, this is called the _zone variant_. Supports `none`, `"st"` (standard), and `"dt"` (daylight).
-///
-/// `locale`: A Unicode Locale Identifier (see https://unicode.org/reports/tr35/tr35.html#Unicode_locale_identifier)
-/// `fallback`: The timezone format fallback. Either `"LocalizedGmt"` or a dictionary for an ISO 8601 fallback (e.g. `(iso8601: (format: "basic", minutes: "required", seconds: "never"))`).
-/// `format`: The format to display a time zone as (see https://unicode.org/reports/tr35/tr35-dates.html#time-zone-format-terminology). Valid options are:
-///   `generic-location-format` (e.g. "Los Angeles Time")
-///   `generic-non-location-long` (e.g. "Pacific Time")
-///   `generic-non-location-short` (e.g. "PT")
-///   `localized-gmt-format` (e.g. "GMT-07:00")
-///   `specific-non-location-long` (e.g. "Pacific Standard Time")
-///   `specific-non-location-short` (e.g. "PDT")
-///   `iso8601`: A dictionary of ISO 8601 options `(iso8601: (format: "utc-basic", minutes: "optional", seconds: "optional"))` (e.g. "-07:00")
-#let fmt-timezone(
-  offset: none,
-
-  iana: none,
-  bcp47: none,
-
-  local-date: none,
-  metazone-id: none,
-
-  zone-variant: none,
-
-  locale: "en",
-  fallback: "localized-gmt",
-  format: none
-) = {
-  assert(format == none or type(format) == str or type(format) == dictionary)
-  assert(type(locale) == str)
-  assert(type(offset) == str or type(offset) == int)
-
-  let tz = make-timezone-dict(
-    offset,
-    iana: iana,
-    bcp47: bcp47,
-    local-date: local-date,
-    metazone-id: metazone-id,
-    zone-variant: zone-variant
-  )
-
-  let opts = (
-    locale: locale,
-    fallback: fallback,
-    format: format,
-  )
-  str(plug.format_timezone(cbor.encode(tz), cbor.encode(opts)))
-}
-
-/// Formats a date and a time in a timezone. Dates are assumed to be ISO dates.
-///
-/// `dt`: The date and time to format. This can be a `datetime` or a dictionary with `year`, `month`, `day`, `hour`, `minute`, `second`, and (optionally) `nanosecond`.
-/// `zone`: The timezone. A dictionary with `offset`, `iana`, `bcp47`, `metazone-id`, and `zone-variant`. The options correspond to the arguments for `fmt-timezone`. Only `offset` is mandatory - the other fields provide supplemental information for named timezones.
-/// `locale`: A Unicode Locale Identifier (see https://unicode.org/reports/tr35/tr35.html#Unicode_locale_identifier)
-/// `fallback`: The timezone format fallback. Either `"LocalizedGmt"` or a dictionary for an ISO 8601 fallback (e.g. `(iso8601: (format: "basic", minutes: "required", seconds: "never"))`).
-/// `date-length`: The length of the formatted date part ("full", "long" (default), "medium", "short", or `none`).
-/// `time-length`: The length of the formatted time part ("full", "long" (default), "medium", "short", or `none`).
-#let fmt-zoned-datetime(
-  dt,
-  zone,
-
-  locale: "en",
-  fallback: "localized-gmt",
-  date-length: "long",
-  time-length: "long"
-) = {
-  assert(type(zone) == dictionary)
-  assert(type(locale) == str)
-  assert(date-length == none or type(date-length) == str)
-  assert(time-length == none or type(time-length) == str)
-
-  let dt = datetime-to-dict(dt)
-  let tz = make-timezone-dict(
-    zone.offset,
-    iana: zone.at("iana", default: none),
-    bcp47: zone.at("bcp47", default: none),
-    local-date: none,
-    metazone-id: zone.at("metazone-id", default: none),
-    zone-variant: zone.at("zone-variant", default: none),
-  )
-
-  let spec = (
-    datetime: dt,
-    timezone: tz,
-  )
-
-  let opts = (
-    locale: locale,
-    fallback: fallback,
-    date: date-length,
-    time: time-length,
-  )
-  str(plug.format_zoned_datetime(cbor.encode(spec), cbor.encode(opts)))
+  str(plug.format(cbor.encode(spec), bytes(locale), cbor.encode(opts)))
 }
 
 /// Gets information about ICU4X' understanding of the `locale`
@@ -284,5 +69,109 @@
 #let locale-info(locale) = {
   assert(type(locale) == str)
 
-  cbor.decode(plug.locale_info(bytes(locale)))
+  cbor(plug.locale_info(bytes(locale)))
 }
+
+/// Styles to format a time zone.
+///
+/// Note that both the offset and a time zone name (IANA or BCP47) must be given.
+///
+/// ```
+/// #icu.fmt(
+///   datetime.today(),
+///   zone: (offset: "+01", iana: "Europe/Berlin"),
+///   zone-style: icu.zone-styles.specific-long
+/// ) // Central European Standard Time
+/// ```
+///
+/// - specific-long: The long specific non-location format, as in "Pacific Daylight Time".
+/// - specific-short: The short specific non-location format, as in "PDT".
+/// - localized-offset-long: The long offset format, as in "GMT−8:00".
+/// - localized-offset-short: The short offset format, as in "GMT−8".
+/// - generic-long: The long generic non-location format, as in "Pacific Time".
+/// - generic-short: The short generic non-location format, as in "PT".
+/// - location: The location format, as in "Los Angeles time".
+/// - exemplar-city: The exemplar city format, as in "Los Angeles".
+#let zone-styles = (
+  specific-long: "specific-long",
+  specific-short: "specific-short",
+  localized-offset-long: "localized-offset-long",
+  localized-offset-short: "localized-offset-short",
+  generic-long: "generic-long",
+  generic-short: "generic-short",
+  location: "location",
+  exemplar-city: "exemplar-city",
+)
+
+/// The length of the formatted date/time.
+///
+/// - long: A long date; typically spelled-out, as in "January 1, 2000".
+/// - medium: A medium-sized date; typically abbreviated, as in "Jan. 1, 2000".
+/// - short: A short date; typically numeric, as in "1/1/2000".
+#let length = (
+  long: "long",
+  medium: "medium",
+  short: "short",
+)
+
+/// Fields of the date to include.
+///
+/// - D: Day of the month
+/// - E: Day of the week
+/// - M: Month
+/// - Y: Year
+#let fields = (
+  D: "D",
+  MD: "MD",
+  YMD: "YMD",
+  DE: "DE",
+  MDE: "MDE",
+  YMDE: "YMDE",
+  E: "E",
+  M: "M",
+  YM: "YM",
+  Y: "Y",
+)
+
+/// How precise the time should be included.
+///
+/// - hour: Only show the hour.
+/// - minute: Show the hour and minute.
+/// - second: Show hour, minute, and second.
+/// - subsecond{n}: Show n fractional digits for the seconds.
+/// - minute-optional: Show the hour and add the minute if it's non-zero.
+#let time-precision = (
+  hour: "hour",
+  minute: "minute",
+  second: "second",
+  subsecond1: "subsecond1",
+  subsecond2: "subsecond2",
+  subsecond3: "subsecond3",
+  subsecond4: "subsecond4",
+  subsecond5: "subsecond5",
+  subsecond6: "subsecond6",
+  subsecond7: "subsecond7",
+  subsecond8: "subsecond8",
+  subsecond9: "subsecond9",
+  minute-optional: "minute-optional",
+)
+
+/// How the numbers should be aligned.
+///
+/// - auto: Use locale specific alignment.
+/// - column: Align the values for a column layout (i.e. pad with fields if necessary).
+#let alignment = (
+  auto_: "auto",
+  column: "column",
+)
+
+/// How the year should be displayed.
+///
+/// - auto: Display the century and/or era when needed to disambiguate.
+/// - full: Always display the century, and display the era when needed to disambiguate.
+/// - with-era: Always display the century and era.
+#let year-style = (
+  auto_: "auto",
+  full: "full",
+  with-era: "with-era",
+)
