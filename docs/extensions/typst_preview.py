@@ -185,7 +185,10 @@ def custom_formatter(
         assert docs_dir and site_dir and site_path
 
         def render(is_dark: bool):
-            return TEMPLATES[options["mode"]] % ("true" if is_dark else "false", source)
+            src = source
+            if options["fake"]:
+                src = re.sub(r"^#import.+", "", src)
+            return TEMPLATES[options["mode"]] % ("true" if is_dark else "false", src)
 
         light_doc = render(False)
         dark_doc = render(True)
@@ -239,6 +242,7 @@ def custom_validator(
     else:
         mode = "embedded"
     options["mode"] = mode
+    options["fake"] = "fake" in inputs
     return True
 
 

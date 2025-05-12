@@ -1,8 +1,9 @@
-use icu_time::zone::{UtcOffset, UtcOffsets};
+use icu_time::zone::{UtcOffset, VariantOffsets};
 use wasm_minimal_protocol::*;
 
 mod format;
 mod locale;
+mod pattern;
 mod serde;
 mod write;
 
@@ -29,6 +30,14 @@ pub enum Error {
     CompositeError(#[from] icu_datetime::fieldsets::builder::BuilderError),
     #[error("Invalid field range: {0}")]
     DateRange(icu_calendar::RangeError),
+    #[error("Invalid pattern: {0}")]
+    PatternError(#[from] icu_datetime::provider::pattern::PatternError),
+    #[error("Bad pattern: {0}")] // XXX: this looks like the error above
+    PatternLoadError(#[from] icu_datetime::pattern::PatternLoadError),
+    #[error("Failed to write: {0}")]
+    FormattedPatternError(icu_datetime::pattern::FormattedDateTimePatternError),
+    #[error("Data error: {0}")]
+    DataError(#[from] icu_provider::DataError),
 
     #[error("A partial date was provided - either year, month, and day must be provided or none")]
     PartialDate,
@@ -40,7 +49,7 @@ pub enum Error {
     #[error("The time zone offset was invalid. Must be within ±18:00:00.")]
     InvalidOffset,
     #[error("The provided time zone (ID) will never have the provided offset - it has these offsets: {0}")]
-    OffsetMismatch(InvalidUtcOffsets),
+    OffsetMismatch(InvalidVariantOffsets),
     #[error("Both IANA and Bcp47 IDs were specifies, expected at most one")]
     IanaAndBcp47,
 
@@ -49,9 +58,9 @@ pub enum Error {
 }
 
 #[derive(Debug)]
-pub struct InvalidUtcOffsets(pub UtcOffsets);
+pub struct InvalidVariantOffsets(pub VariantOffsets);
 
-impl std::fmt::Display for InvalidUtcOffsets {
+impl std::fmt::Display for InvalidVariantOffsets {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         fn write_offset(o: UtcOffset, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
             if o.is_non_negative() {
@@ -88,6 +97,16 @@ pub fn format(spec: &[u8], locale: &[u8], opts: &[u8]) -> Result<Vec<u8>, Error>
         .map_err(|it| Error::De("opts", it))?;
 
     format::format(spec, &locale, builder.into())
+}
+
+#[cfg_attr(target_arch = "wasm32", wasm_func)]
+pub fn format_pattern(spec: &[u8], locale: &[u8], pattern: &[u8]) -> Result<Vec<u8>, Error> {
+    let spec =
+        ciborium::from_reader::<format::Spec, _>(spec).map_err(|it| Error::De("spec", it))?;
+    let locale = std::str::from_utf8(locale)?;
+    let pattern = std::str::from_utf8(pattern)?;
+
+    pattern::format(pattern, &locale, spec)
 }
 
 #[cfg_attr(target_arch = "wasm32", wasm_func)]

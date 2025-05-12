@@ -6,8 +6,11 @@ use icu_datetime::{
 };
 use icu_locale_core::Locale;
 use icu_time::{
-    zone::{iana::IanaParserExtendedBorrowed, TimeZoneVariant, UtcOffsetCalculator},
-    TimeZone, TimeZoneInfo, ZonedDateTime,
+    zone::{
+        iana::IanaParserExtendedBorrowed, TimeZoneVariant, VariantOffsetsCalculator,
+        ZoneNameTimestamp,
+    },
+    DateTime, TimeZone, TimeZoneInfo, ZonedDateTime,
 };
 use serde::Deserialize;
 
@@ -53,8 +56,9 @@ pub fn format(spec: Spec, locale: &str, builder: FieldSetBuilder) -> Result<Vec<
     Ok(crate::write::to_vec(formatter.format(&spec.value)))
 }
 
-struct SpecifiedZonedDateTime {
-    value: icu_time::ZonedDateTime<icu_calendar::Iso, TimeZoneInfo<icu_time::zone::models::Full>>,
+pub struct SpecifiedZonedDateTime {
+    pub value:
+        icu_time::ZonedDateTime<icu_calendar::Iso, TimeZoneInfo<icu_time::zone::models::Full>>,
     has_date: bool,
     has_time: bool,
     has_zone: bool,
@@ -121,39 +125,41 @@ impl TryFrom<Spec> for SpecifiedZonedDateTime {
             if value.minute.is_some() || value.second.is_some() || value.nanosecond.is_some() {
                 return Err(Self::Error::PartialTime);
             }
-            (false, icu_time::Time::midnight())
+            (false, icu_time::Time::start_of_day())
         };
 
         let (has_zone, zone) = if let Some(spec) = value.zone {
             let bcp47 = match (spec.bcp47, spec.iana) {
-                (None, None) => TimeZone::unknown(),
-                (Some(id), None) => TimeZone(id.parse().map_err(|e| Self::Error::TinyStr(e, id))?),
+                (None, None) => TimeZone::UNKNOWN,
+                (Some(id), None) => TimeZone(id.parse().map_err(Self::Error::IcuLocaleParse)?),
                 (None, Some(spec)) => {
-                    let (tz, _canonical, _normalized) =
-                        IanaParserExtendedBorrowed::new().parse(&spec);
-                    if tz == TimeZone::unknown() {
+                    let parsed = IanaParserExtendedBorrowed::new().parse(&spec);
+                    if parsed.time_zone.is_unknown() {
                         return Err(Self::Error::UnknownIana);
                     }
-                    tz
+                    parsed.time_zone
                 }
                 (Some(_), Some(_)) => return Err(Self::Error::IanaAndBcp47),
             };
             // XXX: we need to keep track of the date before we use this time zone
             let tz = bcp47
                 .with_offset(spec.offset.map(TryInto::try_into).transpose()?)
-                .at_time((date, time));
+                .at_date_time_iso(DateTime { date, time });
 
             let tz = if let Some(offset) = tz.offset() {
-                let offsets = UtcOffsetCalculator::new()
-                    .compute_offsets_from_time_zone(tz.time_zone_id(), (date, time));
-                tz.with_zone_variant(match offsets {
+                let offsets = VariantOffsetsCalculator::new()
+                    .compute_offsets_from_time_zone_and_name_timestamp(
+                        tz.id(),
+                        ZoneNameTimestamp::from_date_time_iso(DateTime { date, time }),
+                    );
+                tz.with_variant(match offsets {
                     Some(offsets) => {
                         if offsets.standard == offset {
                             TimeZoneVariant::Standard
                         } else if offsets.daylight == Some(offset) {
                             TimeZoneVariant::Daylight
                         } else {
-                            return Err(Self::Error::OffsetMismatch(crate::InvalidUtcOffsets(
+                            return Err(Self::Error::OffsetMismatch(crate::InvalidVariantOffsets(
                                 offsets,
                             )));
                         }
@@ -161,7 +167,7 @@ impl TryFrom<Spec> for SpecifiedZonedDateTime {
                     None => TimeZoneVariant::Standard,
                 })
             } else {
-                tz.with_zone_variant(TimeZoneVariant::Standard)
+                tz.with_variant(TimeZoneVariant::Standard)
             };
 
             (true, tz)
@@ -169,8 +175,8 @@ impl TryFrom<Spec> for SpecifiedZonedDateTime {
             (
                 false,
                 TimeZoneInfo::utc()
-                    .at_time((date, time))
-                    .with_zone_variant(TimeZoneVariant::Standard),
+                    .at_date_time_iso(DateTime { date, time })
+                    .with_variant(TimeZoneVariant::Standard),
             )
         };
 
@@ -192,104 +198,5 @@ impl TryFrom<UtcOffsetSpec> for icu_time::zone::UtcOffset {
             UtcOffsetSpec::Chars(chars) => Self::try_from_str(&chars),
         }
         .map_err(|_| Self::Error::InvalidOffset)
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use icu_calendar::{Date, Iso};
-    use icu_datetime::{
-        fieldsets::{
-            builder::{DateFields, FieldSetBuilder},
-            enums::{CompositeFieldSet, TimeFieldSet, ZoneFieldSet},
-            zone, T,
-        },
-        DateTimeFormatter, NoCalendarFormatter,
-    };
-    use icu_locale_core::locale;
-    use icu_time::{
-        zone::{IanaParser, TimeZoneVariant, UtcOffsetCalculator},
-        Time, TimeZone, ZonedDateTime,
-    };
-
-    use super::{Spec, TimezoneSpec};
-
-    #[test]
-    fn basic() {
-        let zdt = ZonedDateTime::try_from_str(
-            "2024-08-08T12:08:19+01:00[Europe/Berlin]",
-            Iso,
-            IanaParser::new(),
-            &UtcOffsetCalculator::new(),
-        )
-        .unwrap();
-
-        let formatter = DateTimeFormatter::try_new(
-            locale!("de").into(),
-            CompositeFieldSet::TimeZone(
-                TimeFieldSet::T(T::long()).zone(ZoneFieldSet::GenericLong(zone::GenericLong)),
-            ),
-        )
-        .unwrap();
-        dbg!(formatter.format(&zdt).to_string()); // 12:08:19 MEZ
-
-        let formatter =
-            DateTimeFormatter::try_new(locale!("de").into(), T::long().zone(zone::GenericLong))
-                .unwrap();
-        dbg!(formatter.format(&zdt).to_string()); // 12:08:19 MEZ
-
-        let formatter =
-            DateTimeFormatter::try_new(locale!("de").into(), zone::GenericLong).unwrap();
-        dbg!(formatter.format(&zdt).to_string()); // Mitteleuropäische Normalzeit
-    }
-
-    #[test]
-    fn other() {
-        let spec = Spec {
-            year: Some(2024),
-            month: Some(7),
-            day: Some(3),
-            hour: Some(6),
-            minute: Some(12),
-            second: Some(4),
-            nanosecond: None,
-            zone: Some(TimezoneSpec {
-                offset: Some(super::UtcOffsetSpec::Chars("-05".into())),
-                bcp47: Some("uschi".into()),
-                iana: None,
-            }),
-        };
-        let mut builder = FieldSetBuilder::new();
-        builder.date_fields = Some(DateFields::MD);
-        builder.time_precision = Some(icu_datetime::options::TimePrecision::Hour);
-        builder.zone_style = Some(icu_datetime::fieldsets::builder::ZoneStyle::SpecificLong);
-        dbg!(String::from_utf8(format::format(spec, "en", builder).unwrap()).unwrap());
-    }
-
-    #[test]
-    fn basic2() {
-        let zdt = ZonedDateTime::try_from_str(
-            "2024-08-08T12:08:19+01:00[Europe/Berlin]",
-            Iso,
-            IanaParser::new(),
-            &UtcOffsetCalculator::new(),
-        )
-        .unwrap();
-
-        let formatter =
-            DateTimeFormatter::try_new(locale!("en").into(), zone::GenericShort).unwrap();
-        dbg!(formatter.format(&zdt).to_string()); // 12:08:19 MEZ
-    }
-
-    #[test]
-    fn basic3() {
-        let fmt = NoCalendarFormatter::try_new(locale!("en").into(), zone::GenericShort).unwrap();
-
-        // Time zone info for America/Chicago in the summer
-        let zone = TimeZone(tinystr::tinystr!(8, "debsngn"))
-            .with_offset("-05".parse().ok())
-            .at_time((Date::try_new_iso(2022, 8, 29).unwrap(), Time::midnight()))
-            .with_zone_variant(TimeZoneVariant::Daylight);
-        dbg!(fmt.format(&zone).to_string());
     }
 }

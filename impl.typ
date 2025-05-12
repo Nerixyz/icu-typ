@@ -39,6 +39,7 @@
   zone-style: none,
   alignment: none,
   year-style: none,
+  experimental-pattern: none,
 ) = {
   assert(type(locale) == str)
 
@@ -47,9 +48,15 @@
     spec.insert("zone", zone)
   }
 
+  if experimental-pattern != none {
+    return str(plug.format_pattern(cbor.encode(spec), bytes(locale), bytes(experimental-pattern)))
+  }
+
   if date-fields == none and time-precision == none and zone-style == none {
     date-fields = "YMD"
-    time-precision = "minute"
+    if spec.hour != none and spec.minute != none and spec.second != none {
+      time-precision = "minute"
+    }
   }
 
   let opts = (

@@ -82,7 +82,7 @@ example{
 
 ### `locale`
 
-The locale to use when formatting the datetime. A [Unicode Locale Identifier]. As with [dates](./fmt-date.md#locale), `ca` can be set to a [bcp47 calendar name](https://github.com/unicode-org/cldr/blob/main/common/bcp47/calendar.xml).
+The locale to use when formatting the datetime. A [Unicode Locale Identifier]. Notably, this can be used to set the calendar by setting `ca` to a [bcp47 calendar name](https://github.com/unicode-org/cldr/blob/main/common/bcp47/calendar.xml).
 
 example{
 
@@ -98,7 +98,7 @@ example{
 
 - #icu.fmt(dt, locale: "en")
 - #icu.fmt(dt, locale: "ko")
-- #icu.fmt(dt, locale: "ar-u-ca-islamic")
+- #icu.fmt(dt, locale: "en-TH")
 - #icu.fmt(dt, locale: "mk")
 - #icu.fmt(dt, locale: "so")
 - #icu.fmt(dt, locale: "fo")
@@ -144,7 +144,7 @@ example{
 
 ### `date-fields`
 
-The fields of the date to include in the formatted string. `#!typst-code "D"` (day of month), `#!typst-code "MD"`, `#!typst-code "YMD"`, `#!typst-code "DE"`, `#!typst-code "MDE"`, `#!typst-code "YMDE"`, `#!typst-code "E"` (weekday), `#!typst-code "M" (month)`, `#!typst-code "YM"`, `#!typst-code "Y"` (year), or `#!typst-code none`.
+The fields of the date to include in the formatted string. `#!typst-code "D"` (day of month), `#!typst-code "MD"`, `#!typst-code "YMD"`, `#!typst-code "DE"`, `#!typst-code "MDE"`, `#!typst-code "YMDE"`, `#!typst-code "E"` (weekday), `#!typst-code "M"` (month), `#!typst-code "YM"`, `#!typst-code "Y"` (year), or `#!typst-code none`.
 
 Defaults to `#!typst-code "YMD"` if neither `time-precison` nor `zone-style` are specified - otherwise this defaults to `none` and the date isn't included in the output.
 
@@ -291,5 +291,41 @@ example{
 
 }example
 
+### `experimental-pattern`
+
+Specifies the pattern to format that date as. This is mutually exclusive with all other named arguments except [`zone`](#zone) and [`locale`](#locale).
+
+<!-- prettier-ignore-->
+!!! warning
+    This argument is experimental. Currently, it always formats dates in the Gregorian calendar (regardless of the locale).
+    This assumes that the pattern is already localized for the target locale.
+
+The full list of placeholders can be found in the [Date Field Symbol Table]. Note that this argument doesn't check that the date and time are fully specified. If some fields are left out, they're default initialized.
+
+example{
+
+```typst +preview
+#let dt = datetime(
+  year: 2024,
+  month: 5,
+  day: 31,
+  hour: 18,
+  minute: 2,
+  second: 23,
+)
+#let tz = (offset: "+09", iana: "Pacific/Palau")
+#let f(pat) = icu.fmt(dt, zone: tz, experimental-pattern: pat)
+
++ #f("yyyy.MM.dd G 'at' HH:mm:ss zzz")
++ #f("EEE, MMM d, ''yy")
++ #f("h:mm a")
++ #f("hh 'o''clock' a, zzzz")
++ #f("K:mm a, z")
++ #f("yyyyy.MMMM.dd GGG hh:mm aaa")
+```
+
+}example
+
 [datetime]: https://typst.app/docs/reference/foundations/datetime/
 [Unicode Locale Identifier]: https://unicode.org/reports/tr35/tr35.html#Unicode_locale_identifier
+[Date Field Symbol Table]: https://unicode.org/reports/tr35/tr35-dates.html#table-date-field-symbol-table

@@ -1,7 +1,6 @@
 use icu_datetime::{
     fieldsets::builder::{DateFields, FieldSetBuilder, ZoneStyle},
-    options::{Alignment, SubsecondDigits, TimePrecision, YearStyle},
-    Length,
+    options::{Alignment, Length, SubsecondDigits, TimePrecision, YearStyle},
 };
 
 #[derive(serde::Deserialize)]
