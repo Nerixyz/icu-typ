@@ -14,7 +14,7 @@ icu_datetime = { version = "1.5.1", features = ["serde", "std"] }
 icu_calendar = { version = "1.5.2", features = ["serde", "std"] }
 icu_timezone = { version = "1.5.0", features = ["serde", "std"] }
 icu_locid = { version = "1.5.0", features = ["serde", "std"] }
-icu_provider = { version = "1.5.0" }
+icu_provider = { version = "2.0.0" }
 writeable = "0.5.5"
 tinystr = "0.7.6"
 
