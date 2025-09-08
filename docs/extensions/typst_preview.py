@@ -16,6 +16,9 @@ __all__ = ["MyExtension"]
 PREVIEW_START_REGEX = re.compile(
     r"(?P<fence>~{3,}|`{3,})[ \t]*(?P<lang>typst(?:-code)?)[ \t]+.*(?P<preview>\+preview(?:\((?P<options>[^\)]*)\))?)"
 )
+# example{
+# example(Title){
+EXAMPLE_START_REGEX = re.compile(r"^example\s*(?:\((?P<title>[^)]+)\))?\s*{$")
 NESTED_FENCE_END = r"%s%s[ \t]*\n?$"  # from superfences
 PREFIX_CHARS = (">", " ", "\t")  # from superfences
 INDENTED_LIST = r"^%s\d+"
@@ -47,6 +50,7 @@ class PreviewPreprocessor(Preprocessor):
         transformed = []
 
         i = 0
+        in_example = False
         while i < len(lines):
             line = lines[i]
 
@@ -55,20 +59,34 @@ class PreviewPreprocessor(Preprocessor):
             # Found the start of a fenced block.
             m = PREVIEW_START_REGEX.match(line, len(ws))
             if m is None:
-                if line == "example{":
-                    line = '<details class="example" markdown="1"><summary>Example</summary>'
-                elif line == "}example":
+                m = EXAMPLE_START_REGEX.match(line.strip())
+                if m is not None:
+                    line = f'<details class="example" markdown="1"><summary>{m.group('title') or 'Example'}</summary>'
+                    in_example = True
+                elif in_example and (line.strip() == "}" or line.strip() == "}example"):
                     line = "</details>"
+                    in_example = False
                 transformed.append(line)
                 i += 1
                 continue
 
             lang = m.group("lang")
             preview = m.group("preview")
-            options = m.group("options") or ""
+            options = (m.group("options") or "").replace(",", "")
+
+            def take_opt(name: str) -> bool:
+                nonlocal options
+                if name in options:
+                    options = options.replace(name, "")
+                    return True
+                return False
+
             classes = ""
-            if "vertical" in options:
+            if take_opt("vertical"):
                 classes += "vertical"
+                options.replace("vertical", "")
+            if take_opt("01-to-02"):
+                lang = "typst-01-to-02"
             options = f'{options} lang="{lang}"'
             transformed.append(
                 ws
@@ -153,6 +171,11 @@ TEMPLATE_HEADER = r"""
 IMPORTS = r"""
 #import "@local/icu-datetime:0.2.0" as icu
 """
+# TODO(0.2.0 release): change to @preview
+IMPORTS_01_TO_02 = r"""
+#import "@local/icu-datetime:0.2.0" as icu02
+#import "@preview/icu-datetime:0.1.2" as icu01
+"""
 TEMPLATES = {
     "code": TEMPLATE_HEADER
     + IMPORTS
@@ -162,6 +185,7 @@ TEMPLATES = {
     }
     """,
     "embedded": TEMPLATE_HEADER + IMPORTS + "%s",
+    "01-to-02": TEMPLATE_HEADER + IMPORTS_01_TO_02 + "%s",
     "basic": TEMPLATE_HEADER + "%s",
 }
 
@@ -237,6 +261,8 @@ def custom_validator(
                 mode = "code"
             case "typst":
                 mode = "embedded"
+            case "typst-01-to-02":
+                mode = "01-to-02"
             case _:
                 raise ValueError(f"Invalid language: {inputs['lang']}")
     else:

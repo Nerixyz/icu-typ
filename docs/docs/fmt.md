@@ -10,15 +10,23 @@ let fmt(
   locale: "en",
 
   length: none,
-  date-fields: none,
-  time-precision: none,
-  zone-style: none,
+  date-fields: auto,
+  time-precision: auto,
+  zone-style: auto,
   alignment: none,
   year-style: none,
 )
 ```
 
 Formats a date and time in some [`locale`](#locale). Dates are assumed to be ISO dates.
+
+## Defaults
+
+The function tries to infer the intended format automatically if [`date-fields`](#date-fields), [`time-precision`](#time-precision), and [`zone-style`](#zone-style) _all_ use their default values (`auto`):
+
+-   If [`dt`](#dt) has date fields (`year`, `month`, `day`), then [`date-fields`](#date-fields) will be set to `#!typst-code "YMD"`
+-   If [`dt`](#dt) has time fields (`hour`, `minute`, `second`), then [`time-precision`](#time-precision) will be set to `#!typst-code "minute"`
+-   If [`zone`](#zone) has a value, then [`zone-style`](#zone-style) will be set to `#!typst-code "localized-offset-short"`
 
 ## Arguments
 
@@ -53,11 +61,13 @@ example{
 
 ### `zone`
 
-A time zone passed as a dictionary with `offset` (required), `bcp47` or `iana`.
+A zone passed as a dictionary with `offset` (required), `bcp47` or `iana`.
 
-- `offset`: The UTC offset either specified as a string (e.g. `#!typst-code "+05"`) or as an integer specifying the seconds (`#!typst-code 18000`).
-- `bcp47`: BCP-47 timezone ID (e.g. `#!typst-code "iodga"` (IANA: Indian/Chagos) - see [timezone.xml](https://github.com/unicode-org/cldr/blob/main/common/bcp47/timezone.xml)). This is mutually exclusive with `iana`.
-- `iana`: IANA TZ identifier (e.g. `#!typst-code "Brazil/West"` - see [IANA](https://www.iana.org/time-zones) and [Wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)). This is mutually exclusive with `bcp47`.
+-   `offset`: The UTC offset either specified as a string (e.g. `#!typst-code "+05"`) or as an integer specifying the seconds (`#!typst-code 18000`).
+-   `bcp47`: BCP-47 timezone ID (e.g. `#!typst-code "iodga"` (IANA: Indian/Chagos) - see [timezone.xml](https://github.com/unicode-org/cldr/blob/main/common/bcp47/timezone.xml)). This is mutually exclusive with `iana`.
+-   `iana`: IANA TZ identifier (e.g. `#!typst-code "Brazil/West"` - see [IANA](https://www.iana.org/time-zones) and [Wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)). This is mutually exclusive with `bcp47`.
+
+If zones are formatted on their own, `dt` _can_ be an empty dictionary (`#!typst-code (:)`). However, when specified, the date and time will still be used to resolve the zone variant (standard/daylight). Otherwise, the standard variant will be used.
 
 example{
 
@@ -76,7 +86,7 @@ example{
 - #f((offset: "-09:30", iana: "Pacific/Marquesas"))
 ```
 
-1. Date specified to resolve metazones.
+1. Date specified to resolve zone variants.
 
 }example
 
@@ -144,9 +154,7 @@ example{
 
 ### `date-fields`
 
-The fields of the date to include in the formatted string. `#!typst-code "D"` (day of month), `#!typst-code "MD"`, `#!typst-code "YMD"`, `#!typst-code "DE"`, `#!typst-code "MDE"`, `#!typst-code "YMDE"`, `#!typst-code "E"` (weekday), `#!typst-code "M"` (month), `#!typst-code "YM"`, `#!typst-code "Y"` (year), or `#!typst-code none`.
-
-Defaults to `#!typst-code "YMD"` if neither `time-precison` nor `zone-style` are specified - otherwise this defaults to `none` and the date isn't included in the output.
+he fields of the date to include in the formatted string. `#!typst-code "D"` (day of month), `#!typst-code "MD"`, `#!typst-code "YMD"`, `#!typst-code "DE"`, `#!typst-code "MDE"`, `#!typst-code "YMDE"`, `#!typst-code "E"` (weekday), `#!typst-code "M"` (month), `#!typst-code "YM"`, `#!typst-code "Y"` (year), `#!typst-code none`, or `#!typst-code auto` (default, see [defaults](#defaults)).
 
 The avialable options are also provided in `fields` as a dictionary.
 
@@ -177,7 +185,9 @@ example{
 
 ### `time-precision`
 
-How precise to display the time. "hour", "minute", "second", "subsecond{n}" (n subsecond digits), "minute-optional" ("hour" if `minutes == 0`, otherwise "minute"), or `none`. Defaults to "minute" if neither `date-fields` nor `zone-style` are specified - otherwise this defaults to `none` and the time isn't included in the output. The avialable options are also provided in `time-precision` as a dictionary.
+How precise to display the time. `#!typst-code "hour"`, `#!typst-code "minute"`, `#!typst-code "second"`, `#!typst-code "subsecond{n}"` (n subsecond digits), `#!typst-code "minute-optional"` (`#!typst-code "hour"` if `#!typst-code minutes == 0`, otherwise `#!typst-code "minute"`), `none`, or `auto` (default, see [defaults](#defaults)).
+
+The avialable options are also provided in `time-precision` as a dictionary.
 
 example{
 
@@ -208,7 +218,9 @@ example{
 
 ### `zone-style`
 
-How to format the timezone (if any). "specific-long", "specific-short", "localized-offset-long", "localized-offset-short", "generic-long", "generic-short", "location", "exemplar-city", or `none`. Defaults to `none`. The avialable options are also provided in `zone-style` as a dictionary.
+How to format the timezone (if any). `#!typst-code "specific-long"`, `#!typst-code "specific-short"`, `#!typst-code "localized-offset-long"`, `#!typst-code "localized-offset-short"`, `#!typst-code "generic-long"`, `#!typst-code "generic-short"`, `#!typst-code "location"`, `#!typst-code "exemplar-city"`, `none`, or `auto` (default, see [defaults](#defaults)).
+
+The avialable options are also provided in `zone-style` as a dictionary.
 
 example{
 
@@ -240,7 +252,7 @@ example{
 
 ### `alignment`
 
-How to align (pad) the formatted string. "auto", "column", or `none` (default, implies "auto").
+How to align (pad) the formatted string. `#!typst-code "auto"`, `#!typst-code "column"`, or `none` (default, implies `#!typst-code "auto"`).
 
 example{
 
@@ -263,7 +275,7 @@ example{
 
 ### `year-style`
 
-How to format the year and the era. "auto", "full", "with-era", `none` (default, implies "auto").
+How to format the year and the era. `#!typst-code "auto"`, `#!typst-code "full"`, `#!typst-code "with-era"`, `none` (default, implies `#!typst-code "auto"`).
 
 example{
 

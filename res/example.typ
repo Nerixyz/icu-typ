@@ -54,7 +54,7 @@
 
 = Timezone
 #icu.fmt(
-  datetime.today(),
+  datetime.today(), // to resolve the zone variant
   zone: tz,
   zone-style: "specific-long",
 ) \
@@ -97,7 +97,9 @@
 
 // full unicode language identifier
 #assert.eq(
-  icu.locale-info("en-arab-DE-posix-macos-u-foo-bar-hc-h12-ca-buddhist-t-en-latn-US-windows-rusty-h0-hybrid-a-other-ext-x-typst-wasm"),
+  icu.locale-info(
+    "en-arab-DE-posix-macos-u-foo-bar-hc-h12-ca-buddhist-t-en-latn-US-windows-rusty-h0-hybrid-a-other-ext-x-typst-wasm",
+  ),
   (
     id: (
       language: "en",

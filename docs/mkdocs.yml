@@ -83,3 +83,4 @@ nav:
   - Home: index.md
   - fmt.md
   - locale-info.md
+  - migration.md

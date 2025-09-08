@@ -147,11 +147,17 @@ impl TryFrom<Spec> for SpecifiedZonedDateTime {
                 .at_date_time_iso(DateTime { date, time });
 
             let tz = if let Some(offset) = tz.offset() {
-                let offsets = VariantOffsetsCalculator::new()
-                    .compute_offsets_from_time_zone_and_name_timestamp(
-                        tz.id(),
-                        ZoneNameTimestamp::from_date_time_iso(DateTime { date, time }),
-                    );
+                // Only resolve the zone variant if a date was specified.
+                // Otherwise we'd be at 1970-01-01 which would be confusing.
+                let offsets = if has_date {
+                    VariantOffsetsCalculator::new()
+                        .compute_offsets_from_time_zone_and_name_timestamp(
+                            tz.id(),
+                            ZoneNameTimestamp::from_date_time_iso(DateTime { date, time }),
+                        )
+                } else {
+                    None
+                };
                 tz.with_variant(match offsets {
                     Some(offsets) => {
                         if offsets.standard == offset {

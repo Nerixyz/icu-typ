@@ -20,23 +20,30 @@
 
 /// Formats a date, time, or timezone.
 ///
+/// If `date-fields`, `time-precision`, and `zone-style` all use their default values (`auto`),
+/// then the format will be automatically selected based on the provided `dt` and `zone`:
+/// - If `dt` has date fields, then `date-fields` will be set to "YMD"
+/// - If `dt` has time fields, then `time-precision` will be set to "minute"
+/// - If `zone` has a value, then `zone-style` will be set to "localized-offset-short"
+///
 /// - dt (dictionary, datetime): The date and time to format. This can be a `datetime` or a dictionary with `year`, `month`, `day`, `hour`, `minute`, `second`, and (optionally) `nanosecond`.
 /// - zone (dictionary, none): The timezone. A dictionary with `offset`, `iana`, `bcp47`, `metazone-id`, and `zone-variant`. The options correspond to the arguments for `fmt-timezone`. Only `offset` is mandatory - the other fields provide supplemental information for named timezones.
 /// - locale (str): A Unicode Locale Identifier (see https://unicode.org/reports/tr35/tr35.html#Unicode_locale_identifier)
 /// - length (str, none): The length of the formatted date part ("long", "medium" (default), "short", or `none`). The avialable options are also provided in `length` as a dictionary.
-/// - date-fields (str, none): The fields of the date to include in the formatted string. "D" (day of month), "MD", "YMD", "DE", "MDE", "YMDE", "E" (weekday), "M" (month), "YM", "Y" (year), or `none`. Defaults to "YMD" if neither `time-precison` nor `zone-style` are specified - otherwise this defaults to `none` and the date isn't included in the output. The avialable options are also provided in `fields` as a dictionary.
-/// - time-precision (str, none): How precise to display the time. "hour", "minute", "second", "subsecond{n}" (n subsecond digits), "minute-optional" ("hour" if `minutes == 0`, otherwise "minute"), or `none`. Defaults to "minute" if neither `date-fields` nor `zone-style` are specified - otherwise this defaults to `none` and the time isn't included in the output. The avialable options are also provided in `time-precision` as a dictionary.
-/// - zone-style (str, none): How to format the timezone (if any). "specific-long", "specific-short", "localized-offset-long", "localized-offset-short",  "generic-long", "generic-short", "location", "exemplar-city", or `none`. Defaults to `none`. The avialable options are also provided in `zone-style` as a dictionary.
+/// - date-fields (str, none, auto): The fields of the date to include in the formatted string. "D" (day of month), "MD", "YMD", "DE", "MDE", "YMDE", "E" (weekday), "M" (month), "YM", "Y" (year), `none`, or `auto` (default, see function documentation).
+/// - time-precision (str, none, auto): How precise to display the time. "hour", "minute", "second", "subsecond{n}" (n subsecond digits), "minute-optional" ("hour" if `minutes == 0`, otherwise "minute"), `none`, or `auto` (default, see function documentation).
+/// - zone-style (str, none): How to format the timezone (if any). "specific-long", "specific-short", "localized-offset-long", "localized-offset-short",  "generic-long", "generic-short", "location", "exemplar-city", `none`, or `auto` (default, see function documentation).
 /// - alignment (str, none): How to align (pad) the formatted string. "auto", "column", or `none` (default, implies "auto").
 /// - year-style (str, none): How to format the year and the era. "auto", "full", "with-era", `none` (default, implies "auto").
+/// - experimental-pattern (str, none): Specifies the pattern to format that date as. This is mutually exclusive with all other named arguments except `zone` and `locale`. This argument is experimental. The calendar selection is implemented manually due to missing functionality in ICU4X. **This is a low-level utility that assumes the pattern is already localized for the target locale.** The full list of placeholders can be found on https://unicode.org/reports/tr35/tr35-dates.html#table-date-field-symbol-table. Note that this argument doesn't check that the date and time are fully specified. If some fields are left out, they're default initialized.
 #let fmt(
   dt,
   zone: none,
   locale: "en",
   length: none,
-  date-fields: none,
-  time-precision: none,
-  zone-style: none,
+  date-fields: auto,
+  time-precision: auto,
+  zone-style: auto,
   alignment: none,
   year-style: none,
   experimental-pattern: none,
@@ -52,11 +59,39 @@
     return str(plug.format_pattern(cbor.encode(spec), bytes(locale), bytes(experimental-pattern)))
   }
 
-  if date-fields == none and time-precision == none and zone-style == none {
-    date-fields = "YMD"
-    if spec.hour != none and spec.minute != none and spec.second != none {
+  // only pick a format if all three are `auto`
+  if date-fields == auto and time-precision == auto and zone-style == auto {
+    let has-date = (
+      spec.at("year", default: none) != none
+        and spec.at("month", default: none) != none
+        and spec.at("day", default: none) != none
+    )
+    let has-time = (
+      spec.at("hour", default: none) != none
+        and spec.at("minute", default: none) != none
+        and spec.at("second", default: none) != none
+    )
+    let has-zone = zone != none
+
+    if has-date {
+      date-fields = "YMD"
+    }
+    if has-time {
       time-precision = "minute"
     }
+    if has-zone {
+      zone-style = "localized-offset-short"
+    }
+  }
+
+  if date-fields == auto {
+    date-fields = none
+  }
+  if time-precision == auto {
+    time-precision = none
+  }
+  if zone-style == auto {
+    zone-style = none
   }
 
   let opts = (
