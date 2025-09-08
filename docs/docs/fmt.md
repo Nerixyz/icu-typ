@@ -297,8 +297,8 @@ Specifies the pattern to format that date as. This is mutually exclusive with al
 
 <!-- prettier-ignore-->
 !!! warning
-    This argument is experimental. Currently, it always formats dates in the Gregorian calendar (regardless of the locale).
-    This assumes that the pattern is already localized for the target locale.
+    This argument is experimental. The calendar selection is implemented manually due to missing functionality in ICU4X (It's in my backlog to try and add it there).
+    **This is a low-level utility that assumes the pattern is already localized for the target locale.**
 
 The full list of placeholders can be found in the [Date Field Symbol Table]. Note that this argument doesn't check that the date and time are fully specified. If some fields are left out, they're default initialized.
 
@@ -314,14 +314,15 @@ example{
   second: 23,
 )
 #let tz = (offset: "+09", iana: "Pacific/Palau")
-#let f(pat) = icu.fmt(dt, zone: tz, experimental-pattern: pat)
+#let f(l, pat) = icu.fmt(dt, zone: tz, locale: l, experimental-pattern: pat)
 
-+ #f("yyyy.MM.dd G 'at' HH:mm:ss zzz")
-+ #f("EEE, MMM d, ''yy")
-+ #f("h:mm a")
-+ #f("hh 'o''clock' a, zzzz")
-+ #f("K:mm a, z")
-+ #f("yyyyy.MMMM.dd GGG hh:mm aaa")
++ #f("en", "yyyy.MM.dd G 'at' HH:mm:ss zzz")
++ #f("th-TH", "EEE, MMM d, ''yy")
++ #f("en", "h:mm a")
++ #f("nl", "hh 'o''clock' a, zzzz")
++ #f("gn", "K:mm a, z")
++ #f("en-AF", "yyyyy.MMMM.dd GGG hh:mm aaa")
++ #f("en", "y-MM-dd hh:mm a zzzz")
 ```
 
 }example
