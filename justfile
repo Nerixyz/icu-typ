@@ -31,7 +31,8 @@ bundle: build (clean-dir "build")
     cp README.md build/.
     cp LICENSE build/.
     cp res/example.png build/res/.
-    wasm-opt -Oz ./target/wasm32-unknown-unknown/release/icu_typ.wasm -o ./build/icu-datetime.wasm
+    # wasm-opt -Oz ./target/wasm32-unknown-unknown/release/icu_typ.wasm -o ./build/icu-datetime.wasm
+    cp ./target/wasm32-unknown-unknown/release/icu_typ.wasm ./build/icu-datetime.wasm
 
 [unix]
 deploy: bundle
