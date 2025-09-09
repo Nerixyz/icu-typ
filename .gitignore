@@ -5,4 +5,4 @@
 .idea
 /build
 *.pdf
-/icu-datetime.wasm
+/typst/icu-datetime.wasm

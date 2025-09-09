@@ -1,9 +1,9 @@
 set windows-shell := ["pwsh.exe", "-NoLogo", "-NoProfile", "-Command"]
 
 version := if os_family() == "unix" { 
-    `sed -nr 's/^version += +"([^"]+)"$/\1/p' typst.toml`
+    `sed -nr 's/^version += +"([^"]+)"$/\1/p' typst/typst.toml`
 } else {
-    `cat typst.toml | Select-String 'version += +"([^"]+)"' | % { $_.Matches.Groups[1].Value }`
+    `cat typst/typst.toml | Select-String 'version += +"([^"]+)"' | % { $_.Matches.Groups[1].Value }`
 }
 
 local-dir := if os_family() == "unix" {
@@ -11,6 +11,14 @@ local-dir := if os_family() == "unix" {
 } else {
     `$Env:APPDATA` / "typst" / "packages" / "local" / "icu-datetime" / version
 }
+
+[unix]
+symlink dst target:
+    ln -fs {{target}} {{dst}}
+
+[windows]
+symlink dst target:
+    New-item -Force -ItemType SymbolicLink {{dst}} -Target {{target}}
 
 build:
     cargo b -r --target wasm32-unknown-unknown
@@ -27,8 +35,8 @@ clean-dir dir:
     mkdir -Force {{dir}}/res
 
 bundle: build (clean-dir "build")
-    cp *.typ build/.
-    cp typst.toml build/.
+    cp typst/*.typ build/.
+    cp typst/typst.toml build/.
     cp README.md build/.
     cp LICENSE build/.
     cp res/example.png build/res/.
@@ -45,6 +53,6 @@ deploy: bundle
     mkdir -Force {{local-dir}}
     cp -Force -Recurse build/* {{local-dir}}/.
 
-example:
+example: (symlink "typst/icu-datetime.wasm" "../target/wasm32-unknown-unknown/release/icu_typ.wasm") build
     typst c res/example.typ res/example.png --root .
     oxipng -Z -o max res/example.png

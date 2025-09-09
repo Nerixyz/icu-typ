@@ -1,4 +1,4 @@
-#import "../api.typ" as icu
+#import "../typst/api.typ" as icu
 
 #set page(width: auto, height: auto, margin: 1em)
 #set text(
@@ -29,11 +29,7 @@
   minute: 2,
   second: 23,
 )
-#let tz = (
-  offset: "-07",
-  iana: "America/Los_Angeles",
-  zone-variant: "st", // standard
-)
+#let tz = (offset: "-07", iana: "America/Los_Angeles")
 
 = Date
 #icu.fmt(day, locale: "km", date-fields: "YMDE") \
@@ -49,7 +45,7 @@
 #icu.fmt(dt, locale: "ru", length: "long") \
 #icu.fmt(dt, locale: "en-US", length: "long") \
 #icu.fmt(dt, locale: "zh-Hans-CN", length: "long") \
-#icu.fmt(dt, locale: "ar", length: "long") \
+#icu.fmt(dt, locale: "ar-u-nu-arab", length: "long") \
 #icu.fmt(dt, locale: "fi", length: "long")
 
 = Timezone
@@ -74,7 +70,7 @@
 
 #icu.fmt(dt, ..opts, zone-style: "generic-short") \
 #icu.fmt(dt, ..opts, zone-style: "localized-offset-short", locale: "lv") \
-#icu.fmt(dt, ..opts, zone-style: "exemplar-city", locale: "en-CA-u-hc-h24-ca-buddhist")
+#icu.fmt(dt, ..opts, zone-style: "exemplar-city", locale: "en-CA-u-hc-h23-ca-buddhist")
 
 // the default undefined language
 #assert.eq(

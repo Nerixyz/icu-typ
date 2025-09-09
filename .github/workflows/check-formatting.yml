@@ -25,6 +25,6 @@ jobs:
         steps:
             - uses: actions/checkout@v4
             - name: Check formatting with Prettier
-              uses: Nerixyz/actionsx-prettier@v3-adj
+              uses: Nerixyz/actionsx-prettier@v3-adj+prettier3.6.2
               with:
                   args: -c .

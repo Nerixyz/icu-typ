@@ -12,8 +12,6 @@ See [nerixyz.github.io/icu-typ](https://nerixyz.github.io/icu-typ) for a full AP
 ## Example
 
 ```typ
-#import "@preview/icu-datetime:0.2.0" as icu
-
 #let day = datetime(
   year: 2024,
   month: 5,
@@ -32,11 +30,7 @@ See [nerixyz.github.io/icu-typ](https://nerixyz.github.io/icu-typ) for a full AP
   minute: 2,
   second: 23,
 )
-#let tz = (
-  offset: "-07",
-  iana: "America/Los_Angeles",
-  zone-variant: "st", // standard
-)
+#let tz = (offset: "-07", iana: "America/Los_Angeles")
 
 = Date
 #icu.fmt(day, locale: "km", date-fields: "YMDE") \
@@ -57,7 +51,7 @@ See [nerixyz.github.io/icu-typ](https://nerixyz.github.io/icu-typ) for a full AP
 
 = Timezone
 #icu.fmt(
-  datetime.today(),
+  datetime.today(), // to resolve the zone variant
   zone: tz,
   zone-style: "specific-long",
 ) \
@@ -77,10 +71,16 @@ See [nerixyz.github.io/icu-typ](https://nerixyz.github.io/icu-typ) for a full AP
 
 #icu.fmt(dt, ..opts, zone-style: "generic-short") \
 #icu.fmt(dt, ..opts, zone-style: "localized-offset-short", locale: "lv") \
-#icu.fmt(dt, ..opts, zone-style: "exemplar-city", locale: "en-CA-u-hc-h24-ca-buddhist")
+#icu.fmt(dt, ..opts, zone-style: "exemplar-city", locale: "en-CA-u-hc-h23-ca-buddhist")
 ```
 
-<!-- typst c res/example.typ res/example.png --root . -->
+<!--
+- create a symlink at typst/icu-datetime.wasm to target/wasm32-unknown-unknown/debug/icu_typ.wasm
+  PowerShell (from the project root):
+    new-item -ItemType SymbolicLink typst/icu-datetime.wasm -Target ../target/wasm32-unknown-unknown/debug/icu_typ.wasm
+
+- typst c res/example.typ res/example.png --root .
+ -->
 
 ![Example](res/example.png)
 
@@ -105,15 +105,6 @@ just build
 # to deploy the package locally, use `just deploy`
 ```
 
-While developing, you can symlink the WASM file into the root of the repository (it's in the `.gitignore`):
-
-```sh
-# Windows (PowerShell)
-New-Item icu-datetime.wasm -ItemType SymbolicLink -Value ./target/wasm32-unknown-unknown/debug/icu_typ.wasm
-# Unix
-ln -s ./target/wasm32-unknown-unknown/debug/icu_typ.wasm icu-datetime.wasm
-```
-
-Use `cargo b --target wasm32-unknown-unknown` to build in debug mode.
+`just example` will build the example and symlink the release artifact to `typst/icu-datetime.wasm`.
 
 [Unicode Locale Identifier]: https://unicode.org/reports/tr35/tr35.html#Unicode_locale_identifier

@@ -31,6 +31,13 @@ jobs:
 
             - uses: Swatinem/rust-cache@v2
 
+            - uses: taiki-e/install-action@v2
+              with:
+                  tool: oxipng
+
+            - name: Build example
+              run: just example
+
             - name: Build and deploy locally
               run: just deploy
 
