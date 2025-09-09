@@ -35,6 +35,8 @@ jobs:
               with:
                   tool: oxipng
 
+            - uses: typst-community/setup-typst@v4
+
             - name: Build example
               run: just example
 
@@ -50,8 +52,6 @@ jobs:
               with:
                   name: icu-datetime.zip
                   path: icu-datetime.zip
-
-            - uses: typst-community/setup-typst@v4
 
             - uses: actions/setup-python@v5
               with:
