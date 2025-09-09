@@ -53,6 +53,11 @@ deploy: bundle
     mkdir -Force {{local-dir}}
     cp -Force -Recurse build/* {{local-dir}}/.
 
-example: (symlink "typst/icu-datetime.wasm" "../target/wasm32-unknown-unknown/release/icu_typ.wasm") build
+local-wasm: (symlink "typst/icu-datetime.wasm" "../target/wasm32-unknown-unknown/release/icu_typ.wasm") build
+
+example: local-wasm
     typst c res/example.typ res/example.png --root .
     oxipng -Z -o max res/example.png
+
+test: local-wasm
+    typst query --root . tests/main.typ --one "<ok>"

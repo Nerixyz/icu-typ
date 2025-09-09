@@ -40,6 +40,9 @@ jobs:
             - name: Build example
               run: just example
 
+            - name: Run tests
+              run: just test
+
             - name: Build and deploy locally
               run: just deploy
 
