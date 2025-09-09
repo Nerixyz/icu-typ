@@ -19,11 +19,11 @@ Types of changes:
 
 ## [Unreleased]
 
-This release is a major change since the last version as it updates the ICU4X dependency from 1.x to 2.x. Take a look at the XXXXXX guide.
+This release is a major change since the last version as it updates the ICU4X dependency from 1.x to 2.x. Take a look at the [migration guide](https://nerixyz.github.io/icu-typ/migration/).
 
 ### Added
 
-- [`fmt`](https://nerixyz.github.io/icu-typ/fmt) is now the main function to format dates, times, datetimes, and timezones.
+- [`fmt`](https://nerixyz.github.io/icu-typ/fmt) is now the main function to format dates, times, datetimes, and timezones. It's more expressive than the old individual functions.
 - `zone-styles`, `alignment`, `fields`, `length`, `time-precision`, and `year-style` contain the supported values for arguments to `fmt`. Their values are _not_ implementation defined meaning you can rely on their string values.
 - There is now a new [experimental pattern API](https://nerixyz.github.io/icu-typ/fmt/#experimental-pattern).
 
