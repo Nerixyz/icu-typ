@@ -24,9 +24,9 @@ Formats a date and time in some [`locale`](#locale). Dates are assumed to be ISO
 
 The function tries to infer the intended format automatically if [`date-fields`](#date-fields), [`time-precision`](#time-precision), and [`zone-style`](#zone-style) _all_ use their default values (`auto`):
 
--   If [`dt`](#dt) has date fields (`year`, `month`, `day`), then [`date-fields`](#date-fields) will be set to `#!typst-code "YMD"`
--   If [`dt`](#dt) has time fields (`hour`, `minute`, `second`), then [`time-precision`](#time-precision) will be set to `#!typst-code "minute"`
--   If [`zone`](#zone) has a value, then [`zone-style`](#zone-style) will be set to `#!typst-code "localized-offset-short"`
+- If [`dt`](#dt) has date fields (`year`, `month`, `day`), then [`date-fields`](#date-fields) will be set to `#!typst-code "YMD"`
+- If [`dt`](#dt) has time fields (`hour`, `minute`, `second`), then [`time-precision`](#time-precision) will be set to `#!typst-code "minute"`
+- If [`zone`](#zone) has a value, then [`zone-style`](#zone-style) will be set to `#!typst-code "localized-offset-short"`
 
 ## Arguments
 
@@ -63,9 +63,9 @@ example{
 
 A zone passed as a dictionary with `offset` (required), `bcp47` or `iana`.
 
--   `offset`: The UTC offset either specified as a string (e.g. `#!typst-code "+05"`) or as an integer specifying the seconds (`#!typst-code 18000`).
--   `bcp47`: BCP-47 timezone ID (e.g. `#!typst-code "iodga"` (IANA: Indian/Chagos) - see [timezone.xml](https://github.com/unicode-org/cldr/blob/main/common/bcp47/timezone.xml)). This is mutually exclusive with `iana`.
--   `iana`: IANA TZ identifier (e.g. `#!typst-code "Brazil/West"` - see [IANA](https://www.iana.org/time-zones) and [Wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)). This is mutually exclusive with `bcp47`.
+- `offset`: The UTC offset either specified as a string (e.g. `#!typst-code "+05"`) or as an integer specifying the seconds (`#!typst-code 18000`).
+- `bcp47`: BCP-47 timezone ID (e.g. `#!typst-code "iodga"` (IANA: Indian/Chagos) - see [timezone.xml](https://github.com/unicode-org/cldr/blob/main/common/bcp47/timezone.xml)). This is mutually exclusive with `iana`.
+- `iana`: IANA TZ identifier (e.g. `#!typst-code "Brazil/West"` - see [IANA](https://www.iana.org/time-zones) and [Wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)). This is mutually exclusive with `bcp47`.
 
 If zones are formatted on their own, `dt` _can_ be an empty dictionary (`#!typst-code (:)`). However, when specified, the date and time will still be used to resolve the zone variant (standard/daylight). Otherwise, the standard variant will be used.
 

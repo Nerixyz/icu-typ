@@ -1,4 +1,4 @@
-set windows-shell := ["pwsh.exe", "-NoLogo", "-Command"]
+set windows-shell := ["pwsh.exe", "-NoLogo", "-NoProfile", "-Command"]
 
 version := if os_family() == "unix" { 
     `sed -nr 's/^version += +"([^"]+)"$/\1/p' typst.toml`

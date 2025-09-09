@@ -1,0 +1,6 @@
+.venv
+venv
+/.vscode
+/.idea
+/.vs
+rendered/

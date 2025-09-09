@@ -1,72 +1,72 @@
 [data-md-color-scheme="slate"] {
-  --md-code-hl-variable-color: #ffa585;
-  --md-default-bg-color: hsla(var(--md-hue), 15%, 10%, 1);
+    --md-code-hl-variable-color: #ffa585;
+    --md-default-bg-color: hsla(var(--md-hue), 15%, 10%, 1);
 }
 [data-md-color-scheme="default"] {
-  --md-code-hl-variable-color: #a32c00;
+    --md-code-hl-variable-color: #a32c00;
 }
 
 [data-md-color-scheme="default"] img[src$="_d.svg"],
 [data-md-color-scheme="slate"] img[src$="_l.svg"] {
-  display: none;
+    display: none;
 }
 
 .typst-preview {
-  display: flex;
-  gap: 1em;
-  margin: 0 0 1em;
-  flex-wrap: wrap;
+    display: flex;
+    gap: 1em;
+    margin: 0 0 1em;
+    flex-wrap: wrap;
 }
 
 .typst-preview > .typst-source {
-  margin: 0;
-  overflow-x: auto;
-  flex: 1;
+    margin: 0;
+    overflow-x: auto;
+    flex: 1;
 }
 
 .typst-preview > .typst-source > .highlight,
 .typst-preview > .typst-source > .highlight > :is(pre, .highlighttable) {
-  height: 100%;
+    height: 100%;
 }
 
 .typst-preview > .typst-source > .highlight > :is(.highlighttable, pre) {
-  background: var(--md-code-bg-color);
+    background: var(--md-code-bg-color);
 }
 
 .typst-preview > .typst-source > .highlight > .highlighttable {
-  margin: 0;
+    margin: 0;
 }
 
 .typst-preview > .typst-source > .highlight > pre {
-  margin: 0;
-  height: 100%;
+    margin: 0;
+    height: 100%;
 }
 
 .typst-preview > .preview {
-  background: var(--md-code-bg-color);
-  display: flex;
-  align-items: center;
+    background: var(--md-code-bg-color);
+    display: flex;
+    align-items: center;
 }
 
 .typst-preview.vertical > * {
-  min-width: 100%;
+    min-width: 100%;
 }
 
 .typst-preview > p {
-  display: none;
+    display: none;
 }
 
 @media screen and (max-width: 700px) {
-  .typst-preview > * {
-    min-width: 100%;
-  }
+    .typst-preview > * {
+        min-width: 100%;
+    }
 }
 
 details .md-annotation > .md-tooltip {
-  width: auto;
-  max-width: 10rem;
+    width: auto;
+    max-width: 10rem;
 }
 
 .typst-preview .typst-source {
-  overflow-y: hidden; /* TODO: this doesn't look right */
+    overflow-y: hidden; /* TODO: this doesn't look right */
 }

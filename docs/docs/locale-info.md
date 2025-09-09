@@ -20,8 +20,8 @@ The language identifier starts with a [language subtag] with an optional [script
 
 In this library, only some of the [Unicode extensions](https://unicode.org/reports/tr35/tr35.html#Key_And_Type_Definitions_) (`-u-` extensions) are important.
 
--   `ca` can be used to specify the calendar for dates and datetimes ([calendar.xml](https://github.com/unicode-org/cldr/blob/main/common/bcp47/calendar.xml))
--   `hc` can be used to specify the hour cycle for time formatters ([reference](https://unicode.org/reports/tr35/tr35.html#UnicodeHourCycleIdentifier))
+- `ca` can be used to specify the calendar for dates and datetimes ([calendar.xml](https://github.com/unicode-org/cldr/blob/main/common/bcp47/calendar.xml))
+- `hc` can be used to specify the hour cycle for time formatters ([reference](https://unicode.org/reports/tr35/tr35.html#UnicodeHourCycleIdentifier))
 
 ### Example
 
