@@ -2,6 +2,11 @@
 
 This library is a wrapper around [ICU4X](https://github.com/unicode-org/icu4x)' `datetime` formatting for Typst which provides internationalized formatting for dates, times, and timezones.
 
+If you're looking for documentation of an older version, append that version to the URL:
+
+- **v0.2.0**: [nerixyz.github.io/icu-typ/v0.2.0](https://nerixyz.github.io/icu-typ/v0.2.0)
+- **v0.1.2**: [nerixyz.github.io/icu-typ/v0.1.2](https://nerixyz.github.io/icu-typ/v0.1.2)
+
 ## Usage
 
 ```typst +preview(vertical fake)
