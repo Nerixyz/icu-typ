@@ -22,6 +22,9 @@ jobs:
                     - ref: main
                       version: main
                       typst: 0.13
+                    - ref: main # not tagged yet
+                      version: v0.2.0
+                      typst: 0.13
                     - ref: bd80a02d2fe029eba305d84f1e0a977ffc4272a6
                       version: v0.1.2
                       typst: 0.12.0 # should be 11 but that fails
