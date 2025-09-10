@@ -9,6 +9,8 @@ All comparisons and examples here are compiled with the following imports:
 #import "@preview/icu-datetime:0.1.2" as icu01
 ```
 
+The replacement for all `fmt-*` functions is [`fmt`][fmt].
+
 ### `fmt-date`
 
 ```typst-code

@@ -7,7 +7,7 @@ This library is a wrapper around [ICU4X](https://github.com/unicode-org/icu4x)' 
 
 As the WASM bundle includes all localization data, it's quite large (about 8 MiB).
 
-See [nerixyz.github.io/icu-typ](https://nerixyz.github.io/icu-typ) for a full API reference with more examples.
+See [nerixyz.github.io/icu-typ](https://nerixyz.github.io/icu-typ) for a full API reference with more examples as well as a migration guide.
 
 ## Example
 
