@@ -1,0 +1,85 @@
+name: Build the documentation
+
+on:
+    pull_request:
+    workflow_call:
+
+permissions:
+    contents: read
+
+concurrency:
+    group: "build-docs"
+    cancel-in-progress: false
+
+jobs:
+    build-docs:
+        runs-on: ubuntu-latest
+        strategy:
+            fail-fast: true
+            matrix:
+                include:
+                    - branch: main
+                      typst: 0.13
+                    - branch: v0.1.2
+                      typst: 0.11.0
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v5
+              with:
+                  ref: ${{matrix.branch}}
+
+            - uses: dtolnay/rust-toolchain@master
+              with:
+                  toolchain: stable
+                  components: clippy
+
+            - uses: Aandreba/setup-binaryen@v1.0.0
+              with:
+                  token: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Fixup version
+              if: startsWith(matrix.branch, 'v')
+              run: |
+                  sed -i 's/^site_name: icu-datetime/site_name: icu-datetime (${{matrix.branch}})/' docs/mkdocs.yml
+                  sed -i 's#wasm-opt.*#cp ./target/wasm32-unknown-unknown/release/icu_typ.wasm ./build/icu-datetime.wasm#' justfile
+                  sed -i 's#/main/#/${{matrix.branch}}/#' docs/mkdocs.yml
+                  sed -i 's#https://nerixyz.github.io/icu-typ#https://nerixyz.github.io/icu-typ/${{matrix.branch}}#' docs/mkdocs.yml
+                  sed '/^# icu-datetime$/r'<(cat <<EOF
+                  <!-- prettier-ignore-->
+                  !!! info
+                      This documentation is for version ${{matrix.branch}} of the package. If you want to see the latest version, go to [nerixyz.github.io/icu-typ](https://nerixyz.github.io/icu-typ/).
+
+                  EOF
+                  ) -i -- docs/docs/index.md
+
+            - uses: extractions/setup-just@v3
+            - name: Build and deploy locally
+              run: just deploy
+
+            - name: Install Noto Fonts
+              run: sudo apt install -y fonts-noto-core fonts-noto-cjk
+
+            - uses: typst-community/setup-typst@v4
+              with:
+                  typst-version: ${{matrix.typst}}
+
+            - uses: actions/setup-python@v5
+              with:
+                  python-version: "3.12"
+                  cache: "pip"
+            - run: pip install .
+              working-directory: docs
+
+            - run: python3 -m mkdocs build
+              working-directory: docs
+
+            - run: npm i -g svgo
+            - run: for f in *.svg; do svgo "$f"; done
+              working-directory: docs/site/rendered
+              shell: bash
+
+            - name: Upload artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  path: "docs/site"
+                  name: build-${{matrix.branch}}
