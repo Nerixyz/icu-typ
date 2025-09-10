@@ -13,20 +13,23 @@ concurrency:
 
 jobs:
     build-docs:
+        name: Build documentation for ${{matrix.version}}
         runs-on: ubuntu-latest
         strategy:
             fail-fast: false
             matrix:
                 include:
-                    - branch: main
+                    - ref: main
+                      version: main
                       typst: 0.13
-                    - branch: v0.1.2
+                    - ref: bd80a02d2fe029eba305d84f1e0a977ffc4272a6
+                      version: v0.1.2
                       typst: 0.12.0 # should be 11 but that fails
         steps:
             - name: Checkout
               uses: actions/checkout@v5
               with:
-                  ref: ${{matrix.branch}}
+                  ref: ${{matrix.ref}}
 
             - uses: dtolnay/rust-toolchain@master
               with:
@@ -38,16 +41,16 @@ jobs:
                   token: ${{ secrets.GITHUB_TOKEN }}
 
             - name: Fixup version
-              if: startsWith(matrix.branch, 'v')
+              if: startsWith(matrix.version, 'v')
               run: |
-                  sed -i 's/^site_name: icu-datetime/site_name: icu-datetime (${{matrix.branch}})/' docs/mkdocs.yml
+                  sed -i 's/^site_name: icu-datetime/site_name: icu-datetime (${{matrix.version}})/' docs/mkdocs.yml
                   sed -i 's#wasm-opt.*#cp ./target/wasm32-unknown-unknown/release/icu_typ.wasm ./build/icu-datetime.wasm#' justfile
-                  sed -i 's#/main/#/${{matrix.branch}}/#' docs/mkdocs.yml
-                  sed -i 's#https://nerixyz.github.io/icu-typ#https://nerixyz.github.io/icu-typ/${{matrix.branch}}#' docs/mkdocs.yml
+                  sed -i 's#/main/#/${{matrix.version}}/#' docs/mkdocs.yml
+                  sed -i 's#https://nerixyz.github.io/icu-typ#https://nerixyz.github.io/icu-typ/${{matrix.version}}#' docs/mkdocs.yml
                   sed '/^# icu-datetime$/r'<(cat <<EOF
                   <!-- prettier-ignore-->
                   !!! info
-                      This documentation is for version ${{matrix.branch}} of the package. If you want to see the latest version, go to [nerixyz.github.io/icu-typ](https://nerixyz.github.io/icu-typ/).
+                      This documentation is for version ${{matrix.version}} of the package. If you want to see the latest version, go to [nerixyz.github.io/icu-typ](https://nerixyz.github.io/icu-typ/).
 
                   EOF
                   ) -i -- docs/docs/index.md
@@ -82,4 +85,4 @@ jobs:
               uses: actions/upload-artifact@v4
               with:
                   path: "docs/site"
-                  name: build-${{matrix.branch}}
+                  name: build-${{matrix.version}}
