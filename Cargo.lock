@@ -100,7 +100,7 @@ dependencies = [
 
 [[package]]
 name = "icu-typ"
-version = "0.1.2"
+version = "0.2.0"
 dependencies = [
  "ciborium",
  "icu_calendar",
