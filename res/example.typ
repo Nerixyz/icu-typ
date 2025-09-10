@@ -48,7 +48,7 @@
 #icu.fmt(dt, locale: "ar-u-nu-arab", length: "long") \
 #icu.fmt(dt, locale: "fi", length: "long")
 
-= Timezone
+= Zone
 #icu.fmt(
   datetime.today(), // to resolve the zone variant
   zone: tz,

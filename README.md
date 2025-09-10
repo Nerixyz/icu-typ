@@ -49,7 +49,7 @@ See [nerixyz.github.io/icu-typ](https://nerixyz.github.io/icu-typ) for a full AP
 #icu.fmt(dt, locale: "ar", length: "long") \
 #icu.fmt(dt, locale: "fi", length: "long")
 
-= Timezone
+= Zone
 #icu.fmt(
   datetime.today(), // to resolve the zone variant
   zone: tz,

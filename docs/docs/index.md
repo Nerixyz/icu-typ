@@ -59,7 +59,7 @@ For detailed documentation, see [`fmt`- Format Date and Time](fmt.md).
 #icu.fmt(dt, locale: "fi", length: "long")
 ```
 
-## Timezones
+## Zones
 
 ```typst +preview
 #let tz = (

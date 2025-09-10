@@ -24,9 +24,9 @@ Formats a date and time in some [`locale`](#locale). Dates are assumed to be ISO
 
 The function tries to infer the intended format automatically if [`date-fields`](#date-fields), [`time-precision`](#time-precision), and [`zone-style`](#zone-style) _all_ use their default values (`auto`):
 
-- If [`dt`](#dt) has date fields (`year`, `month`, `day`), then [`date-fields`](#date-fields) will be set to `#!typst-code "YMD"`
-- If [`dt`](#dt) has time fields (`hour`, `minute`, `second`), then [`time-precision`](#time-precision) will be set to `#!typst-code "minute"`
-- If [`zone`](#zone) has a value, then [`zone-style`](#zone-style) will be set to `#!typst-code "localized-offset-short"`
+-   If [`dt`](#dt) has date fields (`year`, `month`, `day`), then [`date-fields`](#date-fields) will be set to `#!typst-code "YMD"`
+-   If [`dt`](#dt) has time fields (`hour`, `minute`, `second`), then [`time-precision`](#time-precision) will be set to `#!typst-code "minute"`
+-   If [`zone`](#zone) has a value, then [`zone-style`](#zone-style) will be set to `#!typst-code "localized-offset-short"`
 
 ## Arguments
 
@@ -63,11 +63,11 @@ example{
 
 A zone passed as a dictionary with `offset` (required), `bcp47` or `iana`.
 
-- `offset`: The UTC offset either specified as a string (e.g. `#!typst-code "+05"`) or as an integer specifying the seconds (`#!typst-code 18000`).
-- `bcp47`: BCP-47 timezone ID (e.g. `#!typst-code "iodga"` (IANA: Indian/Chagos) - see [timezone.xml](https://github.com/unicode-org/cldr/blob/main/common/bcp47/timezone.xml)). This is mutually exclusive with `iana`.
-- `iana`: IANA TZ identifier (e.g. `#!typst-code "Brazil/West"` - see [IANA](https://www.iana.org/time-zones) and [Wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)). This is mutually exclusive with `bcp47`.
+-   `offset`: The UTC offset either specified as a string (e.g. `#!typst-code "+05"`) or as an integer specifying the seconds (`#!typst-code 18000`).
+-   `bcp47`: BCP-47 timezone ID (e.g. `#!typst-code "iodga"` (IANA: Indian/Chagos) - see [timezone.xml](https://github.com/unicode-org/cldr/blob/main/common/bcp47/timezone.xml)). This is mutually exclusive with `iana`.
+-   `iana`: IANA TZ identifier (e.g. `#!typst-code "Brazil/West"` - see [IANA](https://www.iana.org/time-zones) and [Wikipedia](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)). This is mutually exclusive with `bcp47`.
 
-If zones are formatted on their own, `dt` _can_ be an empty dictionary (`#!typst-code (:)`). However, when specified, the date and time will still be used to resolve the zone variant (standard/daylight). Otherwise, the standard variant will be used.
+If zones are formatted on their own, `dt` _can_ be an empty dictionary (`#!typst-code (:)`). However, when specified, the date and time will still be used to resolve the zone variant (standard/daylight). Otherwise, the standard variant will be used. Note that this doesn't resolve the variant at the specified date but the variant at the specified `offset`.
 
 example{
 
@@ -122,6 +122,8 @@ example{
 
 The length of the formatted string (`#!typst-code "long"`, `#!typst-code "medium"` (default), or `#!typst-code "short"`).
 
+The avialable options are also provided in [`length`](./constants.md#length) as a dictionary.
+
 example{
 
 ```typst +preview
@@ -156,7 +158,7 @@ example{
 
 he fields of the date to include in the formatted string. `#!typst-code "D"` (day of month), `#!typst-code "MD"`, `#!typst-code "YMD"`, `#!typst-code "DE"`, `#!typst-code "MDE"`, `#!typst-code "YMDE"`, `#!typst-code "E"` (weekday), `#!typst-code "M"` (month), `#!typst-code "YM"`, `#!typst-code "Y"` (year), `#!typst-code none`, or `#!typst-code auto` (default, see [defaults](#defaults)).
 
-The avialable options are also provided in `fields` as a dictionary.
+The avialable options are also provided in [`date-fields`](./constants.md#date-fields) as a dictionary.
 
 example{
 
@@ -165,7 +167,7 @@ example{
   columns: 2,
   [`date-fields`], [Output],
   ..icu
-    .fields // (1)!
+    .date-fields // (1)!
     .values()
     .map(v => (
       v,
@@ -179,7 +181,7 @@ example{
 )
 ```
 
-1. `fields` is a dictionary that contains all possible values for `date-fiels`.
+1. [`date-fields`](./constants.md#date-fields) is a dictionary that contains all possible values for `date-fiels`.
 
 }example
 
@@ -187,7 +189,7 @@ example{
 
 How precise to display the time. `#!typst-code "hour"`, `#!typst-code "minute"`, `#!typst-code "second"`, `#!typst-code "subsecond{n}"` (n subsecond digits), `#!typst-code "minute-optional"` (`#!typst-code "hour"` if `#!typst-code minutes == 0`, otherwise `#!typst-code "minute"`), `none`, or `auto` (default, see [defaults](#defaults)).
 
-The avialable options are also provided in `time-precision` as a dictionary.
+The avialable options are also provided in [`time-precision`](./constants.md#time-precision) as a dictionary.
 
 example{
 
@@ -212,7 +214,7 @@ example{
 )
 ```
 
-1. `time-precision` is a dictionary that contains all possible values for `time-precision`.
+1. [`time-precision`](./constants.md#time-precision) is a dictionary that contains all possible values for `time-precision`.
 
 }example
 
@@ -220,7 +222,7 @@ example{
 
 How to format the timezone (if any). `#!typst-code "specific-long"`, `#!typst-code "specific-short"`, `#!typst-code "localized-offset-long"`, `#!typst-code "localized-offset-short"`, `#!typst-code "generic-long"`, `#!typst-code "generic-short"`, `#!typst-code "location"`, `#!typst-code "exemplar-city"`, `none`, or `auto` (default, see [defaults](#defaults)).
 
-The avialable options are also provided in `zone-style` as a dictionary.
+The avialable options are also provided in [`zone-styles`](./constants.md#zone-styles) as a dictionary.
 
 example{
 
@@ -246,13 +248,15 @@ example{
 )
 ```
 
-1. `zone-styles` is a dictionary that contains all possible values for `zone-style`.
+1. [`zone-styles`](./constants.md#zone-styles) is a dictionary that contains all possible values for `zone-style`.
 
 }example
 
 ### `alignment`
 
 How to align (pad) the formatted string. `#!typst-code "auto"`, `#!typst-code "column"`, or `none` (default, implies `#!typst-code "auto"`).
+
+The avialable options are also provided in [`alignment`](./constants.md#alignment) as a dictionary.
 
 example{
 
@@ -277,6 +281,8 @@ example{
 
 How to format the year and the era. `#!typst-code "auto"`, `#!typst-code "full"`, `#!typst-code "with-era"`, `none` (default, implies `#!typst-code "auto"`).
 
+The avialable options are also provided in [`year-styles`](./constants.md#year-styles) as a dictionary.
+
 example{
 
 ```typst +preview(vertical)
@@ -284,7 +290,7 @@ example{
   columns: 5,
   [`year-style`], [2024], [-128], [1984], [1847],
   ..icu
-    .year-style // (1)!
+    .year-styles // (1)!
     .values()
     .map(style => (
       style,
@@ -299,7 +305,7 @@ example{
 )
 ```
 
-1. `year-style` is a dictionary that contains all possible values for `year-style`.
+1. [`year-styles`](./constants.md#year-styles) is a dictionary that contains all possible values for `year-style`.
 
 }example
 
