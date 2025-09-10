@@ -19,6 +19,8 @@ Types of changes:
 
 ## [Unreleased]
 
+## [0.2.0] - 2025-09-10
+
 This release is a major change since the last version as it updates the ICU4X dependency from 1.x to 2.x. Take a look at the [migration guide](https://nerixyz.github.io/icu-typ/v0.2.0/migration/).
 
 ### Added
@@ -80,7 +82,8 @@ This release is a major change since the last version as it updates the ICU4X de
 - `fmt-timezone` (🚧 experimental)
 - `fmt-zoned-datetime` (🚧 experimental)
 
-[unreleased]: https://github.com/Nerixyz/icu-typ/compare/v0.1.2...HEAD
+[unreleased]: https://github.com/Nerixyz/icu-typ/compare/v0.2.0...HEAD
+[0.2.0]: https://github.com/Nerixyz/icu-typ/compare/v0.1.2...v0.2.0
 [0.1.2]: https://github.com/Nerixyz/icu-typ/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/Nerixyz/icu-typ/releases/tag/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/Nerixyz/icu-typ/releases/tag/v0.1.0
