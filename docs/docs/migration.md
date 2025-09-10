@@ -9,7 +9,7 @@ All comparisons and examples here are compiled with the following imports:
 #import "@preview/icu-datetime:0.1.2" as icu01
 ```
 
-The replacement for all `fmt-*` functions is [`fmt`][fmt].
+The replacement for all `fmt-*` functions is [`fmt`][fmt]. The old documentation is available at [nerixyz.github.io/icu-typ/v0.1.2](https://nerixyz.github.io/icu-typ/v0.1.2).
 
 ### `fmt-date`
 

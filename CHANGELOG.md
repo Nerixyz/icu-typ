@@ -40,19 +40,19 @@ This release is a major change since the last version as it updates the ICU4X de
 ### Added
 
 - The documentation is now hosted at [nerixyz.github.io/icu-typ](https://nerixyz.github.io/icu-typ/) and includes more examples.
-- The [`offset`](https://nerixyz.github.io/icu-typ/fmt-timezone/#offset) in time zones can be specified as an `int` which specifies the offset in seconds.
-- 🚧 [`fmt-zoned-datetime`](https://nerixyz.github.io/icu-typ/fmt-zoned-datetime): `date-length` and `time-length` now accept `none`.
+- The [`offset`](https://nerixyz.github.io/icu-typ/v0.1.2/fmt-timezone/#offset) in time zones can be specified as an `int` which specifies the offset in seconds.
+- 🚧 [`fmt-zoned-datetime`](https://nerixyz.github.io/icu-typ/v0.1.2/fmt-zoned-datetime): `date-length` and `time-length` now accept `none`.
 
 ### Changed
 
-- 🚧 [`fmt-timezone`](https://nerixyz.github.io/icu-typ/fmt-timezone): `includes` was renamed to `format` and doesn't accept an array anymore (passing an array with more than one item never worked).
-- 🚧 [`fmt-timezone`](https://nerixyz.github.io/icu-typ/fmt-timezone): The `-format` suffix for options of [`format`](https://nerixyz.github.io/icu-typ/fmt-timezone#format) was removed.
-- 🚧 [`fmt-timezone`](https://nerixyz.github.io/icu-typ/fmt-timezone): `local-date` now accepts dictionaries and datetimes without `hour`, `minute`, and `second` (default to `0`) to be able to use `datetime.today()`.
+- 🚧 [`fmt-timezone`](https://nerixyz.github.io/icu-typ/v0.1.2/fmt-timezone): `includes` was renamed to `format` and doesn't accept an array anymore (passing an array with more than one item never worked).
+- 🚧 [`fmt-timezone`](https://nerixyz.github.io/icu-typ/v0.1.2/fmt-timezone): The `-format` suffix for options of [`format`](https://nerixyz.github.io/icu-typ/v0.1.2/fmt-timezone#format) was removed.
+- 🚧 [`fmt-timezone`](https://nerixyz.github.io/icu-typ/v0.1.2/fmt-timezone): `local-date` now accepts dictionaries and datetimes without `hour`, `minute`, and `second` (default to `0`) to be able to use `datetime.today()`.
 
 ### Fixed
 
-- Setting [`bcp47`](https://nerixyz.github.io/icu-typ/fmt-timezone/#bcp47) in time zones now works correctly.
-- Setting [`metazone-id`](https://nerixyz.github.io/icu-typ/fmt-timezone/#metazone-id) in time zones now works correctly.
+- Setting [`bcp47`](https://nerixyz.github.io/icu-typ/v0.1.2/fmt-timezone/#bcp47) in time zones now works correctly.
+- Setting [`metazone-id`](https://nerixyz.github.io/icu-typ/v0.1.2/fmt-timezone/#metazone-id) in time zones now works correctly.
 
 ## [0.1.1] - 2024-06-05
 

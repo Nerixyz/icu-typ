@@ -15,16 +15,21 @@ concurrency:
     cancel-in-progress: false
 
 jobs:
-    deploy:
-        environment:
-            name: github-pages
-            url: ${{ steps.deployment.outputs.page_url }}
+    build:
         runs-on: ubuntu-latest
+        strategy:
+            fail-fast: true
+            matrix:
+                include:
+                    - branch: main
+                      typst: 0.13
+                    - branch: v0.1.2
+                      typst: 0.11.0
         steps:
             - name: Checkout
               uses: actions/checkout@v4
-            - name: Setup Pages
-              uses: actions/configure-pages@v5
+              with:
+                  ref: ${{matrix.branch}}
 
             - uses: dtolnay/rust-toolchain@master
               with:
@@ -43,6 +48,8 @@ jobs:
               run: sudo apt install -y fonts-noto-core fonts-noto-cjk
 
             - uses: typst-community/setup-typst@v4
+              with:
+                  typst-version: ${{matrix.typst}}
 
             - uses: actions/setup-python@v5
               with:
@@ -50,6 +57,21 @@ jobs:
                   cache: "pip"
             - run: pip install .
               working-directory: docs
+
+            - name: Fixup version
+              if: startsWith(matrix.branch, 'v')
+              run: |
+                  sed -i 's/^site_name: icu-datetime/site_name: icu-datetime (${{matrix.branch}})/' docs/mkdocs.yml
+                  sed -i 's#/main/#/${{matrix.branch}}/#' docs/mkdocs.yml
+                  sed -i 's#https://nerixyz.github.io/icu-typ#https://nerixyz.github.io/icu-typ/${{matrix.branch}}#' docs/mkdocs.yml
+                  sed '/^# icu-datetime$/r'<(cat <<EOF
+                  <!-- prettier-ignore-->
+                  !!! info
+                      This documentation is for version ${{matrix.branch}} of the package. If you want to see the latest version, go to [nerixyz.github.io/icu-typ](https://nerixyz.github.io/icu-typ/).
+
+                  EOF
+                  ) -i -- docs/docs/index.md
+
             - run: python3 -m mkdocs build
               working-directory: docs
 
@@ -59,9 +81,36 @@ jobs:
               shell: bash
 
             - name: Upload artifact
-              uses: actions/upload-pages-artifact@v3
+              uses: actions/upload-artifact@v4
               with:
                   path: "docs/site"
+                  name: build-${{matrix.branch}}
+
+    deploy:
+        environment:
+            name: github-pages
+            url: ${{ steps.deployment.outputs.page_url }}
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+            - name: Setup Pages
+              uses: actions/configure-pages@v5
+
+            - uses: actions/download-artifact@v4
+              with:
+                  name: build-main
+                  path: build
+
+            - uses: actions/download-artifact@v4
+              with:
+                  name: build-v0.1.2
+                  path: build/v0.1.2
+
+            - name: Upload artifact
+              uses: actions/upload-pages-artifact@v3
+              with:
+                  path: "build"
             - name: Deploy to GitHub Pages
               id: deployment
               uses: actions/deploy-pages@v4
