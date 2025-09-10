@@ -12,17 +12,13 @@ jobs:
         name: Build
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v5
 
             - uses: extractions/setup-just@v3
 
             - uses: Aandreba/setup-binaryen@v1.0.0
               with:
                   token: ${{ secrets.GITHUB_TOKEN }}
-
-            - uses: denoland/setup-deno@v2
-              with:
-                  deno-version: v1.x
 
             - uses: dtolnay/rust-toolchain@master
               with:
@@ -58,7 +54,7 @@ jobs:
                   name: icu-datetime.zip
                   path: icu-datetime.zip
 
-            - uses: actions/setup-python@v5
+            - uses: actions/setup-python@v6
               with:
                   python-version: "3.12"
                   cache: "pip"
@@ -74,7 +70,7 @@ jobs:
         outputs:
             IS_TAGGED: ${{ steps.is-rel.outputs.IS_TAGGED }}
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v5
               with:
                   fetch-depth: 0 # we need the tags
             - name: Check Release
@@ -90,11 +86,11 @@ jobs:
         needs: [build, check-release]
         if: ${{ needs.check-release.outputs.IS_TAGGED == '0' }}
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v5
               with:
                   fetch-depth: 0 # we need the tags
 
-            - uses: actions/download-artifact@v4
+            - uses: actions/download-artifact@v5
               with:
                   name: icu-datetime.zip
                   path: build/
@@ -103,7 +99,7 @@ jobs:
               id: get-tag
               run: echo "VALUE=$(git describe --exact-match --match 'v*')" >> "$GITHUB_OUTPUT"
             - name: Create release
-              uses: ncipollo/release-action@v1.16.0
+              uses: ncipollo/release-action@v1.20.0
               with:
                   replacesArtifacts: true
                   allowUpdates: true

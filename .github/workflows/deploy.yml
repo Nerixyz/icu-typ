@@ -27,7 +27,7 @@ jobs:
                       typst: 0.11.0
         steps:
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v5
               with:
                   ref: ${{matrix.branch}}
 
@@ -93,22 +93,22 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v5
             - name: Setup Pages
               uses: actions/configure-pages@v5
 
-            - uses: actions/download-artifact@v4
+            - uses: actions/download-artifact@v5
               with:
                   name: build-main
                   path: build
 
-            - uses: actions/download-artifact@v4
+            - uses: actions/download-artifact@v5
               with:
                   name: build-v0.1.2
                   path: build/v0.1.2
 
             - name: Upload artifact
-              uses: actions/upload-pages-artifact@v3
+              uses: actions/upload-pages-artifact@v4
               with:
                   path: "build"
             - name: Deploy to GitHub Pages
