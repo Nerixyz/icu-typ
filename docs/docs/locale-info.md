@@ -36,7 +36,7 @@ You can test your identifiers on [util.unicode.org/UnicodeJsps/languageid.jsp](h
 Chinese, tranditional Han, Hong Kong
 
 ```typst +preview
-#locale-info("zh-Hant-HK")
+#icu.locale-info("zh-Hant-HK")
 ```
 
 ### Default Language
@@ -44,7 +44,7 @@ Chinese, tranditional Han, Hong Kong
 The default "undefined" language.
 
 ```typst +preview
-#locale-info("und")
+#icu.locale-info("und")
 ```
 
 ### Full Unicode Locale Identifier
@@ -58,7 +58,7 @@ A [Unicode Locale Identifier] specifying all extensions.
 #let private-ext = "-a-other-ext"
 #let other-ext = "-x-typst-wasm"
 
-#locale-info(
+#icu.locale-info(
     language-id +
     unicode-ext +
     transform-ext +

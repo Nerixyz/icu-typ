@@ -10,13 +10,13 @@ crate-type = ["cdylib"]
 serde = { version = "1.0", features = ["derive"] }
 ciborium = "0.2.2"
 
-icu_datetime = { version = "1.5.1", features = ["serde", "std"] }
-icu_calendar = { version = "1.5.2", features = ["serde", "std"] }
-icu_timezone = { version = "1.5.0", features = ["serde", "std"] }
-icu_locid = { version = "1.5.0", features = ["serde", "std"] }
-icu_provider = { version = "1.5.0" }
-writeable = "0.5.5"
-tinystr = "0.7.6"
+icu_datetime = { version = "2.0", features = ["serde", "experimental"] }
+icu_calendar = { version = "2.0", features = ["serde"] }
+icu_time = { version = "2.0", features = ["serde"] }
+icu_locale_core = { version = "2.0", features = ["serde"] }
+icu_provider = { version = "2.0" }
+writeable = "0.6.0"
+tinystr = "0.8.0"
 
 wasm-minimal-protocol = { git = "https://github.com/astrale-sharp/wasm-minimal-protocol" }
 thiserror = "2.0"

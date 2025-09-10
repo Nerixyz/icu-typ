@@ -1,67 +1,67 @@
 name: Deploy to Pages
 
 on:
-  push:
-    branches: ["main", "master"]
-  workflow_dispatch:
+    push:
+        branches: ["main", "master"]
+    workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write
-  id-token: write
+    contents: read
+    pages: write
+    id-token: write
 
 concurrency:
-  group: "pages"
-  cancel-in-progress: false
+    group: "pages"
+    cancel-in-progress: false
 
 jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
+    deploy:
+        environment:
+            name: github-pages
+            url: ${{ steps.deployment.outputs.page_url }}
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v4
+            - name: Setup Pages
+              uses: actions/configure-pages@v5
 
-      - uses: dtolnay/rust-toolchain@master
-        with:
-          toolchain: stable
-          components: clippy
+            - uses: dtolnay/rust-toolchain@master
+              with:
+                  toolchain: stable
+                  components: clippy
 
-      - uses: Aandreba/setup-binaryen@v1.0.0
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+            - uses: Aandreba/setup-binaryen@v1.0.0
+              with:
+                  token: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: extractions/setup-just@v3
-      - name: Build and deploy locally
-        run: just deploy
+            - uses: extractions/setup-just@v3
+            - name: Build and deploy locally
+              run: just deploy
 
-      - name: Install Noto Fonts
-        run: sudo apt install -y fonts-noto-core fonts-noto-cjk
+            - name: Install Noto Fonts
+              run: sudo apt install -y fonts-noto-core fonts-noto-cjk
 
-      - uses: typst-community/setup-typst@v4
+            - uses: typst-community/setup-typst@v4
 
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-          cache: "pip"
-      - run: pip install .
-        working-directory: docs
-      - run: python3 -m mkdocs build
-        working-directory: docs
+            - uses: actions/setup-python@v5
+              with:
+                  python-version: "3.12"
+                  cache: "pip"
+            - run: pip install .
+              working-directory: docs
+            - run: python3 -m mkdocs build
+              working-directory: docs
 
-      - run: npm i -g svgo
-      - run: for f in *.svg; do svgo "$f"; done
-        working-directory: docs/site/rendered
-        shell: bash
+            - run: npm i -g svgo
+            - run: for f in *.svg; do svgo "$f"; done
+              working-directory: docs/site/rendered
+              shell: bash
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: "docs/site"
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+            - name: Upload artifact
+              uses: actions/upload-pages-artifact@v3
+              with:
+                  path: "docs/site"
+            - name: Deploy to GitHub Pages
+              id: deployment
+              uses: actions/deploy-pages@v4

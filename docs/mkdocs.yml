@@ -4,86 +4,85 @@ repo_url: https://github.com/Nerixyz/icu-typ
 repo_name: Nerixyz/icu-typ
 edit_uri: edit/main/docs/docs/
 extra_css:
-  - css/custom.css
+    - css/custom.css
 theme:
-  name: material
-  icon:
-    logo: material/calendar-month
-    repo: material/github
-  font:
-    code: JetBrains Mono
-    text: Inter
-  palette:
-    - media: "(prefers-color-scheme)"
-      toggle:
-        icon: material/brightness-auto
-        name: Switch to light mode
-    - media: "(prefers-color-scheme: light)"
-      primary: deep orange
-      accent: deep purple
-      toggle:
-        icon: material/weather-sunny
-        name: Switch to dark mode
-    - media: "(prefers-color-scheme: dark)"
-      scheme: slate
-      primary: deep orange
-      accent: deep purple
-      toggle:
-        icon: material/weather-night
-        name: Switch to light mode
-  features:
-    - content.code.copy
-    - content.code.annotate
-    - content.action.edit
-    - content.action.view
-    - content.tooltips
-    - navigation.instant
-    - navigation.instant.progress
-    - navigation.prune
-    - navigation.footer
-    - toc.follow
+    name: material
+    icon:
+        logo: material/calendar-month
+        repo: material/github
+    font:
+        code: JetBrains Mono
+        text: Inter
+    palette:
+        - media: "(prefers-color-scheme)"
+          toggle:
+              icon: material/brightness-auto
+              name: Switch to light mode
+        - media: "(prefers-color-scheme: light)"
+          primary: deep orange
+          accent: deep purple
+          toggle:
+              icon: material/weather-sunny
+              name: Switch to dark mode
+        - media: "(prefers-color-scheme: dark)"
+          scheme: slate
+          primary: deep orange
+          accent: deep purple
+          toggle:
+              icon: material/weather-night
+              name: Switch to light mode
+    features:
+        - content.code.copy
+        - content.code.annotate
+        - content.action.edit
+        - content.action.view
+        - content.tooltips
+        - navigation.instant
+        - navigation.instant.progress
+        - navigation.prune
+        - navigation.footer
+        - toc.follow
 
 hooks:
-  - hooks.py
+    - hooks.py
 
 plugins:
-  - search
-  - git-revision-date-localized:
-      enable_creation_date: true
+    - search
+    - git-revision-date-localized:
+          enable_creation_date: true
 
 markdown_extensions:
-  - toc:
-      permalink: true
-  - admonition
-  - md_in_html
-  - attr_list
-  - pymdownx.emoji:
-      emoji_index: !!python/name:material.extensions.emoji.twemoji
-      emoji_generator: !!python/name:material.extensions.emoji.to_svg
-  - pymdownx.details
-  - pymdownx.highlight:
-      anchor_linenums: true
-      line_spans: __span
-      pygments_lang_class: true
-      extend_pygments_lang:
-        - name: "typst-code"
-          lang: "typst"
-          options:
-            start: "code"
-  - pymdownx.inlinehilite
-  - pymdownx.snippets
-  - pymdownx.superfences:
-      custom_fences:
-        - name: typst-preview
-          class: typst-preview
-          format: !!python/name:extensions.typst_preview.custom_formatter
-          validator: !!python/name:extensions.typst_preview.custom_validator
+    - toc:
+          permalink: true
+    - admonition
+    - md_in_html
+    - attr_list
+    - pymdownx.emoji:
+          emoji_index: !!python/name:material.extensions.emoji.twemoji
+          emoji_generator: !!python/name:material.extensions.emoji.to_svg
+    - pymdownx.details
+    - pymdownx.highlight:
+          anchor_linenums: true
+          line_spans: __span
+          pygments_lang_class: true
+          extend_pygments_lang:
+              - name: "typst-code"
+                lang: "typst"
+                options:
+                    start: "code"
+    - pymdownx.inlinehilite
+    - pymdownx.snippets
+    - pymdownx.superfences:
+          custom_fences:
+              - name: typst-preview
+                class: typst-preview
+                format: !!python/name:extensions.typst_preview.custom_formatter
+                validator: !!python/name:extensions.typst_preview.custom_validator
 
 nav:
-  - Home: index.md
-  - fmt-date.md
-  - fmt-time.md
-  - fmt-datetime.md
-  - fmt-timezone.md
-  - fmt-zoned-datetime.md
-  - locale-info.md
+    - Home: index.md
+    - fmt.md
+    - locale-info.md
+    - migration.md
+    - constants.md
+    - changelog.md

@@ -1,104 +1,116 @@
 name: Build
 
 on:
-  pull_request:
-  push:
-    branches:
-      - main
-  workflow_dispatch:
+    pull_request:
+    push:
+        branches:
+            - main
+    workflow_dispatch:
 
 jobs:
-  build:
-    name: Build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
+    build:
+        name: Build
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
 
-      - uses: extractions/setup-just@v3
+            - uses: extractions/setup-just@v3
 
-      - uses: Aandreba/setup-binaryen@v1.0.0
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+            - uses: Aandreba/setup-binaryen@v1.0.0
+              with:
+                  token: ${{ secrets.GITHUB_TOKEN }}
 
-      - uses: denoland/setup-deno@v2
-        with:
-          deno-version: v1.x
+            - uses: denoland/setup-deno@v2
+              with:
+                  deno-version: v1.x
 
-      - uses: dtolnay/rust-toolchain@master
-        with:
-          toolchain: stable
-          components: clippy
+            - uses: dtolnay/rust-toolchain@master
+              with:
+                  toolchain: stable
+                  components: clippy
 
-      - uses: Swatinem/rust-cache@v2
+            - uses: Swatinem/rust-cache@v2
 
-      - name: Build and deploy locally
-        run: just deploy
+            - uses: taiki-e/install-action@v2
+              with:
+                  tool: oxipng
 
-      - name: Bundle
-        run: zip -r ../icu-datetime.zip *
-        working-directory: build
+            - uses: typst-community/setup-typst@v4
+              with:
+                  typst-version: 0.13.0
 
-      - name: Upload bundle
-        uses: actions/upload-artifact@v4
-        with:
-          name: icu-datetime.zip
-          path: icu-datetime.zip
+            - name: Build example
+              run: just example
 
-      - uses: typst-community/setup-typst@v4
+            - name: Run tests
+              run: just test
 
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-          cache: "pip"
-      - run: pip install .
-        working-directory: docs
-      - run: python3 -m mkdocs build
-        working-directory: docs
+            - name: Build and deploy locally
+              run: just deploy
 
-  check-release:
-    runs-on: ubuntu-latest
-    needs: build
-    if: ${{ github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main') }}
-    outputs:
-      IS_TAGGED: ${{ steps.is-rel.outputs.IS_TAGGED }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0 # we need the tags
-      - name: Check Release
-        id: is-rel
-        run: |
-          set +e;
-          git describe --exact-match --match 'v*' &> /dev/null;
-          echo "IS_TAGGED=$?" >> "$GITHUB_OUTPUT";
-        shell: bash
+            - name: Bundle
+              run: zip -r ../icu-datetime.zip *
+              working-directory: build
 
-  draft-release:
-    runs-on: ubuntu-latest
-    needs: [build, check-release]
-    if: ${{ needs.check-release.outputs.IS_TAGGED == '0' }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0 # we need the tags
+            - name: Upload bundle
+              uses: actions/upload-artifact@v4
+              with:
+                  name: icu-datetime.zip
+                  path: icu-datetime.zip
 
-      - uses: actions/download-artifact@v4
-        with:
-          name: icu-datetime.zip
-          path: build/
+            - uses: actions/setup-python@v5
+              with:
+                  python-version: "3.12"
+                  cache: "pip"
+            - run: pip install .
+              working-directory: docs
+            - run: python3 -m mkdocs build
+              working-directory: docs
 
-      - name: Get Tag
-        id: get-tag
-        run: echo "VALUE=$(git describe --exact-match --match 'v*')" >> "$GITHUB_OUTPUT"
-      - name: Create release
-        uses: ncipollo/release-action@v1.16.0
-        with:
-          replacesArtifacts: true
-          allowUpdates: true
-          artifactErrorsFailBuild: true
-          omitBodyDuringUpdate: true
-          omitNameDuringUpdate: true
-          draft: true
-          artifacts: "build/*"
-          name: ${{ steps.get-tag.outputs.VALUE }}
-          tag: ${{ steps.get-tag.outputs.VALUE }}
+    check-release:
+        runs-on: ubuntu-latest
+        needs: build
+        if: ${{ github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main') }}
+        outputs:
+            IS_TAGGED: ${{ steps.is-rel.outputs.IS_TAGGED }}
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0 # we need the tags
+            - name: Check Release
+              id: is-rel
+              run: |
+                  set +e;
+                  git describe --exact-match --match 'v*' &> /dev/null;
+                  echo "IS_TAGGED=$?" >> "$GITHUB_OUTPUT";
+              shell: bash
+
+    draft-release:
+        runs-on: ubuntu-latest
+        needs: [build, check-release]
+        if: ${{ needs.check-release.outputs.IS_TAGGED == '0' }}
+        steps:
+            - uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0 # we need the tags
+
+            - uses: actions/download-artifact@v4
+              with:
+                  name: icu-datetime.zip
+                  path: build/
+
+            - name: Get Tag
+              id: get-tag
+              run: echo "VALUE=$(git describe --exact-match --match 'v*')" >> "$GITHUB_OUTPUT"
+            - name: Create release
+              uses: ncipollo/release-action@v1.16.0
+              with:
+                  replacesArtifacts: true
+                  allowUpdates: true
+                  artifactErrorsFailBuild: true
+                  omitBodyDuringUpdate: true
+                  omitNameDuringUpdate: true
+                  draft: true
+                  artifacts: "build/*"
+                  name: ${{ steps.get-tag.outputs.VALUE }}
+                  tag: ${{ steps.get-tag.outputs.VALUE }}
