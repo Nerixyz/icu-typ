@@ -16,6 +16,7 @@ jobs:
               with:
                   toolchain: nightly
                   components: rustfmt
+                  targets: wasm32-unknown-unknown
             - name: rustfmt
               run: cargo fmt --check
 
