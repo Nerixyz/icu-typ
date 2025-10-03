@@ -7,7 +7,7 @@
     "New Computer Modern",
     "New Computer Modern Math",
     "DejaVu Sans Mono",
-    "Noto Serif SC",
+    "Noto Serif",
   ),
 )
 

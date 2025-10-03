@@ -28,6 +28,9 @@ jobs:
 
             - uses: Swatinem/rust-cache@v2
 
+            - name: Install fonts
+              run: sudo apt install fonts-noto fonts-noto-cjk
+
             - uses: taiki-e/install-action@v2
               with:
                   tool: oxipng
