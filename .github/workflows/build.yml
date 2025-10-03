@@ -29,7 +29,7 @@ jobs:
             - uses: Swatinem/rust-cache@v2
 
             - name: Install fonts
-              run: sudo apt install fonts-noto-cjk
+              run: sudo apt install fonts-noto fonts-noto-cjk
 
             - uses: taiki-e/install-action@v2
               with:
@@ -38,6 +38,9 @@ jobs:
             - uses: typst-community/setup-typst@v4
               with:
                   typst-version: 0.13.0
+
+            - name: Install fonts
+              run: typst fonts
 
             - name: Build example
               run: just example
