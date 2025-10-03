@@ -1,4 +1,2 @@
 [toolchain]
-# required for icu (https://github.com/unicode-org/icu4x/issues/5039)
-channel = "stable"
 targets = ["wasm32-unknown-unknown"]
