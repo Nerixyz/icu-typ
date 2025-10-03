@@ -39,9 +39,6 @@ jobs:
               with:
                   typst-version: 0.13.0
 
-            - name: Install fonts
-              run: typst fonts
-
             - name: Build example
               run: just example
 
