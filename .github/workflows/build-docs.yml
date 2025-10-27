@@ -85,7 +85,7 @@ jobs:
               shell: bash
 
             - name: Upload artifact
-              uses: actions/upload-artifact@v4
+              uses: actions/upload-artifact@v5
               with:
                   path: "docs/site"
                   name: build-${{matrix.version}}
