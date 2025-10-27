@@ -30,17 +30,17 @@ jobs:
             - name: Setup Pages
               uses: actions/configure-pages@v5
 
-            - uses: actions/download-artifact@v5
+            - uses: actions/download-artifact@v6
               with:
                   name: build-main
                   path: build
 
-            - uses: actions/download-artifact@v5
+            - uses: actions/download-artifact@v6
               with:
                   name: build-v0.2.0
                   path: build/v0.2.0
 
-            - uses: actions/download-artifact@v5
+            - uses: actions/download-artifact@v6
               with:
                   name: build-v0.1.2
                   path: build/v0.1.2
