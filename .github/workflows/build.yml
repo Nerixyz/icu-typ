@@ -53,7 +53,7 @@ jobs:
               working-directory: build
 
             - name: Upload bundle
-              uses: actions/upload-artifact@v4
+              uses: actions/upload-artifact@v5
               with:
                   name: icu-datetime.zip
                   path: icu-datetime.zip
