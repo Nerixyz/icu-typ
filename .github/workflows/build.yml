@@ -9,8 +9,16 @@ on:
 
 jobs:
     build:
-        name: Build
+        name: Build (${{matrix.typst-version}})
         runs-on: ubuntu-latest
+        strategy:
+            fail-fast: true
+            matrix:
+                include:
+                    - typst-version: 0.13.0
+                      upload: true
+                    - typst-version: latest
+                      upload: false
         steps:
             - uses: actions/checkout@v5
 
@@ -37,7 +45,7 @@ jobs:
 
             - uses: typst-community/setup-typst@v4
               with:
-                  typst-version: 0.13.0
+                  typst-version: ${{ matrix.typst-version }}
 
             - name: Build example
               run: just example
@@ -54,6 +62,7 @@ jobs:
 
             - name: Upload bundle
               uses: actions/upload-artifact@v5
+              if: matrix.upload
               with:
                   name: icu-datetime.zip
                   path: icu-datetime.zip
