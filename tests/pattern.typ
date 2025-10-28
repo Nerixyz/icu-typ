@@ -23,8 +23,9 @@
 
   // 'Y+' not supported by ICU4X
   assert.eq(f("Y"), "Y")
-  // 'u+' not supported by ICU4X
-  assert.eq(f("u"), "u")
+
+  assert.eq(f("u uu uuu"), "2024 2024 2024")
+  assert.eq(f("uuuu uuuuu uuuuuu"), "2024 02024 002024")
 
   assert.eq(f("U UU UUU", locale: "en-u-ca-chinese"), "jia-chen jia-chen jia-chen")
   assert.eq(f("UUUU", locale: "en-u-ca-chinese"), "jia-chen")
@@ -55,8 +56,7 @@
 
   assert.eq(f("F"), "2")
 
-  // 'g' not supported by ICU4X
-  assert.eq(f("g"), "g")
+  assert.eq(f("g"), "2460500")
 
   assert.eq(f("E EE EEE"), "Mon Mon Mon")
   assert.eq(f("EEEE"), "Monday")

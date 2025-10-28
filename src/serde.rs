@@ -3,6 +3,9 @@ use icu_datetime::{
     options::{Alignment, Length, SubsecondDigits, TimePrecision, YearStyle},
 };
 
+// These types mirror the ones from  icu_datetime::fieldsets::builder with the
+// difference that they use kebab-case.
+
 #[derive(serde::Deserialize)]
 #[serde(rename_all = "kebab-case")]
 pub struct FieldSetBuilderSerde {

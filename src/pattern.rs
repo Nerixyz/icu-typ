@@ -1,6 +1,9 @@
 use std::str::FromStr;
 
-use icu_calendar::{AnyCalendarKind, AsCalendar};
+use icu_calendar::{
+    cal::{ChineseTraditional, KoreanTraditional},
+    AnyCalendarKind, AsCalendar,
+};
 use icu_datetime::{
     fieldsets::enums::CompositeFieldSet,
     pattern::{DateTimePattern, FixedCalendarDateTimeNames},
@@ -29,15 +32,14 @@ fn format_with_calendar(
     pattern: &DateTimePattern,
 ) -> Result<Vec<u8>, crate::Error> {
     use icu_calendar::cal::{
-        Buddhist, Chinese, Coptic, Dangi, Ethiopian, EthiopianEraStyle, Gregorian, Hebrew,
-        HijriSimulated, HijriTabular, HijriTabularEpoch, HijriTabularLeapYears, HijriUmmAlQura,
-        Indian, Japanese, JapaneseExtended, Persian, Roc,
+        hijri, Buddhist, Coptic, Ethiopian, EthiopianEraStyle, Gregorian, Hebrew, Hijri,
+        HijriTabularEpoch, HijriTabularLeapYears, Indian, Japanese, JapaneseExtended, Persian, Roc,
     };
     match resolve_calendar_kind(&mut prefs) {
         CalendarKind::Buddhist => fmt_impl(spec, prefs, pattern, Buddhist),
-        CalendarKind::Chinese => fmt_impl(spec, prefs, pattern, Chinese::new()),
+        CalendarKind::Chinese => fmt_impl(spec, prefs, pattern, ChineseTraditional::new()),
         CalendarKind::Coptic => fmt_impl(spec, prefs, pattern, Coptic),
-        CalendarKind::Dangi => fmt_impl(spec, prefs, pattern, Dangi::new()),
+        CalendarKind::Dangi => fmt_impl(spec, prefs, pattern, KoreanTraditional::new()),
         CalendarKind::Ethiopian => fmt_impl(spec, prefs, pattern, Ethiopian::new()),
         CalendarKind::EthiopianAmeteAlem => fmt_impl(
             spec,
@@ -52,18 +54,32 @@ fn format_with_calendar(
             spec,
             prefs,
             pattern,
-            HijriTabular::new(HijriTabularLeapYears::TypeII, HijriTabularEpoch::Friday),
+            Hijri::<hijri::TabularAlgorithm>::new_tabular(
+                HijriTabularLeapYears::TypeII,
+                HijriTabularEpoch::Friday,
+            ),
         ),
-        CalendarKind::HijriSimulatedMecca => {
-            fmt_impl(spec, prefs, pattern, HijriSimulated::new_mecca())
-        }
+        CalendarKind::HijriSimulatedMecca => fmt_impl(
+            spec,
+            prefs,
+            pattern,
+            Hijri::<hijri::AstronomicalSimulation>::new_simulated_mecca(),
+        ),
         CalendarKind::HijriTabularTypeIIThursday => fmt_impl(
             spec,
             prefs,
             pattern,
-            HijriTabular::new(HijriTabularLeapYears::TypeII, HijriTabularEpoch::Thursday),
+            Hijri::<hijri::TabularAlgorithm>::new_tabular(
+                HijriTabularLeapYears::TypeII,
+                HijriTabularEpoch::Thursday,
+            ),
         ),
-        CalendarKind::HijriUmmAlQura => fmt_impl(spec, prefs, pattern, HijriUmmAlQura::new()),
+        CalendarKind::HijriUmmAlQura => fmt_impl(
+            spec,
+            prefs,
+            pattern,
+            Hijri::<hijri::UmmAlQura>::new_umm_al_qura(),
+        ),
         CalendarKind::Japanese => fmt_impl(spec, prefs, pattern, Japanese::new()),
         CalendarKind::JapaneseExtended => fmt_impl(spec, prefs, pattern, JapaneseExtended::new()),
         CalendarKind::Persian => fmt_impl(spec, prefs, pattern, Persian),
@@ -94,7 +110,7 @@ where
 }
 
 // reimplements `icu_datetime::scaffold::calendar::FormattableAnyCalendarKind::from_preferences`
-// https://github.com/unicode-org/icu4x/blob/15a52d9c19da7ea64650f41ad43d428f198f8edc/components/datetime/src/scaffold/calendar.rs#L305-L321
+// https://github.com/unicode-org/icu4x/blob/icu%402.1.0/components/datetime/src/scaffold/calendar.rs#L351-L367
 fn resolve_calendar_kind(prefs: &mut DateTimeFormatterPreferences) -> CalendarKind {
     if let Some(kind) = CalendarKind::try_new(AnyCalendarKind::new((&*prefs).into())) {
         return kind;
@@ -112,7 +128,7 @@ fn resolve_calendar_kind(prefs: &mut DateTimeFormatterPreferences) -> CalendarKi
     CalendarKind::Gregorian
 }
 
-// https://github.com/unicode-org/icu4x/blob/15a52d9c19da7ea64650f41ad43d428f198f8edc/components/datetime/src/scaffold/calendar.rs#L255-L273
+// https://github.com/unicode-org/icu4x/blob/icu%402.1.0/components/datetime/src/scaffold/calendar.rs#L299-L319
 enum CalendarKind {
     Buddhist,
     Chinese,
