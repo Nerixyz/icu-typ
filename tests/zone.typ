@@ -22,7 +22,7 @@
   // no date -> no metazone
   assert.eq(
     icu.fmt((:), zone: (offset: "+10:30", iana: "Australia/South"), zone-style: "specific-long"),
-    "Australian Central Standard Time",
+    "Australian Central Daylight Time",
   )
   // now we got it
   let date = (year: 2020, month: 1, day: 1)

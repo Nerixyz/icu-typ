@@ -6,11 +6,7 @@ use icu_datetime::{
 };
 use icu_locale_core::Locale;
 use icu_time::{
-    zone::{
-        iana::IanaParserExtendedBorrowed, TimeZoneVariant, VariantOffsetsCalculator,
-        ZoneNameTimestamp,
-    },
-    DateTime, TimeZone, TimeZoneInfo, ZonedDateTime,
+    zone::iana::IanaParserExtendedBorrowed, DateTime, TimeZone, TimeZoneInfo, ZonedDateTime,
 };
 use serde::Deserialize;
 
@@ -58,7 +54,7 @@ pub fn format(spec: Spec, locale: &str, builder: FieldSetBuilder) -> Result<Vec<
 
 pub struct SpecifiedZonedDateTime {
     pub value:
-        icu_time::ZonedDateTime<icu_calendar::Iso, TimeZoneInfo<icu_time::zone::models::Full>>,
+        icu_time::ZonedDateTime<icu_calendar::Iso, TimeZoneInfo<icu_time::zone::models::AtTime>>,
     has_date: bool,
     has_time: bool,
     has_zone: bool,
@@ -146,43 +142,11 @@ impl TryFrom<Spec> for SpecifiedZonedDateTime {
                 .with_offset(spec.offset.map(TryInto::try_into).transpose()?)
                 .at_date_time_iso(DateTime { date, time });
 
-            let tz = if let Some(offset) = tz.offset() {
-                // Only resolve the zone variant if a date was specified.
-                // Otherwise we'd be at 1970-01-01 which would be confusing.
-                let offsets = if has_date {
-                    VariantOffsetsCalculator::new()
-                        .compute_offsets_from_time_zone_and_name_timestamp(
-                            tz.id(),
-                            ZoneNameTimestamp::from_date_time_iso(DateTime { date, time }),
-                        )
-                } else {
-                    None
-                };
-                tz.with_variant(match offsets {
-                    Some(offsets) => {
-                        if offsets.standard == offset {
-                            TimeZoneVariant::Standard
-                        } else if offsets.daylight == Some(offset) {
-                            TimeZoneVariant::Daylight
-                        } else {
-                            return Err(Self::Error::OffsetMismatch(crate::InvalidVariantOffsets(
-                                offsets,
-                            )));
-                        }
-                    }
-                    None => TimeZoneVariant::Standard,
-                })
-            } else {
-                tz.with_variant(TimeZoneVariant::Standard)
-            };
-
             (true, tz)
         } else {
             (
                 false,
-                TimeZoneInfo::utc()
-                    .at_date_time_iso(DateTime { date, time })
-                    .with_variant(TimeZoneVariant::Standard),
+                TimeZoneInfo::utc().at_date_time_iso(DateTime { date, time }),
             )
         };
 
