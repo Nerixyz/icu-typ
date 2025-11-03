@@ -117,9 +117,9 @@ dependencies = [
 
 [[package]]
 name = "icu_calendar"
-version = "2.1.0"
+version = "2.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "af1012b9ecfa510672c9920645a1247e0ab4037ad149fba52f0daec4c7d07505"
+checksum = "d6f0e52e009b6b16ba9c0693578796f2dd4aaa59a7f8f920423706714a89ac4e"
 dependencies = [
  "calendrical_calculations",
  "displaydoc",
@@ -135,15 +135,15 @@ dependencies = [
 
 [[package]]
 name = "icu_calendar_data"
-version = "2.1.0"
+version = "2.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a5e28bac68c36104316001a16a5a0ce1822dda530e6ee2e30ca566013a62863c"
+checksum = "527f04223b17edfe0bd43baf14a0cb1b017830db65f3950dc00224860a9a446d"
 
 [[package]]
 name = "icu_collections"
-version = "2.1.0"
+version = "2.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f578a71f2bfaf7ceb30b519a645ae48024b45f9eecbe060a31a004d7b4ba9462"
+checksum = "4c6b649701667bbe825c3b7e6388cb521c23d88644678e83c0c4d0a621a34b43"
 dependencies = [
  "displaydoc",
  "potential_utf",
@@ -209,9 +209,9 @@ checksum = "3924130264230c8bf44fae08b73841eca3418fc14bfbcfce9f14a73c3c675d81"
 
 [[package]]
 name = "icu_locale"
-version = "2.1.0"
+version = "2.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b77d60c94a44c2eb07640e7b9094e6fa052b6cc1b7ad14c309ae346c7108722e"
+checksum = "532b11722e350ab6bf916ba6eb0efe3ee54b932666afec989465f9243fe6dd60"
 dependencies = [
  "icu_collections",
  "icu_locale_core",
@@ -224,9 +224,9 @@ dependencies = [
 
 [[package]]
 name = "icu_locale_core"
-version = "2.1.0"
+version = "2.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4c219b62bf5a06801012446193fdfcbd7970e876823aba4c62def2ce957dcb44"
+checksum = "edba7861004dd3714265b4db54a3c390e880ab658fec5f7db895fae2046b5bb6"
 dependencies = [
  "displaydoc",
  "litemap",
@@ -238,9 +238,9 @@ dependencies = [
 
 [[package]]
 name = "icu_locale_data"
-version = "2.1.0"
+version = "2.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c59e4b9cb2fa24a06fd4996f38a18a18ae4d5d27b3d1ed98af83dcbb7ee6e914"
+checksum = "f03e2fcaefecdf05619f3d6f91740e79ab969b4dd54f77cbf546b1d0d28e3147"
 
 [[package]]
 name = "icu_pattern"
@@ -278,9 +278,9 @@ checksum = "97992e985504ab8ff75e6764d75ad43aa2d14fade27bb1604b1b53c94e3be762"
 
 [[package]]
 name = "icu_provider"
-version = "2.1.0"
+version = "2.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f64958e359123591ae1f17a27b5fc9ebdb50c98b04e0401146154de1d8fe3e44"
+checksum = "85962cf0ce02e1e0a629cc34e7ca3e373ce20dda4c4d7294bbd0bf1fdb59e614"
 dependencies = [
  "displaydoc",
  "icu_locale_core",
@@ -295,9 +295,9 @@ dependencies = [
 
 [[package]]
 name = "icu_time"
-version = "2.1.0"
+version = "2.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5ed0e4cff0e300a0eb97a2962c03425de34a1aba9857ac283794104c46790856"
+checksum = "8242b00da3b3b6678f731437a11c8833a43c821ae081eca60ba1b7579d45b6d8"
 dependencies = [
  "calendrical_calculations",
  "displaydoc",
@@ -313,9 +313,9 @@ dependencies = [
 
 [[package]]
 name = "icu_time_data"
-version = "2.1.0"
+version = "2.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "949db4f4bac7d26a230d141039f3250235a311a773a064cddce16c47dafed285"
+checksum = "3e10b0e5e87a2c84bd5fa407705732052edebe69291d347d0c3033785470edbf"
 
 [[package]]
 name = "ixdtf"
@@ -484,7 +484,7 @@ dependencies = [
 [[package]]
 name = "wasm-minimal-protocol"
 version = "0.1.0"
-source = "git+https://github.com/astrale-sharp/wasm-minimal-protocol#e622e0e4a4f0f34be871a3a6bd22f6519415364b"
+source = "git+https://github.com/astrale-sharp/wasm-minimal-protocol#c51acd43095fe9da8fa943e064618e486fd2b58d"
 dependencies = [
  "proc-macro2",
  "quote",
