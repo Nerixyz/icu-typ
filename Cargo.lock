@@ -154,9 +154,9 @@ dependencies = [
 
 [[package]]
 name = "icu_datetime"
-version = "2.1.0"
+version = "2.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1baa8325dfa8c7fbd863099df5438183c4966a1551a90d4c38e6497e06ea31de"
+checksum = "1b9d49f41ded8e63761b6b4c3120dfdc289415a1ed10107db6198eb311057ca5"
 dependencies = [
  "displaydoc",
  "fixed_decimal",
@@ -181,15 +181,15 @@ dependencies = [
 
 [[package]]
 name = "icu_datetime_data"
-version = "2.1.0"
+version = "2.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "709a265ed3c1763312699b58a0d37de5cb0cfd24a10cca10fcbfd2e03ed78b07"
+checksum = "0bf2a384725c67fcd32d27737bc7ba9dc5fe21311dfe3ba530f4b4d53e72bacc"
 
 [[package]]
 name = "icu_decimal"
-version = "2.1.0"
+version = "2.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "411030ea0461124acaf861ce3e02074e63d9d0f5d97930942c2e93a93facb49c"
+checksum = "a38c52231bc348f9b982c1868a2af3195199623007ba2c7650f432038f5b3e8e"
 dependencies = [
  "fixed_decimal",
  "icu_decimal_data",
@@ -203,9 +203,9 @@ dependencies = [
 
 [[package]]
 name = "icu_decimal_data"
-version = "2.1.0"
+version = "2.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3924130264230c8bf44fae08b73841eca3418fc14bfbcfce9f14a73c3c675d81"
+checksum = "2905b4044eab2dd848fe84199f9195567b63ab3a93094711501363f63546fef7"
 
 [[package]]
 name = "icu_locale"
@@ -244,9 +244,9 @@ checksum = "f03e2fcaefecdf05619f3d6f91740e79ab969b4dd54f77cbf546b1d0d28e3147"
 
 [[package]]
 name = "icu_pattern"
-version = "0.4.0"
+version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "983825f401e6bc4a13c45d552ffd9ad6f3f6b6bc0ec03f31d6835a90a46deb1f"
+checksum = "7a7ff8c0ff6f61cdce299dcb54f557b0a251adbc78f6f0c35a21332c452b4a1b"
 dependencies = [
  "displaydoc",
  "either",
@@ -257,9 +257,9 @@ dependencies = [
 
 [[package]]
 name = "icu_plurals"
-version = "2.1.0"
+version = "2.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "377b43a256bcb14bca95b6128edf0cc6bc73918207b61be87358f3fb3e7acadd"
+checksum = "4f9cfe49f5b1d1163cc58db451562339916a9ca5cbcaae83924d41a0bf839474"
 dependencies = [
  "displaydoc",
  "fixed_decimal",
@@ -272,9 +272,9 @@ dependencies = [
 
 [[package]]
 name = "icu_plurals_data"
-version = "2.1.0"
+version = "2.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "97992e985504ab8ff75e6764d75ad43aa2d14fade27bb1604b1b53c94e3be762"
+checksum = "f018a98dccf7f0eb02ba06ac0ff67d102d8ded80734724305e924de304e12ff0"
 
 [[package]]
 name = "icu_provider"
