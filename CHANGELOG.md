@@ -19,6 +19,14 @@ Types of changes:
 
 ## [Unreleased]
 
+### Changed
+
+- Updated to ICU4X 2.1
+
+### Fixed
+
+- Fixed missing fonts in the preview image built in CI
+
 ## [0.2.0] - 2025-09-10
 
 This release is a major change since the last version as it updates the ICU4X dependency from 1.x to 2.x. Take a look at the [migration guide](https://nerixyz.github.io/icu-typ/v0.2.0/migration/).
