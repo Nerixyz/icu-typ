@@ -12,6 +12,8 @@ See [nerixyz.github.io/icu-typ](https://nerixyz.github.io/icu-typ) for a full AP
 ## Example
 
 ```typ
+#import "@preview/icu-datetime:0.2.1" as icu
+
 #let day = datetime(
   year: 2024,
   month: 5,
