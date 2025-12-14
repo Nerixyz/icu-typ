@@ -19,6 +19,8 @@ Types of changes:
 
 ## [Unreleased]
 
+## [0.2.1] - 2025-12-14
+
 ### Changed
 
 - Updated to ICU4X 2.1
@@ -91,6 +93,7 @@ This release is a major change since the last version as it updates the ICU4X de
 - `fmt-zoned-datetime` (🚧 experimental)
 
 [unreleased]: https://github.com/Nerixyz/icu-typ/compare/v0.2.0...HEAD
+[0.2.1]: https://github.com/Nerixyz/icu-typ/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/Nerixyz/icu-typ/compare/v0.1.2...v0.2.0
 [0.1.2]: https://github.com/Nerixyz/icu-typ/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/Nerixyz/icu-typ/releases/tag/v0.1.0...v0.1.1
