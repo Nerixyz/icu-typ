@@ -37,6 +37,11 @@ jobs:
 
             - uses: actions/download-artifact@v6
               with:
+                  name: build-v0.2.1
+                  path: build/v0.2.1
+
+            - uses: actions/download-artifact@v6
+              with:
                   name: build-v0.2.0
                   path: build/v0.2.0
 
