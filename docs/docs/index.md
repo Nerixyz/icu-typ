@@ -4,13 +4,14 @@ This library is a wrapper around [ICU4X](https://github.com/unicode-org/icu4x)' 
 
 If you're looking for documentation of an older version, append that version to the URL:
 
+- **v0.2.1**: [nerixyz.github.io/icu-typ/v0.2.1](https://nerixyz.github.io/icu-typ/v0.2.1)
 - **v0.2.0**: [nerixyz.github.io/icu-typ/v0.2.0](https://nerixyz.github.io/icu-typ/v0.2.0)
 - **v0.1.2**: [nerixyz.github.io/icu-typ/v0.1.2](https://nerixyz.github.io/icu-typ/v0.1.2)
 
 ## Usage
 
 ```typst +preview(vertical fake)
-#import "@preview/icu-datetime:0.2.0": icu
+#import "@preview/icu-datetime:0.2.1": icu
 
 This documentation was built on #icu.fmt(datetime.today()).
 ```

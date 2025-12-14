@@ -21,8 +21,11 @@ jobs:
                 include:
                     - ref: main
                       version: main
-                      typst: 0.13
+                      typst: 0.14.2
                     - ref: main # not tagged yet
+                      version: v0.2.1
+                      typst: 0.13
+                    - ref: b6b8f921921877f33899721b13d474e0eab6fced
                       version: v0.2.0
                       typst: 0.13
                     - ref: bd80a02d2fe029eba305d84f1e0a977ffc4272a6
