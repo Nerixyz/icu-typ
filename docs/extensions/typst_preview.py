@@ -61,7 +61,7 @@ class PreviewPreprocessor(Preprocessor):
             if m is None:
                 m = EXAMPLE_START_REGEX.match(line.strip())
                 if m is not None:
-                    line = f'<details class="example" markdown="1"><summary>{m.group('title') or 'Example'}</summary>'
+                    line = f'<details class="example" markdown="1"><summary>{m.group("title") or "Example"}</summary>'
                     in_example = True
                 elif in_example and (line.strip() == "}" or line.strip() == "}example"):
                     line = "</details>"
@@ -169,11 +169,10 @@ TEMPLATE_HEADER = r"""
 
 # requires `just deploy`
 IMPORTS = r"""
-#import "@local/icu-datetime:0.2.0" as icu
+#import "@local/icu-datetime:0.2.1" as icu
 """
-# TODO(0.2.0 release): change to @preview
 IMPORTS_01_TO_02 = r"""
-#import "@local/icu-datetime:0.2.0" as icu02
+#import "@preview/icu-datetime:0.2.0" as icu02
 #import "@preview/icu-datetime:0.1.2" as icu01
 """
 TEMPLATES = {
