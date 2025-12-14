@@ -17,6 +17,10 @@ jobs:
                 include:
                     - typst-version: 0.13.0
                       upload: true
+                    - typst-version: 0.14.0
+                      upload: false
+                    - typst-version: 0.14.1
+                      upload: false
                     - typst-version: latest
                       upload: false
         steps:
