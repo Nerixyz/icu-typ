@@ -171,9 +171,8 @@ TEMPLATE_HEADER = r"""
 IMPORTS = r"""
 #import "@local/icu-datetime:0.2.1" as icu
 """
-# TODO(0.2.0 release): change to @preview
 IMPORTS_01_TO_02 = r"""
-#import "@local/icu-datetime:0.2.0" as icu02
+#import "@preview/icu-datetime:0.2.0" as icu02
 #import "@preview/icu-datetime:0.1.2" as icu01
 """
 TEMPLATES = {
