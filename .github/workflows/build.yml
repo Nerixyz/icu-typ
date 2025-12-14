@@ -24,7 +24,7 @@ jobs:
                     - typst-version: latest
                       upload: false
         steps:
-            - uses: actions/checkout@v5
+            - uses: actions/checkout@v6
 
             - uses: extractions/setup-just@v3
 
@@ -87,7 +87,7 @@ jobs:
         outputs:
             IS_TAGGED: ${{ steps.is-rel.outputs.IS_TAGGED }}
         steps:
-            - uses: actions/checkout@v5
+            - uses: actions/checkout@v6
               with:
                   fetch-depth: 0 # we need the tags
             - name: Check Release
@@ -103,7 +103,7 @@ jobs:
         needs: [build, check-release]
         if: ${{ needs.check-release.outputs.IS_TAGGED == '0' }}
         steps:
-            - uses: actions/checkout@v5
+            - uses: actions/checkout@v6
               with:
                   fetch-depth: 0 # we need the tags
 
