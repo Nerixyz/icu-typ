@@ -107,7 +107,7 @@ jobs:
               with:
                   fetch-depth: 0 # we need the tags
 
-            - uses: actions/download-artifact@v6
+            - uses: actions/download-artifact@v7
               with:
                   name: icu-datetime.zip
                   path: build/
