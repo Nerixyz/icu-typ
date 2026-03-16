@@ -68,7 +68,7 @@ jobs:
             - name: Install Noto Fonts
               run: sudo apt install -y fonts-noto-core fonts-noto-cjk
 
-            - uses: typst-community/setup-typst@v4
+            - uses: typst-community/setup-typst@v5
               with:
                   typst-version: ${{matrix.typst}}
 
