@@ -1,0 +1,19 @@
+pre-release-commit-message = "feat: release {{version}}"
+tag = false
+push = false
+publish = false
+consolidate-commits = false
+pre-release-replacements = [
+    { file = "CHANGELOG.md", search = "Unreleased", replace = "v{{version}}", prerelease = false },
+    { file = "CHANGELOG.md", search = "ReleaseDate", replace = "{{date}}", prerelease = false },
+    { file = "CHANGELOG.md", search = "\\.\\.\\.HEAD", replace = "...v{{version}}", exactly = 1 },
+    { file = "CHANGELOG.md", search = "\\[unreleased\\]:", replace = "[unreleased]: https://github.com/Nerixyz/icu-typ/compare/v{{version}}...HEAD\n[{{version}}]:", exactly = 1 },
+    { file = "CHANGELOG.md", search = "<!-- next-header -->", replace = "<!-- next-header -->\n\n## [Unreleased] - ReleaseDate\n\n[Commits](https://github.com/nerixyz/icu-typ/compare/v{{version}}...HEAD)", prerelease = false },
+    { file = "README.md", search = "@preview/icu-datetime:[a-z0-9\\.-]+", replace = "@preview/icu-datetime:{{version}}", prerelease = false },
+    { file = "docs/docs/index.md", search = "@preview/icu-datetime:[a-z0-9\\.-]+", replace = "@preview/icu-datetime:{{version}}", prerelease = false },
+    { file = "docs/docs/fmt.md", search = "@preview/icu-datetime:[a-z0-9\\.-]+", replace = "@preview/icu-datetime:{{version}}", prerelease = false },
+    { file = "docs/extensions/typst_preview.py", search = "@local/icu-datetime:[a-z0-9\\.-]+", replace = "@local/icu-datetime:{{version}}", prerelease = false },
+    { file = "docs/docs/index.md", search = "<!-- next-version -->\r?\n", replace = "<!--next-version -->\n\n- **v{{version}}**: [nerixyz.github.io/icu-typ/v{{version}}](https://nerixyz.github.io/icu-typ/v{{version}})", prerelease = false },
+    { file = ".github/workflows/build-docs.yml", search = "\n( +)typst: ([a-z0-9\\.-]+)\r?\n( +)# next-version", replace = "\n${1}typst: $2\n$3# next-version\n$3- ref: main # not tagged yet\n$3  version: v{{version}}\n$3  typst: $2", prerelease = false },
+    { file = "typst/typst.toml", search = "version = \"[a-z0-9\\.-]+\"", replace = "version = \"{{version}}\"", prerelease = false },
+]

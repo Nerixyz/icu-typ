@@ -17,7 +17,9 @@ Types of changes:
     - Security in case of vulnerabilities.
 -->
 
-## [Unreleased]
+<!-- next-header -->
+
+## [Unreleased] - ReleaseDate
 
 - Updated to ICU4X 2.2
 
@@ -94,7 +96,7 @@ This release is a major change since the last version as it updates the ICU4X de
 - `fmt-timezone` (🚧 experimental)
 - `fmt-zoned-datetime` (🚧 experimental)
 
-[unreleased]: https://github.com/Nerixyz/icu-typ/compare/v0.2.0...HEAD
+[unreleased]: https://github.com/Nerixyz/icu-typ/compare/v0.2.1...HEAD
 [0.2.1]: https://github.com/Nerixyz/icu-typ/compare/v0.2.0...v0.2.1
 [0.2.0]: https://github.com/Nerixyz/icu-typ/compare/v0.1.2...v0.2.0
 [0.1.2]: https://github.com/Nerixyz/icu-typ/compare/v0.1.1...v0.1.2
