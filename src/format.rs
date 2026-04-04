@@ -140,13 +140,13 @@ impl TryFrom<Spec> for SpecifiedZonedDateTime {
             // XXX: we need to keep track of the date before we use this time zone
             let tz = bcp47
                 .with_offset(spec.offset.map(TryInto::try_into).transpose()?)
-                .at_date_time_iso(DateTime { date, time });
+                .at_date_time(DateTime { date, time });
 
             (true, tz)
         } else {
             (
                 false,
-                TimeZoneInfo::utc().at_date_time_iso(DateTime { date, time }),
+                TimeZoneInfo::utc().at_date_time(DateTime { date, time }),
             )
         };
 
