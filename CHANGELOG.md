@@ -19,6 +19,8 @@ Types of changes:
 
 ## [Unreleased]
 
+- Updated to ICU4X 2.2
+
 ## [0.2.1] - 2025-12-14
 
 ### Changed

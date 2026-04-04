@@ -2,7 +2,8 @@ use std::str::FromStr;
 
 use icu_calendar::{
     cal::{ChineseTraditional, KoreanTraditional},
-    AnyCalendarKind, AsCalendar,
+    preferences::{CalendarAlgorithm, CalendarPreferences, HijriCalendarAlgorithm},
+    AsCalendar,
 };
 use icu_datetime::{
     fieldsets::enums::CompositeFieldSet,
@@ -33,24 +34,25 @@ fn format_with_calendar(
 ) -> Result<Vec<u8>, crate::Error> {
     use icu_calendar::cal::{
         hijri, Buddhist, Coptic, Ethiopian, EthiopianEraStyle, Gregorian, Hebrew, Hijri,
-        HijriTabularEpoch, HijriTabularLeapYears, Indian, Japanese, JapaneseExtended, Persian, Roc,
+        HijriTabularEpoch, HijriTabularLeapYears, Indian, Japanese, Persian, Roc,
     };
-    match resolve_calendar_kind(&mut prefs) {
-        CalendarKind::Buddhist => fmt_impl(spec, prefs, pattern, Buddhist),
-        CalendarKind::Chinese => fmt_impl(spec, prefs, pattern, ChineseTraditional::new()),
-        CalendarKind::Coptic => fmt_impl(spec, prefs, pattern, Coptic),
-        CalendarKind::Dangi => fmt_impl(spec, prefs, pattern, KoreanTraditional::new()),
-        CalendarKind::Ethiopian => fmt_impl(spec, prefs, pattern, Ethiopian::new()),
-        CalendarKind::EthiopianAmeteAlem => fmt_impl(
+    // https://github.com/unicode-org/icu4x/blob/icu%402.2.0/components/datetime/src/scaffold/calendar.rs#L449-L488
+    match CalendarPreferences::from(&prefs).resolved_algorithm() {
+        CalendarAlgorithm::Buddhist => fmt_impl(spec, prefs, pattern, Buddhist),
+        CalendarAlgorithm::Chinese => fmt_impl(spec, prefs, pattern, ChineseTraditional::new()),
+        CalendarAlgorithm::Coptic => fmt_impl(spec, prefs, pattern, Coptic),
+        CalendarAlgorithm::Dangi => fmt_impl(spec, prefs, pattern, KoreanTraditional::new()),
+        CalendarAlgorithm::Ethiopic => fmt_impl(spec, prefs, pattern, Ethiopian::new()),
+        CalendarAlgorithm::Ethioaa => fmt_impl(
             spec,
             prefs,
             pattern,
             Ethiopian::new_with_era_style(EthiopianEraStyle::AmeteAlem),
         ),
-        CalendarKind::Gregorian => fmt_impl(spec, prefs, pattern, Gregorian),
-        CalendarKind::Hebrew => fmt_impl(spec, prefs, pattern, Hebrew),
-        CalendarKind::Indian => fmt_impl(spec, prefs, pattern, Indian),
-        CalendarKind::HijriTabularTypeIIFriday => fmt_impl(
+        CalendarAlgorithm::Gregory => fmt_impl(spec, prefs, pattern, Gregorian),
+        CalendarAlgorithm::Hebrew => fmt_impl(spec, prefs, pattern, Hebrew),
+        CalendarAlgorithm::Indian => fmt_impl(spec, prefs, pattern, Indian),
+        CalendarAlgorithm::Hijri(Some(HijriCalendarAlgorithm::Civil)) => fmt_impl(
             spec,
             prefs,
             pattern,
@@ -59,13 +61,7 @@ fn format_with_calendar(
                 HijriTabularEpoch::Friday,
             ),
         ),
-        CalendarKind::HijriSimulatedMecca => fmt_impl(
-            spec,
-            prefs,
-            pattern,
-            Hijri::<hijri::AstronomicalSimulation>::new_simulated_mecca(),
-        ),
-        CalendarKind::HijriTabularTypeIIThursday => fmt_impl(
+        CalendarAlgorithm::Hijri(Some(HijriCalendarAlgorithm::Tbla)) => fmt_impl(
             spec,
             prefs,
             pattern,
@@ -74,16 +70,22 @@ fn format_with_calendar(
                 HijriTabularEpoch::Thursday,
             ),
         ),
-        CalendarKind::HijriUmmAlQura => fmt_impl(
+        CalendarAlgorithm::Hijri(Some(HijriCalendarAlgorithm::Umalqura)) => fmt_impl(
             spec,
             prefs,
             pattern,
             Hijri::<hijri::UmmAlQura>::new_umm_al_qura(),
         ),
-        CalendarKind::Japanese => fmt_impl(spec, prefs, pattern, Japanese::new()),
-        CalendarKind::JapaneseExtended => fmt_impl(spec, prefs, pattern, JapaneseExtended::new()),
-        CalendarKind::Persian => fmt_impl(spec, prefs, pattern, Persian),
-        CalendarKind::Roc => fmt_impl(spec, prefs, pattern, Roc),
+        CalendarAlgorithm::Japanese => fmt_impl(spec, prefs, pattern, Japanese::new()),
+        CalendarAlgorithm::Persian => fmt_impl(spec, prefs, pattern, Persian),
+        CalendarAlgorithm::Roc => fmt_impl(spec, prefs, pattern, Roc),
+        CalendarAlgorithm::Iso8601 | CalendarAlgorithm::Hijri(_) => {
+            // unsupported
+            prefs.calendar_algorithm = None;
+            format_with_calendar(spec, prefs, pattern)
+        }
+        // unknown
+        _ => fmt_impl(spec, prefs, pattern, Gregorian),
     }
 }
 
@@ -107,71 +109,4 @@ where
 
     crate::write::try_to_vec(&names.include_for_pattern(pattern)?.format(&converted))
         .map_err(crate::Error::FormattedPatternError)
-}
-
-// reimplements `icu_datetime::scaffold::calendar::FormattableAnyCalendarKind::from_preferences`
-// https://github.com/unicode-org/icu4x/blob/icu%402.1.0/components/datetime/src/scaffold/calendar.rs#L351-L367
-fn resolve_calendar_kind(prefs: &mut DateTimeFormatterPreferences) -> CalendarKind {
-    if let Some(kind) = CalendarKind::try_new(AnyCalendarKind::new((&*prefs).into())) {
-        return kind;
-    }
-
-    // Calendar not supported by DateTimeFormatter
-    // Currently this is CalendarAlgorithm::Iso8601, CalendarAlgorithm::Hijri(Rgsa)
-    // Let AnyCalendarKind constructor select an appropriate fallback
-    prefs.calendar_algorithm = None;
-    if let Some(res) = CalendarKind::try_new(AnyCalendarKind::new((&*prefs).into())) {
-        return res;
-    }
-
-    // unlike ICU, we default to the georgian calendar
-    CalendarKind::Gregorian
-}
-
-// https://github.com/unicode-org/icu4x/blob/icu%402.1.0/components/datetime/src/scaffold/calendar.rs#L299-L319
-enum CalendarKind {
-    Buddhist,
-    Chinese,
-    Coptic,
-    Dangi,
-    Ethiopian,
-    EthiopianAmeteAlem,
-    Gregorian,
-    Hebrew,
-    Indian,
-    HijriTabularTypeIIFriday,
-    HijriSimulatedMecca,
-    HijriTabularTypeIIThursday,
-    HijriUmmAlQura,
-    Japanese,
-    JapaneseExtended,
-    Persian,
-    Roc,
-}
-
-impl CalendarKind {
-    fn try_new(kind: AnyCalendarKind) -> Option<CalendarKind> {
-        match kind {
-            AnyCalendarKind::Buddhist => Some(Self::Buddhist),
-            AnyCalendarKind::Chinese => Some(Self::Chinese),
-            AnyCalendarKind::Coptic => Some(Self::Coptic),
-            AnyCalendarKind::Dangi => Some(Self::Dangi),
-            AnyCalendarKind::Ethiopian => Some(Self::Ethiopian),
-            AnyCalendarKind::EthiopianAmeteAlem => Some(Self::EthiopianAmeteAlem),
-            AnyCalendarKind::Gregorian => Some(Self::Gregorian),
-            AnyCalendarKind::Hebrew => Some(Self::Hebrew),
-            AnyCalendarKind::Indian => Some(Self::Indian),
-            AnyCalendarKind::HijriTabularTypeIIFriday => Some(Self::HijriTabularTypeIIFriday),
-            AnyCalendarKind::HijriSimulatedMecca => Some(Self::HijriSimulatedMecca),
-            AnyCalendarKind::HijriTabularTypeIIThursday => Some(Self::HijriTabularTypeIIThursday),
-            AnyCalendarKind::HijriUmmAlQura => Some(Self::HijriUmmAlQura),
-            AnyCalendarKind::Japanese => Some(Self::Japanese),
-            AnyCalendarKind::JapaneseExtended => Some(Self::JapaneseExtended),
-            AnyCalendarKind::Persian => Some(Self::Persian),
-            AnyCalendarKind::Roc => Some(Self::Roc),
-
-            AnyCalendarKind::Iso => None,
-            _ => None,
-        }
-    }
 }
