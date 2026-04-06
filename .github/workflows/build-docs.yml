@@ -62,7 +62,7 @@ jobs:
                   EOF
                   ) -i -- docs/docs/index.md
 
-            - uses: extractions/setup-just@v3
+            - uses: extractions/setup-just@v4
             - name: Build and deploy locally
               run: just deploy
 
