@@ -169,7 +169,7 @@ TEMPLATE_HEADER = r"""
 
 # requires `just deploy`
 IMPORTS = r"""
-#import "@local/icu-datetime:0.2.1" as icu
+#import "@local/icu-datetime:0.2.2" as icu
 """
 IMPORTS_01_TO_02 = r"""
 #import "@preview/icu-datetime:0.2.0" as icu02
