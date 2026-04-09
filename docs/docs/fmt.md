@@ -1,7 +1,7 @@
 # `fmt` - Format Date and Time
 
 ```typst-code
-import "@preview/icu-datetime:0.2.0" as icu
+import "@preview/icu-datetime:0.2.2" as icu
 
 let fmt(
   dt,

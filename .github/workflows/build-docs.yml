@@ -23,6 +23,9 @@ jobs:
                       version: main
                       typst: 0.14.2
                     # next-version
+                    - ref: main # not tagged yet
+                      version: v0.2.2
+                      typst: 0.14.2
                     - ref: 65674b1dee0a274173f4c5fb45cc27d802222d8f
                       version: v0.2.1
                       typst: 0.13
