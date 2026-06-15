@@ -493,7 +493,7 @@ dependencies = [
 [[package]]
 name = "wasm-minimal-protocol"
 version = "0.2.0"
-source = "git+https://github.com/astrale-sharp/wasm-minimal-protocol#4d10ad3cd606b5fac7b6ab766665d75a6784f19b"
+source = "git+https://github.com/astrale-sharp/wasm-minimal-protocol#e8150000ef6bf51c103fbd5f7c7d8371557f179c"
 dependencies = [
  "proc-macro2",
  "quote",
