@@ -21,6 +21,8 @@ jobs:
                       upload: false
                     - typst-version: 0.14.1
                       upload: false
+                    - typst-version: 0.15.0
+                      upload: false
                     - typst-version: latest
                       upload: false
         steps:
