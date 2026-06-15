@@ -23,7 +23,7 @@ Types of changes:
 
 [Commits](https://github.com/nerixyz/icu-typ/compare/v0.2.2...HEAD)
 
-## [v0.2.2] - 2026-04-09
+## [0.2.2] - 2026-04-09
 
 - Updated to ICU4X 2.2
 
