@@ -39,10 +39,12 @@
   // 'q' not supported by ICU4X
   assert.eq(f("q"), "q")
 
-  assert.eq(f("M MM MMM"), "7 07 Jul")
+  assert.eq(f("M MM"), "7 07")
+  assert.eq(f("MMM"), "Jul")
   assert.eq(f("MMMM"), "July")
   assert.eq(f("MMMMM"), "J")
-  assert.eq(f("L LL LLL"), "7 07 Jul")
+  assert.eq(f("L LL"), "7 07")
+  assert.eq(f("LLL"), "Jul")
   assert.eq(f("LLLL"), "July")
   assert.eq(f("LLLLL"), "J")
 
@@ -83,8 +85,9 @@
   assert.eq(f("bbbb"), "PM")
   assert.eq(f("bbbbb"), "p")
 
-  // 'B' not supported by ICU4X
-  assert.eq(f("B"), "B")
+  assert.eq(f("B BB BBB"), "PM PM PM")
+  assert.eq(f("BBBB"), "PM")
+  assert.eq(f("BBBBB"), "p")
 
   assert.eq(f("h hh H HH K KK"), "6 06 18 18 6 06")
 

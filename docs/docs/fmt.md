@@ -320,7 +320,7 @@ Specifies the pattern to format that date as. This is mutually exclusive with al
 
 The full list of placeholders can be found in the [Date Field Symbol Table]. Note that this argument doesn't check that the date and time are fully specified. If some fields are left out, they're default initialized.
 
-The following symbols are unsupported by ICU4X: `Y+` (year in "week of year"), `u+`, `Q+`, `q+`, `w+`, `W+`, `g+`, `e`/`ee`/`c`/`cc` (numeric week), `B+`, `k+`, `j+`, `J+`, `C+`, `S+`, and `VV`.
+The following symbols are unsupported by ICU4X: `Y+` (year in "week of year"), `u+`, `Q+`, `q+`, `w+`, `W+`, `g+`, `e`/`ee`/`c`/`cc` (numeric week), `k+`, `j+`, `J+`, `C+`, `S+`, and `VV`.
 
 example{
 
