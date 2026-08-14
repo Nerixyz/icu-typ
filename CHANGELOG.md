@@ -21,6 +21,8 @@ Types of changes:
 
 ## [Unreleased] - ReleaseDate
 
+- Updated to ICU4X 2.3
+
 [Commits](https://github.com/nerixyz/icu-typ/compare/v0.2.2...HEAD)
 
 ## [0.2.2] - 2026-04-09

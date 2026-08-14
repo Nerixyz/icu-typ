@@ -2,7 +2,8 @@ use std::str::FromStr;
 
 use icu_calendar::{
     cal::{ChineseTraditional, KoreanTraditional},
-    preferences::{CalendarAlgorithm, CalendarPreferences, HijriCalendarAlgorithm},
+    preferences::{CalendarAlgorithm, HijriCalendarAlgorithm},
+    provider::CalendarPreferredV1,
     AsCalendar,
 };
 use icu_datetime::{
@@ -12,7 +13,7 @@ use icu_datetime::{
     DateTimeFormatterPreferences,
 };
 use icu_locale_core::Locale;
-use icu_provider::DataProvider;
+use icu_provider::{marker::DataMarkerExt, DataIdentifierBorrowed, DataProvider, DataRequest};
 use icu_time::ZonedDateTime;
 
 use crate::format::{Spec, SpecifiedZonedDateTime};
@@ -36,8 +37,25 @@ fn format_with_calendar(
         hijri, Buddhist, Coptic, Ethiopian, EthiopianEraStyle, Gregorian, Hebrew, Hijri,
         HijriTabularEpoch, HijriTabularLeapYears, Indian, Japanese, Persian, Roc,
     };
-    // https://github.com/unicode-org/icu4x/blob/icu%402.2.0/components/datetime/src/scaffold/calendar.rs#L449-L488
-    match CalendarPreferences::from(&prefs).resolved_algorithm() {
+
+    // https://github.com/unicode-org/icu4x/blob/icu%402.3.0/components/datetime/src/scaffold/calendar.rs#L484-L509
+    let algorithm = match prefs.calendar_algorithm {
+        Some(algorithm) if !matches!(algorithm, CalendarAlgorithm::Hijri(None)) => algorithm,
+        unresolved => DataProvider::<CalendarPreferredV1>::load(
+            &icu_calendar::provider::Baked,
+            DataRequest {
+                id: DataIdentifierBorrowed::for_locale(&CalendarPreferredV1::make_locale(
+                    prefs.locale_preferences,
+                )),
+                metadata: Default::default(),
+            },
+        )?
+        .payload
+        .get()
+        .resolve(unresolved),
+    };
+
+    match algorithm {
         CalendarAlgorithm::Buddhist => fmt_impl(spec, prefs, pattern, Buddhist),
         CalendarAlgorithm::Chinese => fmt_impl(spec, prefs, pattern, ChineseTraditional::new()),
         CalendarAlgorithm::Coptic => fmt_impl(spec, prefs, pattern, Coptic),
