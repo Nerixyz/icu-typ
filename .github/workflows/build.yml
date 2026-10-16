@@ -45,7 +45,7 @@ jobs:
             - name: Install fonts
               run: sudo apt install fonts-noto fonts-noto-cjk
 
-            - uses: taiki-e/install-action@v2
+            - uses: taiki-e/install-action@v2.85.5
               with:
                   tool: oxipng
 
