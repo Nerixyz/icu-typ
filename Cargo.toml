@@ -18,7 +18,7 @@ icu_provider = { version = "2.3" }
 writeable = "0.6.0"
 tinystr = "0.8.0"
 
-wasm-minimal-protocol = { git = "https://github.com/astrale-sharp/wasm-minimal-protocol" }
+wasm-minimal-protocol = "0.2"
 thiserror = "2.0"
 
 [profile.release]
